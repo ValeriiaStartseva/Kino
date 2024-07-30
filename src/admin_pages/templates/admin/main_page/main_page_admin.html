@@ -1,0 +1,73 @@
+{% extends 'admin/base_admin.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <form id="MainPageForm" method="post" enctype="multipart/form-data" action="{% url 'main_page' %}">
+        {% csrf_token %}
+        <div class="mb-3 row align-items-center">
+            <label for="phone" class="col-sm-4 col-form-label">Телефон</label>
+            <div class="col-sm-8">
+                {{ form.phone }}
+                {% if form.phone.errors %}
+                    <div class="alert alert-danger">{{ form.phone.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+            <label for="description" class="col-sm-4 col-form-label">SEO текст</label>
+            <div class="col-sm-8">
+                {{ form.seo_text_main_page }}
+                {% if form.seo_text_main_page.errors %}
+                    <div class="alert alert-danger">{{ form.seo_text_main_page.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">SEO блок:</label>
+            <div class="row mb-3 align-items-center">
+                <label for="seo_url" class="col-sm-2 col-form-label">URL</label>
+                <div class="col-sm-10">
+                    {{ form.url_seo }}
+                    {% if form.url_seo.errors %}
+                        <div class="alert alert-danger">{{ form.url_seo.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <label for="seo_title" class="col-sm-2 col-form-label">Title</label>
+                <div class="col-sm-10">
+                    {{ form.title_seo }}
+                    {% if form.title_seo.errors %}
+                        <div class="alert alert-danger">{{ form.title_seo.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <label for="seo_keywords" class="col-sm-2 col-form-label">Keywords</label>
+                <div class="col-sm-10">
+                    {{ form.keywords_seo }}
+                    {% if form.keywords_seo.errors %}
+                        <div class="alert alert-danger">{{ form.keywords_seo.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <label for="seo_description" class="col-sm-2 col-form-label">Description</label>
+                <div class="col-sm-10">
+                    {{ form.description_seo }}
+                    {% if form.description_seo.errors %}
+                        <div class="alert alert-danger">{{ form.description_seo.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-secondary">Зберегти</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

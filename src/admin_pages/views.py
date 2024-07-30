@@ -1,0 +1,205 @@
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.urls import reverse
+
+from src.core.forms import GalleryImageFormSet
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Page, Contacts, MainPage
+from .forms import PageForm, GalleryImageFormSet, MainPageForm
+from django.db import transaction
+from src.core.models import GalleryImage, Gallery
+import logging
+from django.views.generic import View
+from .forms import ContactFormSet
+
+logger = logging.getLogger(__name__)
+
+
+@transaction.atomic
+def add_page(request):
+    logger.debug('Request method: %s', request.method)
+    if request.method == 'POST':
+        logger.debug('POST data: %s', request.POST)
+        logger.debug('FILES data: %s', request.FILES)
+
+        form = PageForm(request.POST, request.FILES)
+        formset = GalleryImageFormSet(request.POST, request.FILES)
+
+        if form.is_valid():
+            logger.debug('PageForm is valid')
+        else:
+            logger.debug('PageForm errors: %s', form.errors)
+
+        if formset.is_valid():
+            logger.debug('GalleryImageFormSet is valid')
+        else:
+            logger.debug('GalleryImageFormSet errors: %s', formset.errors)
+
+        if form.is_valid() and formset.is_valid():
+            page = form.save(commit=False)
+            logger.debug('Page form saved with commit=False')
+
+            # Зберігаємо головне зображення
+            main_image_id = form.cleaned_data['main_image']
+            logger.debug('Main image id: %s', main_image_id)
+            if main_image_id:
+                try:
+                    main_image = GalleryImage.objects.get(pk=main_image_id.id)
+                    logger.debug('Main image object: %s', main_image)
+                    page.main_image = main_image
+                except GalleryImage.DoesNotExist:
+                    logger.error('Main image does not exist')
+                    messages.error(request, 'Картинка не існує.')
+                    return render(request, 'admin/pages/add_page.html', {'form': form, 'formset': formset})
+
+            gallery = Gallery.objects.create()
+            logger.debug('Gallery object created: %s', gallery)
+            page.gallery = gallery
+            page.save()
+            logger.debug('Page object saved: %s', page)
+
+            formset.instance = gallery
+            formset.save(commit=True)
+            logger.debug('GalleryImageFormSet saved')
+
+            messages.success(request, 'Сторінку успішно додано.')
+            return redirect('all_page_list')
+        else:
+            messages.error(request, 'Форма або набір форм недійсні.')
+    else:
+        form = PageForm()
+        formset = GalleryImageFormSet()
+
+    logger.debug('Rendering add_page template')
+    return render(request, 'admin/pages/add_page.html', {'form': form, 'formset': formset})
+
+
+# view for get template for success page
+def page_success(request):
+    return render(request, 'admin/pages/page_success.html')
+
+
+# view for getting list of all pages
+def get_page_list(request):
+    if request.method == 'GET':
+        page_list = Page.objects.all()
+
+        pages_data = []
+        for page in page_list:
+            page_data = {
+                'id': page.id,
+                'name': page.name,
+            }
+            pages_data.append(page_data)
+
+        return JsonResponse({'pages_list': pages_data})
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+
+def page_list_view(request):
+    pages = Page.objects.all()
+    return render(request, 'admin/pages/pages_list.html', {'pages': pages})
+
+
+@transaction.atomic
+def edit_page(request, page_id):
+    page = get_object_or_404(Page, id=page_id)
+    gallery = page.gallery
+
+    if request.method == 'POST':
+        form = PageForm(request.POST, request.FILES, instance=page)
+        formset = GalleryImageFormSet(request.POST, request.FILES, instance=gallery)
+
+        if form.is_valid() and formset.is_valid():
+            page = form.save(commit=False)
+
+            # Зберігаємо головне зображення
+            new_main_image_id = form.cleaned_data.get('main_image')
+            if new_main_image_id:
+                try:
+                    new_main_image = GalleryImage.objects.get(pk=new_main_image_id.id)
+                    if page.main_image != new_main_image:
+                        page.main_image = new_main_image
+                except GalleryImage.DoesNotExist:
+                    messages.error(request, 'Картинка не існує.')
+                    return render(request, 'admin/pages/edit_page.html',
+                                  {'form': form, 'formset': formset, 'page': page, 'gallery': gallery})
+            else:
+                # Якщо нове зображення не вибране, залишаємо старе
+                page.main_image = page.main_image
+
+            # Перевірка та збереження галереї
+            if not gallery:
+                gallery = Gallery.objects.create()
+                page.gallery = gallery
+
+            page.save()
+            formset.instance = gallery
+            formset.save()
+
+            messages.success(request, 'Сторінку успішно оновлено.')
+            return redirect('all_page_list')
+        else:
+            messages.error(request, 'Форма або набір форм недійсні.')
+    else:
+        form = PageForm(instance=page)
+        formset = GalleryImageFormSet(instance=gallery)
+
+    return render(request, 'admin/pages/edit_page.html', {'form': form, 'formset': formset, 'page': page})
+
+
+# view for delete page from DB
+def delete_page(request, page_id):
+    page = get_object_or_404(Page, id=page_id)
+
+    if request.method == 'POST':
+        page.delete()
+        return redirect('page_list')
+
+    return render(request, 'admin/pages/confirm_delete_page.html', {'page': page})
+
+
+def main_page(request):
+    main_page_instance = MainPage.objects.first()
+
+    if request.method == 'POST':
+        form = MainPageForm(request.POST, request.FILES, instance=main_page_instance)
+
+        if form.is_valid():
+            main_page = form.save(commit=False)
+            main_page.save()
+            messages.success(request, 'Сторінка успішно збережена.')
+            return redirect('main_page')
+        else:
+            messages.error(request, 'Форма недійсна.')
+    else:
+        form = MainPageForm(instance=main_page_instance)
+
+    return render(request, 'admin/main_page/main_page_admin.html', {'form': form})
+
+
+class AddContactsView(View):
+    template_name = 'add_contacts.html'
+
+    def get(self, request, *args, **kwargs):
+        formset = ContactFormSet(queryset=Contacts.objects.none())
+        return render(request, self.template_name, {'formset': formset})
+
+    def post(self, request, *args, **kwargs):
+        formset = ContactFormSet(request.POST, request.FILES)
+        if formset.is_valid():
+            formset.save()
+            return redirect('contacts_list')  # Замість 'contacts_list' використовуйте URL, куди ви хочете перенаправити після збереження
+        return render(request, self.template_name, {'formset': formset})
+
+
+def pages_list(request):
+    context = {
+        'pages_list': [
+            {'name': 'Головна сторінка', 'edit_url': reverse('all_page_list')},
+            {'name': 'Всі сторінки', 'edit_url': reverse('main_page')},
+            # {'name': 'Сторінка контактів', 'edit_url': reverse('contacts_list')}
+        ]
+    }
+    return render(request, 'admin/pages.html', context)

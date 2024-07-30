@@ -1,0 +1,155 @@
+<div class="mb-3">
+    <hr>
+        <!-- Gallery images section -->
+        <div id="galleryHeader">Gallery Images</div>
+        <div id="gallery" class="d-flex flex-wrap">
+            <!-- Gallery images will be dynamically added here -->
+        </div>
+        <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#galleryImageModal" onclick="loadGalleryImages()">Add</button>
+
+        <!-- Modal for selecting gallery images -->
+        <div class="modal fade" id="galleryImageModal" tabindex="-1" aria-labelledby="galleryImageModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="galleryImageModalLabel">Select Image</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <select class="form-select" id="galleryImageSelect">
+                            <!-- Options will be dynamically added here -->
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="galleryModalCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="selectGalleryImage()">Select</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+<script>
+    function loadGalleryImages() {
+        // Fetch gallery images only if the select options are empty
+        const select = document.querySelector('#galleryImageSelect');
+        if (select && select.children.length === 0) {
+            fetch('/get_gallery_images/')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    select.innerHTML = '';
+                    data.gallery_images.forEach(image => {
+                        const option = document.createElement('option');
+                        option.setAttribute('data-image-url', image.image_url);
+                        option.textContent = image.alt_text;
+                        select.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    alert('Не вдалося завантажити зображення.');
+                });
+        }
+    }
+
+    async function selectGalleryImage() {
+        const selectedOption = document?.querySelector('#galleryImageSelect option:checked');
+        if (selectedOption) {
+            const imageUrl = selectedOption.getAttribute('data-image-url');
+            const altText = selectedOption.textContent;
+            await addImageToGallery(imageUrl, altText);
+            closeGalleryModal();
+        } else {
+            alert('Будь ласка, виберіть зображення.');
+        }
+    }
+
+    async function addImageToGallery(imageUrl, altText) {
+        const gallery = document.getElementById('gallery');
+        const divElement = document.createElement('div');
+        divElement.className = 'position-relative m-2';
+        divElement.style.width = '150px';
+        divElement.style.height = '100px';
+
+        const imgElement = document.createElement('img');
+        imgElement.src = imageUrl;
+        imgElement.className = 'img-thumbnail';
+        imgElement.style.width = '100%';
+        imgElement.style.height = '100%';
+
+        const removeIcon = document.createElement('span');
+        removeIcon.className = 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger';
+        removeIcon.style.cursor = 'pointer';
+        removeIcon.textContent = '×';
+
+        divElement.appendChild(imgElement);
+        divElement.appendChild(removeIcon);
+        gallery.appendChild(divElement);
+
+   
+
+ 
+        // отримуємо контейнер формсету, в якому зберігаються всі форми для картинок галереї (див. add_movie.html)
+        // id_galleryimage_set-TOTAL_FORMS - це спец. поле з формсетів, в якому зберігається кількість доданих картинок
+      
+        const formContainer = document.getElementById('formset-container');
+        const totalForms = document.getElementById('id_galleryimage_set-TOTAL_FORMS');
+        console.log(formContainer)
+        console.log(totalForms)
+        const currentFormCount = parseInt(totalForms.value);
+
+        /*
+        перевірка на те, чи заповнена вже перша форма 
+        якщо вона вже заповнена - то ми її клонуємо і додаємо до контейнеру формсету, і далі в неї зберігаємо картинку
+        якщо вона пуста - то далі збережемо картинку в неї
+         */
+        const firstForm = formContainer.children[0];
+        if (firstForm.querySelector('input[type="file"]').files.length !== 0) {
+          const newForm = formContainer.children[formContainer.children.length - 1].cloneNode(true);
+          newForm.innerHTML = newForm.innerHTML.replace(/galleryimage_set-(\d+)-/g, `galleryimage_set-${currentFormCount - 1}-`);
+          newForm.id = `form-${currentFormCount}`;
+          formContainer.appendChild(newForm);
+        }
+
+        /*
+         отримуємо інпути з форми, яку ми створили в пункті 4 (або існуючу початкову), і отримуємо її елементи,
+           а саме інпут для картинки та альт-тексту, і чекбокс для видалення картинки
+         */
+        const galleryForm = formContainer.children[currentFormCount - 1];
+      console.log(currentFormCount)
+      console.log(galleryForm)
+        const imageInput = galleryForm?.querySelector(`#id_galleryimage_set-${currentFormCount - 1}-image`);
+        const altTextInput = galleryForm?.querySelector(`#id_galleryimage_set-${currentFormCount - 1}-alt_text`);
+        const deleteCheckbox = galleryForm?.querySelector(`#id_galleryimage_set-${currentFormCount - 1}-DELETE`);
+
+        // завантажуємо картинку з серверу
+        
+        const imageFile = await (await fetch(`${location.origin}${imageUrl}`)).blob();
+
+        // створюємо об'єкт DataTransfer, який містить файл картинки, і присвоюємо його інпуту для картинки
+        // напряму покласти в інпут посилання на картинку чи саму картинку js не дозволяє
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(new File([imageFile], imageUrl.split('/').pop()));
+        imageInput.files = dataTransfer.files;
+        // тут присвоюємо альт-текст
+        altTextInput.value = altText;
+
+        // видалення картинки з галереї 
+        removeIcon.onclick = () => {
+          divElement.remove();
+          deleteCheckbox.checked = true;
+        };
+
+        // збільшуємо лічильник кількості форм у формсеті
+        totalForms.value = currentFormCount + 1;
+    }
+
+    function closeGalleryModal() {
+        document.getElementById('galleryModalCloseBtn').click();
+    }
+</script>

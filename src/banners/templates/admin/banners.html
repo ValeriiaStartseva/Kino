@@ -1,0 +1,26 @@
+{% extends 'admin/base_admin.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="mb-3 row align-items-center justify-content-center">
+        <label for="banner_list" class="h1">Список всіх банерів</label>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Назва банеру</th>
+                <th scope="col">Редагувати</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for banner in banner_list %}
+                <tr>
+                    <td>{{ banner.name }}</td>
+                    <td><a href="{{ banner.edit_url }}" class="btn btn-primary">Редагувати</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

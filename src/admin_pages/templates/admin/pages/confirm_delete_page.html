@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Підтвердження видалення сторінки</title>
+</head>
+<body>
+    <h1>Ви впевнені, що хочете видалити сторінку "{{ page.name }}"?</h1>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-secondary">Підтвердити видалення</button>
+    </form>
+</body>
+</html>

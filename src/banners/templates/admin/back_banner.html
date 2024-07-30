@@ -1,0 +1,61 @@
+{% extends 'admin/base_admin.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <form id="BackgroundBannerForm" method="post" enctype="multipart/form-data" action="{% url 'back_banner' %}">
+        {% csrf_token %}
+        <h2>Банер на задньому фоні</h2>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="background_type" id="flexRadioDefault1" value="css_background" onclick="toggleFields()" {% if banner_instance and banner_instance.back == 'css' %}checked{% endif %}>
+            <label class="form-check-label" for="flexRadioDefault1">
+                CSS фон
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="background_type" id="flexRadioDefault2" value="image_background" onclick="toggleFields()" {% if banner_instance and banner_instance.back == 'photo' %}checked{% endif %}>
+            <label class="form-check-label" for="flexRadioDefault2">
+                Фото
+            </label>
+        </div>
+
+        <div id="colorPicker" style="display: none;">
+            {{ form.background_color.label_tag }}
+            {{ form.background_color }}
+        </div>
+
+        <div id="imagePicker" style="display: none;">
+            {{ form.background_image.label_tag }}
+            {{ form.background_image }}
+        </div>
+
+        <input type="hidden" name="back" id="id_back" value="{{ form.back.initial }}">
+
+        <button type="submit" class="btn btn-primary mt-3">Зберегти</button>
+    </form>
+</div>
+
+<script>
+    function toggleFields() {
+        const cssOption = document.getElementById('flexRadioDefault1').checked;
+        const colorPicker = document.getElementById('colorPicker');
+        const imagePicker = document.getElementById('imagePicker');
+        const backField = document.getElementById('id_back');
+
+        if (cssOption) {
+            colorPicker.style.display = 'block';
+            imagePicker.style.display = 'none';
+            backField.value = 'css';
+        } else {
+            colorPicker.style.display = 'none';
+            imagePicker.style.display = 'block';
+            backField.value = 'photo';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleFields();
+    });
+</script>
+{% endblock %}

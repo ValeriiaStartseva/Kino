@@ -1,0 +1,82 @@
+<div class="mb-3 row align-items-center">
+    <label for="id_logo" class="col-sm-4 col-form-label">Лого</label>
+    <div class="col-sm-8 d-flex align-items-center">
+        <div class="me-3">
+            <img src="" id="id_logo" alt="img" style="width: 150px; height: 100px; border: 1px solid #ccc;">
+        </div>
+
+        <div>
+            <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#logoModal" onclick="loadLogoGalleryImages()">Завантажити</button>
+            <button class="btn btn-secondary btn-sm" id="removeLogoButton">Видалити</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="logoModal" tabindex="-1" aria-labelledby="logoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoModalLabel">Вибір картинки</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
+            </div>
+            <div class="modal-body">
+                <select class="form-select" id="logoSelect" name="logo">
+                    <!-- Options will be dynamically added here -->
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button id="logoModalCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                <button type="button" class="btn btn-primary" onclick="selectLogo()">Вибрати</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function loadLogoGalleryImages() {
+    fetch('/get_gallery_images/')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const select = document.querySelector('#logoSelect');
+            select.innerHTML = ''; // очищаємо попередні опції
+            data.gallery_images.forEach(image => {
+                const option = document.createElement('option');
+                option.value = image.id;
+                option.setAttribute('data-image-url', image.image_url);
+                option.textContent = image.alt_text;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            alert('Не вдалося завантажити зображення.');
+        });
+}
+
+function selectLogo() {
+    const selectedOption = document.querySelector('#logoSelect option:checked');
+    if (selectedOption) {
+        const imageUrl = selectedOption.getAttribute('data-image-url');
+        document.querySelector('#id_logo').setAttribute('src', imageUrl);
+        closeLogoModal();
+    } else {
+        alert('Будь ласка, виберіть зображення.');
+    }
+}
+
+function closeLogoModal() {
+    document.getElementById('logoModalCloseBtn').click();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('#removeLogoButton').addEventListener('click', function() {
+        document.querySelector('#id_logo').setAttribute('src', '');
+    });
+});
+</script>

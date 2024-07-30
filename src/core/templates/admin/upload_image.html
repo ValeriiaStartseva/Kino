@@ -1,0 +1,75 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" action="{% url 'upload_image' %}">
+    {% csrf_token %}
+
+    <div class="mb-3 row align-items-center">
+        <label for="alt_text" class="col-sm-4 col-form-label">Введіть alt-text</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control" id="alt_text" name="alt_text" placeholder="alt-text">
+            {% if form.alt_text.errors %}
+                <div class="text-danger">{{ form.alt_text.errors }}</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mb-3 row align-items-center">
+        <label for="imageInput" class="col-sm-4 col-form-label">Виберіть картинку</label>
+        <div class="col-sm-8 d-flex align-items-center">
+            <input hidden type="file" id="imageInput" name="image" accept="image/*" onchange="updateFileName()">
+            {% if form.image.errors %}
+                <div class="text-danger">{{ form.image.errors }}</div>
+            {% endif %}
+            <span id="fileName" class="me-2">Файл не обраний</span>
+            <label for="imageInput" class="btn btn-secondary">Завантажити</label>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <button type="submit" class="btn btn-secondary">Завантажити зображення</button>
+    </div>
+</form>
+
+<script>
+function updateFileName() {
+    const input = document.getElementById('imageInput');
+    const fileName = document.getElementById('fileName');
+    if (input.files.length > 0) {
+        fileName.textContent = input.files[0].name;
+    } else {
+        fileName.textContent = 'Файл не обраний';
+    }
+}
+
+document.querySelector('form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    try {
+        const response = await fetch(event.target.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Error:', errorData);
+            alert('Зображення не завантажено.');
+            return;
+        }
+
+        const data = await response.json();
+        console.log('Success:', data);
+        alert('Зображення успішно завантажено.');
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Сталася помилка при завантаженні зображення.');
+    }
+});
+</script>
+{% endblock %}

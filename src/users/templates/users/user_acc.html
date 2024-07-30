@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<body>
+<div class="cinemas-wrapper">
+    <div class="container mt-5">
+        <h1 class="mb-4 text-center">Сторінка клієнта</h1>
+        <form>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="mb-3 row align-items-center">
+                <label for="firstName" class="col-sm-4 col-form-label">Ім'я</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="firstName" aria-label="First name">
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="lastName" class="col-sm-4 col-form-label">Прізвище</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="lastName" aria-label="Last name">
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="nickname" class="col-sm-4 col-form-label">Нікнейм</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="nickname" aria-label="Nickname">
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="email" class="col-sm-4 col-form-label">Email</label>
+                <div class="col-sm-8">
+                  <input type="email" class="form-control" id="email" aria-label="Email">
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="address" class="col-sm-4 col-form-label">Адреса</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="address" aria-label="Address">
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="password" class="col-sm-4 col-form-label">Пароль</label>
+                <div class="col-sm-8">
+                  <input type="password" class="form-control" id="password" aria-label="Password">
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="rePassword" class="col-sm-4 col-form-label">Повторити пароль</label>
+                <div class="col-sm-8">
+                  <input type="password" class="form-control" id="rePassword" aria-label="RePassword">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3 row align-items-center">
+                <label class="col-sm-4 col-form-label">Мова</label>
+                <div class="col-sm-8 d-flex align-items-center">
+                  <div class="form-check me-3">
+                    <input class="form-check-input" type="radio" name="languageOptions" id="languageUkr" value="ukr">
+                    <label class="form-check-label" for="languageUkr">УКР</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="languageOptions" id="languageRus" value="rus">
+                    <label class="form-check-label" for="languageRus">РУ</label>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label class="col-sm-4 col-form-label">Стать</label>
+                <div class="col-sm-8 d-flex align-items-center">
+                  <div class="form-check me-3">
+                    <input class="form-check-input" type="radio" name="genderOptions" id="genderMale" value="male">
+                    <label class="form-check-label" for="genderMale">Ч</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="genderOptions" id="genderFemale" value="female">
+                    <label class="form-check-label" for="genderFemale">Ж</label>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="dob" class="col-sm-4 col-form-label">Дата народження</label>
+                <div class="col-sm-8">
+                  <input type="date" class="form-control" id="dob" name="dob">
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="city" class="col-sm-4 col-form-label">Місто</label>
+                <div class="col-sm-8">
+                  <select class="form-select" id="city" aria-label="City">
+                    <option selected>Оберіть місто</option>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="cardNumber" class="col-sm-4 col-form-label">Номер карти</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="cardNumber" aria-label="Card number">
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="phoneNumber" class="col-sm-4 col-form-label">Телефон</label>
+                <div class="col-sm-8">
+                  <input type="tel" class="form-control" id="phoneNumber" aria-label="Phone number">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mb-2">
+            <button type="submit" class="btn btn-primary">Зберегти</button>
+          </div>
+        </form>
+    </div>
+</div>
+
+
+</body>
+{% endblock %}

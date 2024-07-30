@@ -1,0 +1,44 @@
+{% extends 'admin/base_admin.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="mb-3 row align-items-center justify-content-center">
+        <label for="post_success" class="h1">Список всіх постів</label>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">Назва посту</th>
+                <th scope="col">Тип</th>
+                <th scope="col">Редагувати</th>
+              <th scope="col">Видалити</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr>
+                <th scope="row">{{ post.id }}</th>
+                <td>{{ post.name }}</td>
+              <td>{{ post.type }}</td>
+                <td>
+                    <a href="{% url 'edit_post' post_id=post.id %}" class="btn btn-outline-primary btn-sm">
+    <i class="fa fa-pencil" aria-hidden="true"></i> Редагувати
+</a>
+                </td>
+            <td>
+                    <a href="{% url 'delete_post' post_id=post.id %}" class="btn btn-outline-primary btn-sm">
+    <i class="fa fa-pencil" aria-hidden="true"></i> Видалити
+</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center">
+    <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'add_post' %}'">Додати новий пост</button>
+</div>
+</div>
+{% endblock %}
+

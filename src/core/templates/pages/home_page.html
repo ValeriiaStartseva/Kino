@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block user_navbar %}
+{% include 'elements/user_navbar.html' %}
+  {% endblock %}
+{% block content %}
+<div class="background-image">
+        <div class="content-container">
+            <div class="container-fluid">
+                {% block gallery %}
+                    {% include 'elements/carousel.html' %}
+                {% endblock %}
+
+                {% block movie %}
+                    {% include 'elements/watch_today.html' %}
+                {% endblock %}
+
+                {% block soon_movie %}
+                    {% include 'elements/watch_soon.html' %}
+                {% endblock %}
+
+                {% block news %}
+                    {% include 'elements/news_and_promotions.html' %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+

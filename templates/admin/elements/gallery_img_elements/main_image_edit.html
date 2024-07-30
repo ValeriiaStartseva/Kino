@@ -1,0 +1,84 @@
+<div class="mb-3 row align-items-center">
+    <label for="id_main_image" class="col-sm-4 col-form-label">Головна картинка</label>
+    <div class="col-sm-8 d-flex align-items-center">
+        <div class="me-3">
+            <img src="{{ form.instance.main_image.image.url }}" id="id_main_image_preview" alt="img" style="width: 150px; height: 100px; border: 1px solid #ccc;">
+        </div>
+        <div>
+            <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#mainImageModal" onclick="loadOneGalleryImages()">Завантажити</button>
+            <button class="btn btn-secondary btn-sm" id="removeMainImageButton">Видалити</button>
+            <input type="hidden" id="id_main_image" name="main_image" value="{{ form.instance.main_image.id }}">
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="mainImageModal" tabindex="-1" aria-labelledby="mainImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mainImageModalLabel">Вибір картинки</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
+            </div>
+            <div class="modal-body">
+                <select class="form-select" id="mainImageSelect" name="main_image">
+                    <!-- Options will be dynamically added here -->
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button id="mainModalCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                <button type="button" class="btn btn-primary" onclick="selectMainImage()">Вибрати</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function loadOneGalleryImages() {
+    fetch('/get_gallery_images/')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const select = document.querySelector('#mainImageSelect');
+            select.innerHTML = ''; // очищаємо попередні опції
+            data.gallery_images.forEach(image => {
+                const option = document.createElement('option');
+                option.value = image.id;
+                option.setAttribute('data-image-url', image.image_url);
+                option.textContent = image.alt_text;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+            alert('Не вдалося завантажити зображення.');
+        });
+}
+
+function selectMainImage() {
+    const selectedOption = document.querySelector('#mainImageSelect option:checked');
+    if (selectedOption) {
+        const imageUrl = selectedOption.getAttribute('data-image-url');
+        document.querySelector('#id_main_image_preview').setAttribute('src', imageUrl); // Оновлюємо атрибут src для превью зображення
+        document.querySelector('#id_main_image').value = selectedOption.value; // Оновлюємо приховане поле input
+        closeMainModal();
+    } else {
+        alert('Будь ласка, виберіть зображення.');
+    }
+}
+
+function closeMainModal() {
+    document.getElementById('mainModalCloseBtn').click();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('#removeMainImageButton').addEventListener('click', function() {
+        document.querySelector('#id_main_image_preview').setAttribute('src', ''); // Видаляємо превью зображення
+        document.querySelector('#id_main_image').value = ''; // Очищаємо приховане поле input
+    });
+});
+</script>

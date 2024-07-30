@@ -1,0 +1,21 @@
+{% load static %}
+
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4" style="text-align: center">Скоро в кіно</h1>
+        <div class="row">
+            {% for soon_movie in soon_movies %}
+                <div class="col-md-3 mb-4">
+                    <div class="card">
+                        <img src="{{ soon_movie.poster_url }}" height="360" class="card-img-top" alt="{{ soon_movie.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ soon_movie.title }}</h5>
+                            <h6>Дата, коли вийде</h6>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>

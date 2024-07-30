@@ -1,0 +1,37 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+}
+
+.user-profile img {
+    margin-right: 8px;
+}
+
+.close-icon {
+    position: absolute;
+    top: -3px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding-bottom: 4px;
+}
+
+.close-icon:before {
+    content: '×';
+    font-size: 16px;
+    line-height: 1;
+}

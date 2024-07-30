@@ -1,0 +1,17 @@
+# Virtual environment
+/venv/
+/env/
+
+# Ignore PyCharm project files
+.idea/
+
+
+# Ignore PyCharm project folders
+/media/
+
+
+.queries.py
+
+.venv
+
+.debug.log

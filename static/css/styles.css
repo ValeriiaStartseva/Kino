@@ -1,0 +1,156 @@
+/* styles.css */
+.navbar-brand img {
+    height: 40px;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.background-image {
+    background-image: url('/static/images/backgrounds/back.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content-container {
+    background-color: white;
+    width: 80%;
+    max-width: 1200px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.card {
+    .card-body {
+        display: flex;
+        flex-direction: column;
+    }
+}
+.carousel-inner img {
+    height: 600px;
+    object-fit: cover;
+}
+
+.banner-wrapper {
+  height: 400px;
+  img {
+    width: 100%;
+    height: 400px;
+  }
+}
+
+.banner {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+.banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+.banner-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+}
+
+.cinemas-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+  @media (max-width: 576px) {
+  .cinemas-wrapper {
+    flex-direction: column;
+  }
+  }
+
+.form-group {
+      display: flex;
+      align-items: center;
+    }
+.form-group label {
+      margin-right: 10px;
+      font-weight: bold;
+    }
+.form-check-inline {
+      margin-right: 10px;
+    }
+
+.header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px;
+}
+
+.user-profile {
+    margin-left: auto;
+}
+
+.user-profile a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.user-profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.user-profile span {
+    font-size: 16px;
+    margin-right: 10px;
+}
+.cinemas-wrapper.contacts {
+        width: 100%;
+        padding: 20px;
+    }
+    .container {
+        max-width: 1200px;
+        margin: auto;
+    }
+    .theater-list {
+        display: flex;
+        flex-direction: column; /* Вирівнює всі елементи вертикально */
+    }
+
+    .theater {
+        display: block;
+        margin-bottom: 20px; /* Додайте відступи між елементами для кращого відображення */
+    }
+
+    .theater-content {
+        display: flex;
+        flex-direction: row; /* Робить дочірні елементи горизонтально один біля одного */
+        align-items: flex-start; /* Вирівнює елементи зверху */
+        justify-content: space-between; /* Додає простір між блоками */
+    }
+
+    .theater-info {
+        flex: 1;
+        margin-right: 20px; /* Відступ між блоком інформації та картою */
+    }
+
+    .theater-map {
+        width: 300px; /* Ширина карти */
+        height: 200px; /* Висота карти */
+        flex-shrink: 0; /* Зупиняє карту від зменшення */
+    }

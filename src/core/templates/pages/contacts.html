@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% block banner %}
+  {% include 'elements/banner.html' %}
+{% endblock %}
+
+<body>
+    <div class="cinemas-wrapper contacts">
+        <div class="container mt-5">
+            <h1 class="mb-4 text-center">Контакти</h1>
+            <div class="theater-list">
+                {% for cinema in cinemas %}
+                <div class="theater">
+                    <h3>{{ cinema.cinema_name }}</h3>
+                    <div class="theater-content">
+                        <div class="theater-info">
+                            <p>Кінотеатр {{ cinema.cinema_name }}</p>
+                            <p>{{ cinema.adress_cinema_contacts }}</p>
+                            <p>Бронювання квитків: {{ cinema.numbers_contacts }}</p>
+                            <p>email: {{ cinema.email_cinema_contacts }}</p>
+                            {% if cinema.logo_url %}
+                                <img src="{% static cinema.logo_url %}" alt="{{ cinema.cinema_name }} logo">
+                            {% endif %}
+                        </div>
+                        {% if cinema.coordinates.lng and cinema.coordinates.lat %}
+                        <iframe
+                            class="theater-map"
+                            src="https://www.google.com/maps?q={{ cinema.coordinates.lat }},{{ cinema.coordinates.lng }}&hl=uk&z=14&output=embed"
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                        {% else %}
+                        <p>Координати для цього кінотеатру не вказані.</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}

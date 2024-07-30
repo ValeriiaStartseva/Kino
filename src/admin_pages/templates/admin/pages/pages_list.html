@@ -1,0 +1,42 @@
+{% extends 'admin/base_admin.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="mb-3 row align-items-center justify-content-center">
+        <label for="movie_success" class="h1">Список всіх сторінок</label>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">Назва сторінки</th>
+                <th scope="col">Редагувати</th>
+              <th scope="col">Видалити</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for page in pages %}
+            <tr>
+                <th scope="row">{{ page.id }}</th>
+                <td>{{ page.name }}</td>
+                <td>
+                    <a href="{% url 'edit_page' page_id=page.id %}" class="btn btn-outline-primary btn-sm">
+    <i class="fa fa-pencil" aria-hidden="true"></i> Редагувати
+</a>
+                </td>
+            <td>
+                    <a href="{% url 'delete_page' page_id=page.id %}" class="btn btn-outline-primary btn-sm">
+    <i class="fa fa-pencil" aria-hidden="true"></i> Видалити
+</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center">
+    <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'add_page' %}'">Додати нову сторінку</button>
+</div>
+</div>
+{% endblock %}
+
