@@ -6,6 +6,7 @@ from .models import GalleryImage, Gallery
 from django.http import JsonResponse
 from src.movies.models import Movie
 
+
 # вью для сторінки завантаження картинок в БД
 def upload_image(request):
     if request.method == 'POST':

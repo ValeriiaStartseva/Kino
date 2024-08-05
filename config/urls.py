@@ -13,8 +13,18 @@ from src.banners import views as banners_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('kino-cms/', pages_views.home_page),
-    path('my-account/', users_views.client_page),
+    # path('my-account/', users_views.client_page),
     path('contact-us/', pages_views.contact),
+
+
+    # home page
+    path('', pages_views.home_page, name="home"),
+
+
+    # user site
+    path('register/', users_views.register, name='register'),
+    path('login/', users_views.login, name='login'),
+    path('logout', users_views.logout, name='logout'),
 
     # gallery admin
     path('upload_image/', pages_views.upload_image, name='upload_image'),
@@ -47,7 +57,7 @@ urlpatterns = [
     path('pages/<int:page_id>/delete/', admin_pages_views.delete_page, name='delete_page'),
     path('pages/main_page/', admin_pages_views.main_page, name='main_page'),
     path('pages/', admin_pages_views.pages_list, name='pages_list'),
-    # path('pages/contacts', admin_pages_views.AddContactsView, name='add_contacts'),
+    path('pages/contacts', admin_pages_views.contacts_view, name='add_contacts'),
 
     # posts admin
     path('post/create/', promotion_views.add_post, name='add_post'),
@@ -61,6 +71,13 @@ urlpatterns = [
     path('banners/main_page_news_banners', banners_views.news_banners, name='main_page_news_banner'),
     path('banners/back_banners', banners_views.back_banners, name='back_banner'),
     path('banners/banner-list/', banners_views.banner_list, name='banner_list'),
+
+
+    # users admin
+    path('users/', users_views.users_list_admin, name='users_list'),
+    path('users/<int:user_id>/delete/', users_views.delete_user, name='delete_user'),
+    path('user/edit/<int:user_id>/', users_views.edit_user, name='edit_user'),
+
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

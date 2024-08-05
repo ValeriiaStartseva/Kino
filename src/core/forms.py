@@ -1,5 +1,5 @@
 from django import forms
-from .models import GalleryImage, Gallery
+from .models import GalleryImage, Gallery, SEOMixin
 
 
 class GalleryImageForm(forms.ModelForm):
@@ -18,5 +18,11 @@ class GalleryImageForm(forms.ModelForm):
         }
 
 
-GalleryImageFormSet = forms.inlineformset_factory(Gallery, GalleryImage, fields=['alt_text', 'image'], extra=10, can_delete=True
-)
+GalleryImageFormSet = forms.inlineformset_factory(Gallery, GalleryImage, fields=['alt_text', 'image'], extra=10,
+                                                  can_delete=True)
+
+
+class SEOMixinForm(forms.ModelForm):
+    class Meta:
+        model = SEOMixin
+        fields = ['url_seo', 'title_seo', 'keywords_seo', 'description_seo']

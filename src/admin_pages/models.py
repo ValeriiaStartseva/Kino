@@ -4,7 +4,6 @@ from src.core.models import SEOMixin
 from django.core.exceptions import ValidationError
 
 
-
 class Page(SEOMixin, models.Model):
     name = models.CharField(max_length=12, unique=True)
     description = models.TextField()
@@ -23,7 +22,8 @@ class Page(SEOMixin, models.Model):
         return self.name
 
 
-class Contacts(SEOMixin, models.Model):
+class Contacts(models.Model):
+    seo = models.ForeignKey(SEOMixin, on_delete=models.CASCADE, related_name='contacts', default=1)
     cinema_name = models.CharField(max_length=20, unique=True)
     adress_cinema_contacts = models.CharField(max_length=50)
     numbers_contacts = models.CharField(max_length=50)

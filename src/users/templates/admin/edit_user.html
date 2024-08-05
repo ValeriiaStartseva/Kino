@@ -1,0 +1,143 @@
+{% extends 'admin/base_admin.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'intl-tel-input/css/intlTelInput.css' %}">
+<script src="{% static 'intl-tel-input/js/intlTelInput.min.js' %}"></script>
+<script src="{% static 'intl-tel-input/js/utils.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<body>
+<div class="cinemas-wrapper">
+    <div class="container mt-5">
+        <h1 class="mb-4 text-center">Редагування користувача</h1>
+     {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <form id="editUserForm" method="post" action="{% url 'edit_user' user.id %}">
+          {% csrf_token %}
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="mb-3 row align-items-center">
+                <label for="firstName" class="col-sm-4 col-form-label">Ім'я</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="firstName" name="name" value="{{ user.name }}" aria-label="First name">
+                  <div class="text-danger" id="nameError"></div>
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="lastName" class="col-sm-4 col-form-label">Прізвище</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="lastName" name="last_name" value="{{ user.last_name }}" aria-label="Last name">
+                  <div class="text-danger" id="lastNameError"></div>
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="nickname" class="col-sm-4 col-form-label">Нікнейм</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="nickname" name="nickname" value="{{ user.nickname }}" aria-label="Nickname">
+                  <div class="text-danger" id="nicknameError"></div>
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="email" class="col-sm-4 col-form-label">Email</label>
+                <div class="col-sm-8">
+                  <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" aria-label="Email">
+                  <div class="text-danger" id="emailError"></div>
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="address" class="col-sm-4 col-form-label">Адреса</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="address" name="address" value="{{ user.address }}" aria-label="Address">
+                  <div class="text-danger" id="addressError"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3 row align-items-center">
+                <label class="col-sm-4 col-form-label">Мова</label>
+                <div class="col-sm-8 d-flex align-items-center">
+                  <div class="form-check me-3">
+                    <input class="form-check-input" type="radio" name="language" id="languageUkr" value="ua" {% if user.language == "ua" %}checked{% endif %}>
+                    <label class="form-check-label" for="languageUkr">УКР</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="language" id="languageRus" value="ru" {% if user.language == "ru" %}checked{% endif %}>
+                    <label class="form-check-label" for="languageRus">РУ</label>
+                  </div>
+                  <div class="text-danger" id="languageError"></div>
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label class="col-sm-4 col-form-label">Стать</label>
+                <div class="col-sm-8 d-flex align-items-center">
+                  <div class="form-check me-3">
+                    <input class="form-check-input" type="radio" name="gender" id="genderMale" value="M" {% if user.gender == "M" %}checked{% endif %}>
+                    <label class="form-check-label" for="genderMale">Ч</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="F" {% if user.gender == "F" %}checked{% endif %}>
+                    <label class="form-check-label" for="genderFemale">Ж</label>
+                  </div>
+                  <div class="text-danger" id="genderError"></div>
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="dob" class="col-sm-4 col-form-label">Дата народження</label>
+                <div class="col-sm-8">
+                  <input type="date" class="form-control" id="dob" name="date_birthday" value="{{ user.date_birthday|date:'Y-m-d' }}">
+                  <div class="text-danger" id="dateBirthdayError"></div>
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="city" class="col-sm-4 col-form-label">Місто</label>
+                <div class="col-sm-8">
+                  <select class="form-select" id="city" name="city" aria-label="City">
+                    <option>Оберіть місто</option>
+                    {% for city in cities %}
+                    <option value="{{ city }}" {% if user.city == city %}selected{% endif %}>{{ city }}</option>
+                    {% endfor %}
+                  </select>
+                  <div class="text-danger" id="cityError"></div>
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="cardNumber" class="col-sm-4 col-form-label">Номер карти</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="cardNumber" name="num_card" value="{{ user.num_card }}" aria-label="Card number">
+                  <div class="text-danger" id="cardNumberError"></div>
+                </div>
+              </div>
+              <div class="mb-3 row align-items-center">
+                <label for="phoneNumber" class="col-sm-4 col-form-label">Телефон</label>
+                <div class="col-sm-8">
+                  <input type="tel" class="form-control" id="phoneNumber" name="phone" value="{{ user.phone }}" aria-label="Phone number">
+                  <div class="text-danger" id="phoneError"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mb-2">
+            <button type="submit" class="btn btn-primary">Зберегти</button>
+          </div>
+        </form>
+    </div>
+</div>
+
+<script>
+  const input = document.querySelector("#phoneNumber");
+  window.intlTelInput(input, {
+    initialCountry: "ua",
+    utilsScript: "{% static 'intl-tel-input/js/utils.js' %}"
+  });
+
+</script>
+</body>
+{% endblock %}

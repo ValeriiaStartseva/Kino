@@ -1,8 +1,8 @@
-from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class UserManager(BaseUserManager):
@@ -33,10 +33,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('M', 'Male'),
     )
 
-    ROLE = (
-        ('user', 'User'),
-        ('admin', 'Admin'),
-    )
     name = models.CharField(max_length=10, blank=True)
     last_name = models.CharField(max_length=12, blank=True)
     nickname = models.CharField(max_length=10, unique=True)
@@ -45,25 +41,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     num_card = models.CharField(max_length=12)
     language = models.CharField(max_length=3, choices=LANGUAGES, default='ua')
     gender = models.CharField(max_length=1, choices=GENDERS)
-    phone = PhoneNumberField(blank=True)
+    phone = PhoneNumberField(blank=True, region='UA')
     date_birthday = models.DateField(blank=True, null=True)
     city = models.CharField(max_length=12)
-    role = models.CharField(max_length=6, choices=ROLE)
 
-    is_staff = models.BooleanField(
-        _('staff status'),
-        default=False,
-        help_text=_('Designates whether the user can log into this admin site.'),
-    )
-    is_active = models.BooleanField(
-        _('active'),
-        default=True,
-        help_text=_(
-            'Designates whether this user should be treated as active. '
-            'Unselect this instead of deleting accounts.'
-        ),
-    )
+    is_staff = models.BooleanField(_('staff status'), default=False)
+    is_active = models.BooleanField(_('active'), default=True)
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    last_login = models.DateTimeField(_('last login'), blank=True, null=True)
 
     objects = UserManager()
 

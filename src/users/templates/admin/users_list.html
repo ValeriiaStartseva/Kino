@@ -1,0 +1,160 @@
+{#{% extends 'admin/base_admin.html' %}#}
+{#{% load static %}#}
+{##}
+{#{% block content %}#}
+{#<div class="container">#}
+{#    <div class="mb-3 row align-items-center justify-content-center">#}
+{#        <label for="users_list" class="h1">Список всіх користувачів</label>#}
+{#    </div>#}
+{#    <table class="table table-striped">#}
+{#        <thead>#}
+{#            <tr>#}
+{#                <th scope="col">id</th>#}
+{#                <th scope="col">Дата реєстрації</th>#}
+{#                <th scope="col">День народження</th>#}
+{#                <th scope="col">Email</th>#}
+{#                <th scope="col">Телефон</th>#}
+{#                <th scope="col">Імʼя</th>#}
+{#                <th scope="col">Прізвище</th>#}
+{#                <th scope="col">Псевдонім</th>#}
+{#                <th scope="col">Місто</th>#}
+{#                <th scope="col" class="text-center">Редагувати</th>#}
+{#                <th scope="col" class="text-center">Видалити</th>#}
+{#            </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#            {% for user in users %}#}
+{#            <tr>#}
+{#                <th scope="row">{{ user.id }}</th>#}
+{#                <td>{{ user.registration_date|date:"Y-m-d" }}</td>#}
+{#                <td>{{ user.date_birthday }}</td>#}
+{#                <td>{{ user.email }}</td>#}
+{#                <td>{{ user.phone }}</td>#}
+{#                <td>{{ user.name }}</td>#}
+{#                <td>{{ user.last_name }}</td>#}
+{#                <td>{{ user.nickname }}</td>#}
+{#                <td>{{ user.city }}</td>#}
+{#                <td class="text-center">#}
+{#                    <a href="{% url 'edit_user' user.id %}" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center">#}
+{#                        <i class="fa fa-pencil-alt" aria-hidden="true"></i> <span class="sr-only">Редагувати</span>#}
+{#                    </a>#}
+{#                </td>#}
+{#                <td class="text-center">#}
+{#                    <a href="{% url 'delete_user' user.id %}" class="btn btn-outline-danger btn-sm d-inline-flex align-items-center">#}
+{#                        <i class="fa fa-trash-alt" aria-hidden="true"></i> <span class="sr-only">Видалити</span>#}
+{#                    </a>#}
+{#                </td>#}
+{#            </tr>#}
+{#            {% endfor %}#}
+{#        </tbody>#}
+{#    </table>#}
+{#</div>#}
+{#{% endblock %}#}
+
+
+
+{% extends 'admin/base_admin.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="mb-3 row align-items-center justify-content-center">
+        <label for="users_list" class="h1">Список всіх користувачів</label>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">Дата реєстрації</th>
+                <th scope="col">День народження</th>
+                <th scope="col">Email</th>
+                <th scope="col">Телефон</th>
+                <th scope="col">Імʼя</th>
+                <th scope="col">Прізвище</th>
+                <th scope="col">Псевдонім</th>
+                <th scope="col">Місто</th>
+                <th scope="col" class="text-center">Редагувати</th>
+                <th scope="col" class="text-center">Видалити</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <th scope="row">{{ user.id }}</th>
+                <td>{{ user.registration_date|date:"Y-m-d" }}</td>
+                <td>{{ user.date_birthday }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.phone }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.last_name }}</td>
+                <td>{{ user.nickname }}</td>
+                <td>{{ user.city }}</td>
+                <td class="text-center">
+                    <a href="{% url 'edit_user' user.id %}" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center">
+                        <i class="fa fa-pencil-alt" aria-hidden="true"></i> <span class="sr-only">Редагувати</span>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a href="{% url 'delete_user' user.id %}" class="btn btn-outline-danger btn-sm d-inline-flex align-items-center">
+                        <i class="fa fa-trash-alt" aria-hidden="true"></i> <span class="sr-only">Видалити</span>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Пагінація -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" aria-label="Перша">
+                    <span aria-hidden="true">&laquo;&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Попередня">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&laquo;&laquo;</span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">&laquo;</span>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:-5 and num < page_obj.number|add:5 %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Наступна">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Остання">
+                    <span aria-hidden="true">&raquo;&raquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&raquo;</span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">&raquo;&raquo;</span>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "admin/base_admin.html" %}
+{% load static %}
+
+{% block content %}
+<h1>Сторінка контактів</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ contact_formset.management_form }}
+    <div id="contact-forms">
+        {% for form in contact_formset %}
+            <div class="contact-form card mb-3 p-3 border" data-form-idx="{{ forloop.counter0 }}">
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {{ form.non_field_errors }}
+                <div class="form-row">
+                    {% for field in form.visible_fields %}
+                        <div class="form-group col-md-6">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {{ field.errors }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <input type="hidden" name="{{ form.DELETE.name }}" value="{{ form.DELETE.value }}">
+            </div>
+        {% endfor %}
+    </div>
+    <div class="card mb-3 p-3 border">
+        <h3>SEO блок</h3>
+        {{ seo_form.as_p }}
+    </div>
+    <button class="btn btn-primary" type="submit">Зберегти</button>
+</form>
+<button id="add-cinema" class="btn btn-primary mt-3">Додати ще кінотеатр</button>
+
+<!-- Hidden empty form for clonning -->
+<div id="empty-form" class="contact-form card mb-3 p-3 border d-none" data-form-idx="__prefix__">
+    {% for hidden in contact_formset.empty_form.hidden_fields %}
+        {{ hidden }}
+    {% endfor %}
+    {{ contact_formset.empty_form.non_field_errors }}
+    <div class="form-row">
+        {% for field in contact_formset.empty_form.visible_fields %}
+            <div class="form-group col-md-6">
+                {{ field.label_tag }}
+                {{ field }}
+                {{ field.errors }}
+            </div>
+        {% endfor %}
+    </div>
+<input type="hidden" name="DELETE" value="None">
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get the total number of forms
+    var formId = "id_contacts-TOTAL_FORMS"; // Corrected form ID
+    var formContainer = document.getElementById('contact-forms');
+    var formIdx = parseInt(document.getElementById(formId).value);
+    console.log("Initial form index: " + formIdx);
+
+    document.getElementById('add-cinema').addEventListener('click', function() {
+        console.log('Button "Add Cinema" clicked');
+
+        // Clone the last form
+        const newForm = document.getElementById('empty-form').cloneNode(true);
+        newForm.innerHTML = newForm.innerHTML.replace(/__prefix__/g, formIdx);
+        newForm.classList.remove('d-none');
+        newForm.removeAttribute('id');
+        newForm.setAttribute('data-form-idx', formIdx);
+        formContainer.appendChild(newForm);
+
+        // Clear input values
+        const inputs = newForm.querySelectorAll('input, select, textarea');
+        inputs.forEach(function(input) {
+            if (input.type === 'checkbox' || input.type === 'radio') {
+                input.checked = false;
+            } else if (input.type !== 'hidden') {
+                input.value = '';
+            }
+        });
+
+        // Clear the ID field explicitly
+        var idField = newForm.querySelector(`input[name="contacts-${formIdx}-id"]`);
+        if (idField) {
+            idField.value = '';
+            console.log('Cleared ID field for new form:', idField);
+        }
+
+        // Update form index
+        document.getElementById(formId).value = formIdx + 1;
+        formIdx += 1;
+
+        console.log("New form added with index: " + formIdx);
+    });
+
+    // Function to get the values of the form fields dynamically
+    function getFormValues(formIndex) {
+        var formset_quantity = 'id_contacts-' + formIndex + '-quantity';
+        var formset_unit_price = 'id_contacts-' + formIndex + '-unit_price';
+        var formset_total_price = 'id_contacts-' + formIndex + '-total_price';
+
+        var quantityElement = document.getElementById(formset_quantity);
+        var unitPriceElement = document.getElementById(formset_unit_price);
+        var totalPriceElement = document.getElementById(formset_total_price);
+
+        if (quantityElement && unitPriceElement && totalPriceElement) {
+            var quantityValue = quantityElement.value;
+            var unitPriceValue = unitPriceElement.value;
+            var totalPriceValue = totalPriceElement.value;
+
+            console.log('Quantity: ' + quantityValue);
+            console.log('Unit Price: ' + unitPriceValue);
+            console.log('Total Price: ' + totalPriceValue);
+        } else {
+            console.error('One or more elements not found for form index ' + formIndex);
+        }
+    }
+
+    // Example of how to use the getFormValues function
+    if (formContainer.children.length > 0) {
+        getFormValues(0); // Get values for the first form if it exists
+    }
+});
+</script>
+{% endblock %}
+

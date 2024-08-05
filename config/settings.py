@@ -74,13 +74,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
+LOGOUT_REDIRECT_URL = '/'
+
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'KinoCMS_db',
+        'NAME': 'Kino_db',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',

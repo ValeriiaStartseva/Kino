@@ -1,6 +1,6 @@
 from django import forms
-from django.forms import inlineformset_factory, modelformset_factory
-from .models import Page, GalleryImage, Gallery, MainPage, Contacts
+from django.forms import inlineformset_factory
+from .models import Page, GalleryImage, Gallery, MainPage, Contacts, SEOMixin
 
 
 class PageForm(forms.ModelForm):
@@ -41,16 +41,15 @@ class MainPageForm(forms.ModelForm):
                   'url_seo', 'title_seo', 'keywords_seo', 'description_seo')
 
 
-class ContactForm(forms.ModelForm):
-    logo = forms.ModelChoiceField(queryset=GalleryImage.objects.all(), required=True, widget=forms.HiddenInput())
-    created_at = forms.DateTimeField(widget=forms.TextInput(attrs={'readonly': 'readonly'}), required=False)
+class ContactsForm(forms.ModelForm):
+    logo = forms.ModelChoiceField(queryset=GalleryImage.objects.all(), required=True,
+                                  widget=forms.Select(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Contacts
         fields = [
             'cinema_name', 'adress_cinema_contacts', 'numbers_contacts', 'email_cinema_contacts', 'coordinates_long',
             'coordinates_lat', 'logo', 'status',
-            'url_seo', 'title_seo', 'keywords_seo', 'description_seo'
         ]
 
         widgets = {
@@ -61,12 +60,8 @@ class ContactForm(forms.ModelForm):
             'coordinates_long': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Координати, довгота'}),
             'coordinates_lat': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Координати, широта'}),
             'logo': forms.Select(attrs={'class': 'form-control'}),
-            'url_seo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'URL'}),
-            'title_seo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title'}),
-            'keywords_seo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Keywords'}),
-            'description_seo': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description'}),
-            'status': forms.CheckboxInput(attrs={'class': 'form-check-input'})
         }
 
 
-ContactFormSet = modelformset_factory(Contacts, form=ContactForm, extra=1)
+ContactsFormSet = forms.inlineformset_factory(SEOMixin, Contacts, form=ContactsForm, extra=0)
+

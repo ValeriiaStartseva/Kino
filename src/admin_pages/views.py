@@ -1,52 +1,33 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.urls import reverse
-
 from src.core.forms import GalleryImageFormSet
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import Page, Contacts, MainPage
-from .forms import PageForm, GalleryImageFormSet, MainPageForm
+from .models import Page, MainPage, SEOMixin, Contacts
+from .forms import PageForm, GalleryImageFormSet, MainPageForm, ContactsFormSet
 from django.db import transaction
 from src.core.models import GalleryImage, Gallery
 import logging
-from django.views.generic import View
-from .forms import ContactFormSet
+from src.core.forms import SEOMixinForm
 
 logger = logging.getLogger(__name__)
 
 
 @transaction.atomic
 def add_page(request):
-    logger.debug('Request method: %s', request.method)
     if request.method == 'POST':
-        logger.debug('POST data: %s', request.POST)
-        logger.debug('FILES data: %s', request.FILES)
-
         form = PageForm(request.POST, request.FILES)
         formset = GalleryImageFormSet(request.POST, request.FILES)
 
-        if form.is_valid():
-            logger.debug('PageForm is valid')
-        else:
-            logger.debug('PageForm errors: %s', form.errors)
-
-        if formset.is_valid():
-            logger.debug('GalleryImageFormSet is valid')
-        else:
-            logger.debug('GalleryImageFormSet errors: %s', formset.errors)
-
         if form.is_valid() and formset.is_valid():
             page = form.save(commit=False)
-            logger.debug('Page form saved with commit=False')
 
             # Зберігаємо головне зображення
             main_image_id = form.cleaned_data['main_image']
-            logger.debug('Main image id: %s', main_image_id)
             if main_image_id:
                 try:
                     main_image = GalleryImage.objects.get(pk=main_image_id.id)
-                    logger.debug('Main image object: %s', main_image)
                     page.main_image = main_image
                 except GalleryImage.DoesNotExist:
                     logger.error('Main image does not exist')
@@ -54,24 +35,20 @@ def add_page(request):
                     return render(request, 'admin/pages/add_page.html', {'form': form, 'formset': formset})
 
             gallery = Gallery.objects.create()
-            logger.debug('Gallery object created: %s', gallery)
             page.gallery = gallery
             page.save()
-            logger.debug('Page object saved: %s', page)
 
             formset.instance = gallery
             formset.save(commit=True)
-            logger.debug('GalleryImageFormSet saved')
 
             messages.success(request, 'Сторінку успішно додано.')
-            return redirect('all_page_list')
+            return redirect('pages_list')
         else:
             messages.error(request, 'Форма або набір форм недійсні.')
     else:
         form = PageForm()
         formset = GalleryImageFormSet()
 
-    logger.debug('Rendering add_page template')
     return render(request, 'admin/pages/add_page.html', {'form': form, 'formset': formset})
 
 
@@ -170,7 +147,7 @@ def main_page(request):
             main_page = form.save(commit=False)
             main_page.save()
             messages.success(request, 'Сторінка успішно збережена.')
-            return redirect('main_page')
+            return redirect('pages_list')
         else:
             messages.error(request, 'Форма недійсна.')
     else:
@@ -179,19 +156,52 @@ def main_page(request):
     return render(request, 'admin/main_page/main_page_admin.html', {'form': form})
 
 
-class AddContactsView(View):
-    template_name = 'add_contacts.html'
 
-    def get(self, request, *args, **kwargs):
-        formset = ContactFormSet(queryset=Contacts.objects.none())
-        return render(request, self.template_name, {'formset': formset})
 
-    def post(self, request, *args, **kwargs):
-        formset = ContactFormSet(request.POST, request.FILES)
-        if formset.is_valid():
-            formset.save()
-            return redirect('contacts_list')  # Замість 'contacts_list' використовуйте URL, куди ви хочете перенаправити після збереження
-        return render(request, self.template_name, {'formset': formset})
+@transaction.atomic
+def contacts_view(request):
+    seo_instance, created = SEOMixin.objects.get_or_create(id=1)
+
+    if request.method == 'POST':
+        logger.debug('Handling POST request')
+        seo_form = SEOMixinForm(request.POST, instance=seo_instance)
+        contact_formset = ContactsFormSet(request.POST, request.FILES, instance=seo_instance)
+
+        if seo_form.is_valid() and contact_formset.is_valid():
+            seo = seo_form.save()
+
+            try:
+                # Save the contacts formset
+                instances = contact_formset.save(commit=False)
+                for instance in instances:
+                    instance.seo = seo  # Link the SEO instance to each contact
+                    instance.save()
+                for instance in contact_formset.deleted_objects:
+                    instance.delete()
+                contact_formset.save_m2m()
+
+                messages.success(request, 'Контакти успішно оновлено')
+                return redirect('pages_list')
+            except Exception as e:
+                logger.error('Error saving forms: %s', e)
+                messages.error(request, 'Сталася помилка при збереженні контактів.')
+        else:
+            logger.warning('Form or formset invalid')
+            logger.debug('SEO form errors: %s', seo_form.errors)
+            logger.debug('Contact formset errors: %s', contact_formset.errors)
+            logger.debug('SEO form cleaned data: %s', seo_form.cleaned_data)
+            logger.debug('Contact formset cleaned data: %s', contact_formset.cleaned_data)
+            messages.error(request, 'Форма або набір форм недійсні.')
+    else:
+        logger.debug('Handling GET request')
+        seo_form = SEOMixinForm(instance=seo_instance)
+        contact_formset = ContactsFormSet(instance=seo_instance)
+
+    logger.debug('Rendering template with SEO form and contact formset')
+    return render(request, 'admin/contacts/add_contacts.html', {
+        'seo_form': seo_form,
+        'contact_formset': contact_formset,
+    })
 
 
 def pages_list(request):
@@ -199,7 +209,7 @@ def pages_list(request):
         'pages_list': [
             {'name': 'Головна сторінка', 'edit_url': reverse('all_page_list')},
             {'name': 'Всі сторінки', 'edit_url': reverse('main_page')},
-            # {'name': 'Сторінка контактів', 'edit_url': reverse('contacts_list')}
+            {'name': 'Сторінка контактів', 'edit_url': reverse('add_contacts')}
         ]
     }
     return render(request, 'admin/pages.html', context)

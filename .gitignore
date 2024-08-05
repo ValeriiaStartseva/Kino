@@ -14,4 +14,8 @@
 
 .venv
 
-.debug.log
+
+debug.log
+
+queries.py
+

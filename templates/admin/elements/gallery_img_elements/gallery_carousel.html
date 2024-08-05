@@ -91,12 +91,12 @@
         divElement.appendChild(removeIcon);
         gallery.appendChild(divElement);
 
-   
 
- 
+
+
         // отримуємо контейнер формсету, в якому зберігаються всі форми для картинок галереї (див. add_movie.html)
         // id_galleryimage_set-TOTAL_FORMS - це спец. поле з формсетів, в якому зберігається кількість доданих картинок
-      
+
         const formContainer = document.getElementById('formset-container');
         const totalForms = document.getElementById('id_galleryimage_set-TOTAL_FORMS');
         console.log(formContainer)
@@ -104,7 +104,7 @@
         const currentFormCount = parseInt(totalForms.value);
 
         /*
-        перевірка на те, чи заповнена вже перша форма 
+        перевірка на те, чи заповнена вже перша форма
         якщо вона вже заповнена - то ми її клонуємо і додаємо до контейнеру формсету, і далі в неї зберігаємо картинку
         якщо вона пуста - то далі збережемо картинку в неї
          */
@@ -128,7 +128,7 @@
         const deleteCheckbox = galleryForm?.querySelector(`#id_galleryimage_set-${currentFormCount - 1}-DELETE`);
 
         // завантажуємо картинку з серверу
-        
+
         const imageFile = await (await fetch(`${location.origin}${imageUrl}`)).blob();
 
         // створюємо об'єкт DataTransfer, який містить файл картинки, і присвоюємо його інпуту для картинки
@@ -139,7 +139,7 @@
         // тут присвоюємо альт-текст
         altTextInput.value = altText;
 
-        // видалення картинки з галереї 
+        // видалення картинки з галереї
         removeIcon.onclick = () => {
           divElement.remove();
           deleteCheckbox.checked = true;

@@ -60,7 +60,7 @@ def add_post(request):
             logger.debug('GalleryImageFormSet saved')
 
             messages.success(request, 'Сторінку успішно додано.')
-            return redirect('page_list')
+            return redirect('post_list')
         else:
             messages.error(request, 'Форма або набір форм недійсні.')
     else:
