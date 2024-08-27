@@ -24,20 +24,232 @@
         {{ formset.management_form }}
 
         <div class="mb-3">
-            {% include 'admin/elements/gallery_img_elements/gallery_carousel_edit.html' %}
-        </div>
-
-        <div id="formset-container" hidden="hidden">
-            {% for form in formset %}
-                <div id="form-{{ forloop.counter }}">
-                    {{ form.as_p }}
+          <div id="gallery" class="d-flex flex-wrap">
+    {% if formset %}
+    <div id="formset-container" class="d-flex">
+        {% for form in formset %}
+        <div class="form-item m-2">
+            {{ form.id }}
+            {% if form.instance.gallery_image %}
+            <div class="position-relative" style="width: 150px;">
+                <!-- Поле для вибору зображення -->
+                <div class="d-none">
+                    {{ form.gallery_image }}
                 </div>
-            {% endfor %}
+
+                <!-- Прев'ю зображення -->
+                <img id="image-preview-{{ forloop.counter0 }}" src="{{ form.instance.gallery_image.image.url }}" class="img-thumbnail" style="width: 100%; height: 100px;" alt="{{ form.instance.alt_text }}">
+
+                <!-- Поле для введення URL -->
+                <div class="mt-2">
+                    <label for="{{ form.url.id_for_label }}">Введіть URL</label>
+                    {{ form.url }}
+                    {% if form.url.errors %}
+                    <div class="text-danger">
+                        {{ form.url.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Поле для прихованого видалення -->
+                <div class="d-none">
+                    {{ form.DELETE }}
+                </div>
+
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="cursor: pointer;" onclick="removeImage(this, '{{ forloop.counter0 }}')">×</span>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>Немає доступних зображень для відображення.</p>
+    {% endif %}
+</div>
+
         </div>
 
-    <div class="d-flex justify-content-center">
+        <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#galleryImageModal" onclick="loadGalleryImages()">Додати</button>
+
+        <!-- Modal для вибору зображень з галереї -->
+        <div class="modal fade" id="galleryImageModal" tabindex="-1" aria-labelledby="galleryImageModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="galleryImageModalLabel">Вибрати зображення</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
+                    </div>
+                    <div class="modal-body">
+                        <select class="form-select" id="galleryImageSelect">
+                            <!-- Опції будуть динамічно додані тут -->
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="galleryModalCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                        <button type="button" class="btn btn-primary" onclick="selectGalleryImage()">Вибрати</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.querySelectorAll('input[type="file"]').forEach((fileInput, index) => {
+                const preview = document.getElementById(`image-preview-${index}`);
+                const label = document.getElementById(`image-label-${index}`);
+
+                fileInput.addEventListener('change', function(event) {
+                    if (fileInput.files && fileInput.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            preview.src = e.target.result;
+                            preview.style.display = 'block'; // Показуємо прев'ю
+                        };
+                        reader.readAsDataURL(fileInput.files[0]);
+
+                        // Робимо поле вибору файлу невидимим
+                        fileInput.classList.add('d-none');
+                        label.classList.add('d-none');
+                    }
+                });
+            });
+
+            function loadGalleryImages() {
+                const select = document.querySelector('#galleryImageSelect');
+                if (select && select.children.length === 0) {
+                    fetch('/get_gallery_images/')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Помилка мережі');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            select.innerHTML = '';
+                            data.gallery_images.forEach(image => {
+                                const option = document.createElement('option');
+                                option.setAttribute('data-image-url', image.image_url);
+                                option.textContent = image.alt_text;
+                                option.value = image.id;
+                                select.appendChild(option);
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Помилка завантаження:', error);
+                            alert('Не вдалося завантажити зображення.');
+                        });
+                }
+            }
+
+            function removeImage(spanElement, formIndex) {
+                const imageContainer = spanElement.parentElement;
+                const deleteCheckbox = document.querySelector(`#id_banner_images-${formIndex}-DELETE`);
+
+                if (deleteCheckbox) {
+                    deleteCheckbox.checked = true;
+                    deleteCheckbox.value = 'on';  // Додайте це, щоб переконатися, що значення передається
+                    imageContainer.style.display = 'none';  // Приховуємо зображення замість видалення з DOM
+                } else {
+                    console.error(`Не вдалося знайти елемент з id #id_banner_images-${formIndex}-DELETE`);
+                }
+            }
+
+            async function selectGalleryImage() {
+                const selectedOption = document.querySelector('#galleryImageSelect option:checked');
+                if (selectedOption) {
+                    const imageUrl = selectedOption.getAttribute('data-image-url');
+                    const altText = selectedOption.textContent;
+                    const imageId = selectedOption.value;
+                    await addImageToGallery(imageId, imageUrl, altText);
+                    closeGalleryModal();
+                } else {
+                    alert('Будь ласка, виберіть зображення.');
+                }
+            }
+
+            async function addImageToGallery(imageId, imageUrl, altText) {
+                const gallery = document.getElementById('gallery');
+                const divElement = document.createElement('div');
+                divElement.className = 'position-relative m-2';
+                divElement.style.width = '150px';
+                divElement.style.height = '150px';
+
+                const imgElement = document.createElement('img');
+                imgElement.src = imageUrl;
+                imgElement.className = 'img-thumbnail';
+                imgElement.style.width = '100%';
+                imgElement.style.height = '100px';
+
+                const urlInput = document.createElement('input');
+                urlInput.type = 'text';
+                urlInput.className = 'form-control mt-2';
+                urlInput.placeholder = 'Введіть URL';
+
+                const removeIcon = document.createElement('span');
+                removeIcon.className = 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger';
+                removeIcon.style.cursor = 'pointer';
+                removeIcon.textContent = '×';
+
+                divElement.appendChild(imgElement);
+                divElement.appendChild(urlInput);
+                divElement.appendChild(removeIcon);
+                gallery.appendChild(divElement);
+
+                const formContainer = document.getElementById('formset-container');
+                const totalForms = document.getElementById('id_banner_images-TOTAL_FORMS');
+
+                if (!formContainer || !totalForms) {
+                    console.error("Не вдалося знайти formContainer або totalForms.");
+                    return;
+                }
+
+                const currentFormCount = parseInt(totalForms.value);
+
+                // Створення нової форми
+                const newForm = document.createElement('div');
+                newForm.classList.add('d-none');
+                newForm.innerHTML = `
+                    <input type="hidden" name="banner_images-${currentFormCount}-gallery_image" id="id_banner_images-${currentFormCount}-gallery_image" value="${imageId}">
+                    <input type="hidden" name="banner_images-${currentFormCount}-DELETE" id="id_banner_images-${currentFormCount}-DELETE">
+                    <input type="file" name="banner_images-${currentFormCount}-image" id="id_banner_images-${currentFormCount}-image">
+                    <input type="text" name="banner_images-${currentFormCount}-url" id="id_banner_images-${currentFormCount}-url">
+                `;
+                newForm.id = `form-${currentFormCount}`;
+                formContainer.appendChild(newForm);
+
+                const imageInput = newForm.querySelector(`#id_banner_images-${currentFormCount}-image`);
+                const urlInputForm = newForm.querySelector(`#id_banner_images-${currentFormCount}-url`);
+                const deleteCheckbox = newForm.querySelector(`#id_banner_images-${currentFormCount}-DELETE`);
+
+                if (!imageInput || !urlInputForm || !deleteCheckbox) {
+                    console.error("Не вдалося знайти одне з полів форми.");
+                    return;
+                }
+
+                const imageFile = await (await fetch(`${location.origin}${imageUrl}`)).blob();
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(new File([imageFile], imageUrl.split('/').pop()));
+                imageInput.files = dataTransfer.files;
+
+                urlInputForm.value = urlInput.value;
+
+                removeIcon.onclick = () => {
+                    divElement.remove();
+                    deleteCheckbox.checked = true;
+                };
+
+                totalForms.value = currentFormCount + 1;
+            }
+
+            function closeGalleryModal() {
+                document.getElementById('galleryModalCloseBtn').click();
+            }
+        </script>
+
+        <div class="d-flex justify-content-center">
             <button type="submit" class="btn btn-secondary">Зберегти</button>
         </div>
     </form>
 </div>
 {% endblock %}
+
+

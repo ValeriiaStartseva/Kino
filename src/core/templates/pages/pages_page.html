@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="background-image">
+    <div class="content-container mt-5">
+        <div class="container-fluid">
+            <!-- Main Image Banner -->
+            <div class="container mt-4">
+                <div class="main-image-banner" style="padding-bottom: 20px;">
+                    <img src="{{ page.main_image.image.url }}" alt="{{ page.name }}" class="img-fluid w-100">
+                </div>
+            </div>
+
+            <!-- Опис сторінки -->
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <h2 class="text-center">{{ page.name }}</h2>
+                    <p>{{ page.description }}</p>
+                </div>
+            </div>
+
+            <!-- Галерея -->
+            <div class="row mt-5">
+                <div class="col-md-12 text-center">
+                    <h3>Фотогалерея</h3>
+                    <div id="carouselGalleryIndicators" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            {% for image in page.gallery.galleryimage_set.all %}
+                              <button type="button" data-bs-target="#carouselGalleryIndicators" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" aria-current="true" aria-label="Slide {{ forloop.counter }}"></button>
+                            {% endfor %}
+                        </div>
+                        <div class="carousel-inner">
+                            {% for image in page.gallery.galleryimage_set.all %}
+                              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ image.caption }}">
+                              </div>
+                            {% endfor %}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselGalleryIndicators" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselGalleryIndicators" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

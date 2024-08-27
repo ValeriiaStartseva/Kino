@@ -1,8 +1,8 @@
 from src.core.forms import GalleryImageFormSet
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import MainPageBanners, Gallery, MainPageNewsBanners, BackgroundBanner
-from .forms import MainPageBannersForm, GalleryImageFormSet, MainPageNewsBannersForm, BackgroundBannerForm
+from .models import MainPageBanners, MainPageNewsBanners, BackgroundBanner
+from .forms import MainPageBannersForm, MainPageNewsBannersForm, BackgroundBannerForm, BannerImageFormSet_main, MainPageBanners, BannerImageFormSet_news
 from django.db import transaction
 from django.urls import reverse
 import logging
@@ -10,67 +10,108 @@ import logging
 # Set up logging
 logger = logging.getLogger(__name__)
 
+
 @transaction.atomic
 def main_banners(request):
+    logger.info("Виклик функції main_banners.")
     banner_instance = MainPageBanners.objects.first()
 
+    if banner_instance:
+        logger.info(f"Знайдено екземпляр MainPageBanners з ID: {banner_instance.id}")
+    else:
+        logger.warning("Не знайдено жодного екземпляру MainPageBanners. Буде створений новий.")
+
     if request.method == 'POST':
+        logger.info("Отримано POST запит на збереження банера.")
+
         form = MainPageBannersForm(request.POST, request.FILES, instance=banner_instance)
-        formset = GalleryImageFormSet(request.POST, request.FILES,
-                                      instance=banner_instance.gallery if banner_instance else None)
+        formset = BannerImageFormSet_main(request.POST, request.FILES, instance=banner_instance)
+        print(request.POST)
+        print(request.FILES)
+        if form.is_valid():
+            logger.info("Основна форма MainPageBannersForm дійсна.")
+        else:
+            logger.error(f"Помилки в основній формі: {form.errors}")
+
+        if formset.is_valid():
+            logger.info("Формсет BannerImageFormSet_main дійсний.")
+        else:
+            logger.error(f"Помилки у формсеті: {formset.errors}")
 
         if form.is_valid() and formset.is_valid():
-            main_banner = form.save(commit=False)
+            main_banner = form.save()
+            logger.info(f"Банер MainPageBanners збережено з ID: {main_banner.id}")
 
-            if not banner_instance:
-                gallery = Gallery.objects.create()
-                main_banner.gallery = gallery
-
-            main_banner.save()
-
-            formset.instance = main_banner.gallery
-            formset.save(commit=True)
+            formset.instance = main_banner
+            formset.save()
+            logger.info(f"Формсет збережено для банера з ID: {main_banner.id}")
 
             messages.success(request, 'Банер успішно збережено.')
-            return redirect('main_page_banner')
+            logger.info("Повідомлення про успішне збереження банера відправлено користувачу.")
+            return redirect('banner_list')
         else:
+            logger.error("Форма або формсет недійсні. Збереження не виконано.")
             messages.error(request, 'Форма або набір форм недійсні.')
-    else:
-        form = MainPageBannersForm(instance=banner_instance)
-        formset = GalleryImageFormSet(instance=banner_instance.gallery if banner_instance else None)
 
+    else:
+        logger.info("Отримано GET запит для відображення форми редагування банера.")
+        form = MainPageBannersForm(instance=banner_instance)
+        formset = BannerImageFormSet_main(instance=banner_instance)
+
+    logger.info("Відображення шаблону редагування банера.")
     return render(request, 'admin/main_page_banner.html', {'form': form, 'formset': formset})
+
 
 @transaction.atomic
 def news_banners(request):
+    logger.info("Виклик функції news_banners.")
     banner_instance = MainPageNewsBanners.objects.first()
 
+    if banner_instance:
+        logger.info(f"Знайдено екземпляр MainPageBanners з ID: {banner_instance.id}")
+    else:
+        logger.warning("Не знайдено жодного екземпляру MainPageBanners. Буде створений новий.")
+
     if request.method == 'POST':
+        logger.info("Отримано POST запит на збереження банера.")
+
         form = MainPageNewsBannersForm(request.POST, request.FILES, instance=banner_instance)
-        formset = GalleryImageFormSet(request.POST, request.FILES,
-                                      instance=banner_instance.gallery if banner_instance else None)
+        formset = BannerImageFormSet_news(request.POST, request.FILES, instance=banner_instance)
+        print(request.POST)
+        print(request.FILES)
+        if form.is_valid():
+            logger.info("Основна форма MainPageBannersForm дійсна.")
+        else:
+            logger.error(f"Помилки в основній формі: {form.errors}")
+
+        if formset.is_valid():
+            logger.info("Формсет BannerImageFormSet_main дійсний.")
+        else:
+            logger.error(f"Помилки у формсеті: {formset.errors}")
 
         if form.is_valid() and formset.is_valid():
-            news_banner = form.save(commit=False)
+            news_banner = form.save()
+            logger.info(f"Банер MainPageBanners збережено з ID: {news_banner.id}")
 
-            if not banner_instance:
-                gallery = Gallery.objects.create()
-                news_banner.gallery = gallery
-
-            news_banner.save()
-
-            formset.instance = news_banner.gallery
-            formset.save(commit=True)
+            formset.instance = news_banner
+            formset.save()
+            logger.info(f"Формсет збережено для банера з ID: {news_banner.id}")
 
             messages.success(request, 'Банер успішно збережено.')
-            return redirect('main_page_news_banner')
+            logger.info("Повідомлення про успішне збереження банера відправлено користувачу.")
+            return redirect('banner_list')
         else:
+            logger.error("Форма або формсет недійсні. Збереження не виконано.")
             messages.error(request, 'Форма або набір форм недійсні.')
-    else:
-        form = MainPageNewsBannersForm(instance=banner_instance)
-        formset = GalleryImageFormSet(instance=banner_instance.gallery if banner_instance else None)
 
+    else:
+        logger.info("Отримано GET запит для відображення форми редагування банера.")
+        form = MainPageNewsBannersForm(instance=banner_instance)
+        formset = BannerImageFormSet_news(instance=banner_instance)
+
+    logger.info("Відображення шаблону редагування банера.")
     return render(request, 'admin/news_banner.html', {'form': form, 'formset': formset})
+
 
 
 @transaction.atomic

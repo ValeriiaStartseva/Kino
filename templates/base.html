@@ -15,9 +15,9 @@
 
 <body>
     {% block user_navbar %}{% endblock %}
-    
+
     {% block navbar %}
-    {% include 'elements/navbar.html' %}
+    {% include 'elements/navbar.html' with pages=pages %}
     {% endblock %}
 
 

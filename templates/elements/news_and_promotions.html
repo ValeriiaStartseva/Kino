@@ -1,22 +1,29 @@
-{% load static %}
-
 <div class="container mt-5">
     <h1 class="mb-4" style="text-align: center">Новини та Акції</h1>
 </div>
 
-
 <div id="carouselExampleIndicators1" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-indicators">
-    {% for item in carousel_news %}
-      <button type="button" data-bs-target="#carouselExampleIndicators1" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" aria-current="true" aria-label="Slide {{ forloop.counter }}"></button>
+    {% for banner in carousel_news %}
+      {% for image in banner.news_images.all %}
+        <button type="button" data-bs-target="#carouselExampleIndicators1" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.parentloop.first and forloop.first %}active{% endif %}" aria-current="true" aria-label="Slide {{ forloop.counter }}"></button>
+      {% endfor %}
     {% endfor %}
   </div>
     
   <div class="carousel-inner">
-    {% for item in carousel_news %}
-      <div class="carousel-item {% if forloop.first %}active{% endif %}">
-        <img src="{{ item.poster_url }}" class="d-block w-100" alt="{{ item.caption }}">
-      </div>
+    {% for banner in carousel_news %}
+      {% for image in banner.news_images.all %}
+        <div class="carousel-item {% if forloop.parentloop.first and forloop.first %}active{% endif %}" data-bs-interval="{{ banner.rotation_speed }}">
+          {% if image.url %}
+            <a href="{{ image.url }}">
+              <img src="{{ image.gallery_image.image.url }}" class="d-block w-100" alt="{{ image.gallery_image.alt_text }}">
+            </a>
+          {% else %}
+            <img src="{{ image.gallery_image.image.url }}" class="d-block w-100" alt="{{ image.gallery_image.alt_text }}">
+          {% endif %}
+        </div>
+      {% endfor %}
     {% endfor %}
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators1" data-bs-slide="prev">
@@ -28,5 +35,3 @@
     <span class="visually-hidden">Next</span>
   </button>
 </div>
-    
- 

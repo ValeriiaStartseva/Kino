@@ -13,9 +13,8 @@
 .queries.py
 
 .venv
-
+.env
 
 debug.log
 
-queries.py
 

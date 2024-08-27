@@ -2,7 +2,7 @@ from django import forms
 from django.forms.widgets import PasswordInput, EmailInput
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from .models import User
-
+from django.contrib.auth import authenticate
 
 # create or register a user
 class RegistrationForm(UserCreationForm):
@@ -13,13 +13,22 @@ class RegistrationForm(UserCreationForm):
 
 
 # authenticate a user
-class LoginForm(AuthenticationForm):
-    email = forms.EmailField(widget=forms.EmailInput())
-    password = forms.CharField(widget=PasswordInput())
 
-    class Meta:
-        model = User
-        fields = ['email', 'password']
+class LoginForm(forms.Form):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=PasswordInput(attrs={'class': 'form-control'}))
+
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        password = self.cleaned_data.get('password')
+        if email and password:
+            self.user = authenticate(email=email, password=password)
+            if not self.user:
+                raise forms.ValidationError('Invalid email or password')
+        return self.cleaned_data
+
+    def get_user(self):
+        return self.user
 
 
 class UserUpdateForm(UserChangeForm):

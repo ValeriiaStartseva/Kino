@@ -1,0 +1,36 @@
+<!-- Афіша -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="background-image">
+    <div class="content-container mt-5">
+        <div class="container-fluid">
+            <!-- Заголовок сторінки -->
+            <div class="row mb-4">
+                <div class="col-md-12 text-center">
+                    <h2 class="text-dark">В кіно сьогодні</h2>
+                </div>
+            </div>
+
+            <!-- Список фільмів -->
+            <div class="row">
+                {% for movie in movies %}
+                    <div class="col-md-3 mb-4">
+                        <div class="card bg-dark text-light h-100">
+                            <img src="{{ movie.main_image.image.url }}" class="card-img-top" alt="{{ movie.name }}">
+                            <div class="card-body d-flex flex-column text-center">
+                                <h5 class="card-title">
+                                    <a href="{% url 'movie_detail' movie.slug %}" class="text-warning">{{ movie.name }}</a>
+                                </h5>
+                                <a href="{% url 'movie_detail' movie.slug %}" class="btn btn-warning mt-auto">Детальніше</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

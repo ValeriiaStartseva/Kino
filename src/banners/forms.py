@@ -1,52 +1,62 @@
 from django import forms
-from .models import MainPageBanners, MainPageNewsBanners, BackgroundBanner
+from .models import MainPageBanners, MainPageNewsBanners, BackgroundBanner, BannerImage
 from django.forms import inlineformset_factory
-from src.core.models import Gallery, GalleryImage
+
+
+BannerImageFormSet_main = inlineformset_factory(
+    MainPageBanners,
+    BannerImage,
+    fields=('gallery_image', 'url'),
+    extra=0,
+    widgets={
+        'gallery_image': forms.Select(attrs={'class': 'form-control'}),
+        'url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Посилання на сторінку'}),
+    }
+)
+
+BannerImageFormSet_news = inlineformset_factory(
+    MainPageNewsBanners,
+    BannerImage,
+    fields=('gallery_image', 'url'),
+    extra=0,
+    widgets={
+        'gallery_image': forms.Select(attrs={'class': 'form-control'}),
+        'url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Посилання на сторінку'}),
+    }
+)
+
+
+class BannerImageForm(forms.ModelForm):
+    class Meta:
+        model = BannerImage
+        fields = ['gallery_image', 'url']
+        widgets = {
+            'gallery_image': forms.HiddenInput(),
+        }
 
 
 class MainPageBannersForm(forms.ModelForm):
-    gallery_form = forms.ModelMultipleChoiceField(queryset=GalleryImage.objects.all(), required=False,
-                                                  widget=forms.CheckboxSelectMultiple)
-
     class Meta:
         model = MainPageBanners
         fields = [
-            'rotation_speed', 'gallery_form', 'status',
+            'rotation_speed', 'status',
         ]
         widgets = {
             'rotation_speed': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Швидкість'}),
-            'gallery_form': forms.SelectMultiple(attrs={'class': 'form-control'}),
-            'status': forms.CheckboxInput(attrs={'class': 'form-check-input'})
+            'status': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if self.instance.pk:
-            self.fields['gallery_form'].queryset = GalleryImage.objects.filter(gallery=self.instance.gallery)
-
-
-GalleryImageFormSet = inlineformset_factory(Gallery, GalleryImage, fields=('alt_text', 'image'), extra=1)
 
 
 class MainPageNewsBannersForm(forms.ModelForm):
-    gallery_form = forms.ModelMultipleChoiceField(queryset=GalleryImage.objects.all(), required=False,
-                                                  widget=forms.CheckboxSelectMultiple)
-
     class Meta:
         model = MainPageNewsBanners
         fields = [
-            'rotation_speed', 'gallery_form', 'status',
+            'rotation_speed', 'status',
         ]
         widgets = {
             'rotation_speed': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Швидкість'}),
-            'gallery_form': forms.SelectMultiple(attrs={'class': 'form-control'}),
-            'status': forms.CheckboxInput(attrs={'class': 'form-check-input'})
+            'status': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if self.instance.pk:
-            self.fields['gallery_form'].queryset = GalleryImage.objects.filter(gallery=self.instance.gallery)
 
 
 class BackgroundBannerForm(forms.ModelForm):

@@ -7,41 +7,52 @@ from django.core.paginator import Paginator
 from django.db import transaction
 from django.contrib import messages
 from django.urls import reverse
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 def register(request):
     cities = ['Київ', 'Львів', 'Одеса', 'Харків', 'Дніпро']
+    logger.info('Register view called. Request method: %s', request.method)
+
     if request.method == 'POST':
+        logger.debug('POST data received: %s', request.POST)
         form = RegistrationForm(request.POST)
+
         if form.is_valid():
+            logger.info('Form is valid. Saving user.')
             user = form.save()
             user.set_password(form.cleaned_data.get('password1'))
             user.save()
+            logger.info('User %s saved successfully.', user.email)
             return JsonResponse({'form_is_valid': True, 'redirect_url': '/login/'})
         else:
             errors = {field: error[0] for field, error in form.errors.items()}
+            logger.warning('Form is not valid. Errors: %s', errors)
             return JsonResponse({'form_is_valid': False, 'errors': errors})
     else:
         form = RegistrationForm()
+
+    logger.debug('Rendering register page with form.')
     return render(request, 'users/register.html', {'form': form, 'cities': cities})
 
 
 def login(request):
     if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password')
-            user = authenticate(request, email=email, password=password)
-            if user is not None:
-                auth_login(request, user)
-                return redirect('home')
-            else:
-                form.add_error(None, 'Invalid email or password')
+        loginform = LoginForm(request.POST)
+        if loginform.is_valid():
+            auth_login(request, loginform.get_user())
+            return redirect('home')
+        else:
+            logging.error(f"Login form is not valid: {loginform.errors}")
     else:
-        form = LoginForm()
-    context = {'form': form}
+        loginform = LoginForm()
+    context = {'loginform': loginform}
     return render(request, 'users/login.html', context)
+
+
 
 
 def logout(request):

@@ -9,16 +9,35 @@ from src.promotion import views as promotion_views
 from django.conf import settings
 from django.conf.urls.static import static
 from src.banners import views as banners_views
+from src.newsletter import views as newsletter_views
 
 urlpatterns = [
+
+
     path('admin/', admin.site.urls),
     path('kino-cms/', pages_views.home_page),
-    # path('my-account/', users_views.client_page),
-    path('contact-us/', pages_views.contact),
+
 
 
     # home page
     path('', pages_views.home_page, name="home"),
+
+    # pages site
+    path('movies/<slug:slug>/', pages_views.movie_detail, name='movie_detail'),
+    path('cinemas/<slug:slug>/', pages_views.cinema_detail, name='cinema_detail'),
+    path('halls/<slug:slug>/', pages_views.hall_detail, name='hall_detail'),
+    path('billboard/', pages_views.billboard, name='billboard'),
+    path('coming-soon/', pages_views.coming_soon, name='coming_soon'),
+    path('pages/<slug:slug>/', pages_views.page_detail, name='page_detail'),
+    path('promotions/', pages_views.promotions, name='promotions'),
+    path('promotion/<slug:slug>/', pages_views.promotion_detail, name='promotion_detail'),
+    path('news/', pages_views.news, name='news'),
+    path('news/<slug:slug>/', pages_views.news_detail, name='news_detail'),
+    path('contact-us/', pages_views.contact, name='contact_us'),
+    path('timetable/', pages_views.timetable_view, name='timetable'),
+    path('booking/<int:showtime_id>/', pages_views.booking_view, name='booking'),
+
+
 
 
     # user site
@@ -66,7 +85,7 @@ urlpatterns = [
     path('posts/', promotion_views.post_list_view, name='post_list'),
     path('posts/<int:post_id>/delete/', promotion_views.delete_post, name='delete_post'),
 
-    # banners
+    # banners admin
     path('banners/main_page_banners', banners_views.main_banners, name='main_page_banner'),
     path('banners/main_page_news_banners', banners_views.news_banners, name='main_page_news_banner'),
     path('banners/back_banners', banners_views.back_banners, name='back_banner'),
@@ -77,6 +96,13 @@ urlpatterns = [
     path('users/', users_views.users_list_admin, name='users_list'),
     path('users/<int:user_id>/delete/', users_views.delete_user, name='delete_user'),
     path('user/edit/<int:user_id>/', users_views.edit_user, name='edit_user'),
+
+
+    # email newsletter
+    path('email-campaign/', newsletter_views.email_campaign_view, name='email_campaign'),
+    path('save-selected-users/', newsletter_views.save_selected_users, name='save_selected_users'),
+    path('delete-template/<int:template_id>/', newsletter_views.delete_template, name='delete_template'),
+    path('email-campaign/progress/<int:campaign_id>/', newsletter_views.check_campaign_progress, name='check_campaign_progress'),
 
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

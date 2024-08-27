@@ -213,3 +213,6 @@ def pages_list(request):
         ]
     }
     return render(request, 'admin/pages.html', context)
+
+
+

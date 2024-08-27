@@ -5,25 +5,28 @@
         <a class="nav-link" href="#">Статистика</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="http://localhost:8000/banners/banner-list/">Банера/Слайдери</a>
+        <a class="nav-link" href="{% url 'upload_image' %}">Галерея</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="http://localhost:8000/movies/">Фільми</a>
+        <a class="nav-link" href="{% url 'banner_list' %}">Банера</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="http://localhost:8000/cinemas/">Кінотеатри</a>
+        <a class="nav-link" href="{% url 'movie_list' %}">Фільми</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="http://localhost:8000/posts/">Новини/Акції</a>
+        <a class="nav-link" href="{% url 'cinema_list' %}">Кінотеатри</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="http://localhost:8000/pages/">Сторінки</a>
+        <a class="nav-link" href="{% url 'post_list' %}">Новини/Акції</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'pages_list' %}">Сторінки</a>
       </li>
       <li class="nav-item">
   <a class="nav-link" href="{% url 'users_list' %}">Користувачі</a>
 </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Розсилка</a>
+        <a class="nav-link" href="{% url 'email_campaign' %}">Розсилка</a>
       </li>
     </ul>
   </nav>

@@ -2,7 +2,8 @@ from django.db import models
 from src.core.models import Gallery, GalleryImage
 from src.core.models import SEOMixin
 from multiselectfield import MultiSelectField
-
+from django.utils.text import slugify
+from django import template
 
 class Movie(SEOMixin, models.Model):
     AGE_CHOICES = (
@@ -18,6 +19,7 @@ class Movie(SEOMixin, models.Model):
     )
 
     name = models.CharField(max_length=20, unique=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     description = models.TextField()
     trailer = models.URLField()
 
@@ -34,3 +36,17 @@ class Movie(SEOMixin, models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+
+
+
+register = template.Library()
+
+@register.filter
+def youtube_embed_url(url):
+    return url.replace("watch?v=", "embed/")

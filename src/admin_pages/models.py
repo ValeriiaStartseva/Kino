@@ -2,10 +2,12 @@ from django.db import models
 from src.core.models import Gallery, GalleryImage
 from src.core.models import SEOMixin
 from django.core.exceptions import ValidationError
+from django.utils.text import slugify
 
 
 class Page(SEOMixin, models.Model):
     name = models.CharField(max_length=12, unique=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=False)
@@ -20,6 +22,11 @@ class Page(SEOMixin, models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class Contacts(models.Model):

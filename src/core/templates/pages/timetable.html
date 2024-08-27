@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row my-4">
+        <div class="col-md-12">
+            <h2>Розклад фільмів</h2>
+        </div>
+    </div>
+
+    <!-- Фільтрація -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <form method="get" id="filter-form" class="d-flex flex-wrap align-items-center">
+                <label class="me-2">Показувати тільки:</label>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="format" id="format3D" value="3D" {% if '3D' in selected_formats %}checked{% endif %}>
+                    <label class="form-check-label" for="format3D">3D</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="format" id="format2D" value="2D" {% if '2D' in selected_formats %}checked{% endif %}>
+                    <label class="form-check-label" for="format2D">2D</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="format" id="formatIMAX" value="IMAX" {% if 'IMAX' in selected_formats %}checked{% endif %}>
+                    <label class="form-check-label" for="formatIMAX">IMAX</label>
+                </div>
+
+                <div class="form-group mb-2 ms-3">
+                    <label for="cinema">Кінотеатр: </label>
+                    <select name="cinema" id="cinema" class="form-control mx-sm-3">
+                        <option value="">Всі</option>
+                        {% for cinema in cinemas %}
+                            <option value="{{ cinema.id }}" {% if selected_cinema == cinema.id|stringformat:"s" %}selected{% endif %}>{{ cinema.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group mb-2 ms-3">
+                    <label for="date">Дата: </label>
+                    <input type="date" name="date" id="date" class="form-control mx-sm-3" value="{{ selected_date }}">
+                </div>
+
+                <div class="form-group mb-2 ms-3">
+                    <label for="hall">Зал: </label>
+                    <select name="hall" id="hall" class="form-control mx-sm-3">
+                        <option value="">Всі</option>
+                        {% for hall in halls %}
+                            <option value="{{ hall.id }}" {% if selected_hall == hall.id|stringformat:"s" %}selected{% endif %}>{{ hall.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-warning mt-auto">Показати</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Розклад фільмів -->
+    <div class="row">
+        <div class="col-md-12">
+            {% for showtime in showtimes %}
+                <div class="timetable-day">
+                    <h4>{{ showtime.date|date:"d M, l" }}</h4>
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Час</th>
+                                <th>Фільм</th>
+                                <th>Зал</th>
+                                <th>Ціна в грн.</th>
+                                <th>Бронювання</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for session in showtime.sessions %}
+                                <tr>
+                                    <td>{{ session.show_time|date:"H:i" }}</td>
+                                    <td>{{ session.movie_id.name }}</td>
+                                    <td>{{ session.hall_id.name }}</td>
+                                    <td>{{ session.price }}</td>
+                                    <td><a href="{% url 'booking' session.id %}" class="btn btn-warning">Бронювати</a></td> <!-- Перехід на сторінку бронювання -->
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

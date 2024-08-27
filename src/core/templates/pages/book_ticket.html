@@ -1,0 +1,190 @@
+<!-- Сторінка для бронювання квитка -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="background-image">
+    <div class="content-container mt-5">
+        <div class="container-fluid">
+            <!-- Main Banner Image -->
+            <div class="container mt-4">
+                <div class="main-image-banner" style="padding-bottom: 20px;">
+                    <img src="{{ showtime.hall_id.main_image.image.url }}" class="img-fluid w-100" alt="{{ showtime.hall_id.name }}">
+                </div>
+            </div>
+
+            <!-- Заголовок сторінки -->
+            <div class="row mb-4">
+                <div class="col-md-12 text-center">
+                    <h2 class="text-dark">Бронювання квитка</h2>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Ліва колонка з головною картинкою фільму -->
+                <div class="col-md-3">
+                    <img src="{{ showtime.movie_id.main_image.image.url }}" class="img-fluid" alt="{{ showtime.movie_id.name }}">
+                    <h3>{{ showtime.movie_id.name }}</h3>
+                    <p><strong>Дата і час:</strong> {{ showtime.show_time|date:"d M Y, H:i" }}</p>
+                    <p><strong>Ціна:</strong> {{ showtime.price }} грн.</p>
+                    <p><strong>Зал:</strong> {{ showtime.hall_id.name }}</p>
+                </div>
+
+                <!-- Основний контент - схема залу -->
+                <div class="col-md-9">
+                    <h4>Обрати місце:</h4>
+                    <div id="seating-chart" class="seating-chart-container">
+                        <!-- Тут буде відмалювана схема -->
+                    </div>
+
+                    <!-- Кнопка бронювання та відображення загальної вартості -->
+                    <div class="mt-4">
+                        {% if user.is_authenticated %}
+                            <button id="book-tickets" class="btn btn-primary">Забронювати</button>
+                        {% else %}
+                            <p>Для того, щоб забронювати квиток, будь ласка, <a href="{% url 'login' %}?next={{ request.path }}">увійдіть у аккаунт</a>.</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-2">
+                        <p><strong>Загальна вартість:</strong> <span id="total-price">0</span> грн.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const hallSchema = {{ hall_schema|safe }}; // Завантажуємо JSON з Django в JavaScript
+
+    function drawSeatingChart(schema) {
+        const seatingChart = document.getElementById('seating-chart');
+        seatingChart.innerHTML = ''; // Очищаємо вміст контейнера
+
+        schema.rows.forEach(row => {
+            const rowDiv = document.createElement('div');
+            rowDiv.classList.add('seat-row');
+
+            const rowLabel = document.createElement('span');
+            rowLabel.classList.add('row-label');
+            rowLabel.textContent = `Ряд ${row.row_number}`;
+            rowDiv.appendChild(rowLabel);
+
+            row.seats.forEach(seat => {
+                const seatDiv = document.createElement('div');
+                seatDiv.classList.add('seat');
+                seatDiv.textContent = seat.seat_number;
+                seatDiv.dataset.seatNumber = seat.seat_number;
+                seatDiv.dataset.rowNumber = row.row_number;
+
+                if (seat.status === 'reserved') {
+                    seatDiv.classList.add('reserved');
+                } else {
+                    seatDiv.addEventListener('click', () => {
+                        seatDiv.classList.toggle('selected'); // Вибір або зняття вибору з місця
+                        calculateTotalPrice();
+                    });
+                }
+
+                rowDiv.appendChild(seatDiv);
+            });
+
+            seatingChart.appendChild(rowDiv);
+        });
+    }
+
+    function calculateTotalPrice() {
+        const selectedSeats = document.querySelectorAll('.seat.selected');
+        let totalPrice = selectedSeats.length * {{ showtime.price }};
+        document.getElementById('total-price').textContent = totalPrice;
+    }
+
+    // Викликаємо функцію для відмалювання схеми
+    drawSeatingChart(hallSchema);
+
+    {% if user.is_authenticated %}
+    document.getElementById('book-tickets').addEventListener('click', () => {
+        const selectedSeats = document.querySelectorAll('.seat.selected');
+        if (selectedSeats.length === 0) {
+            alert('Будь ласка, оберіть місця для бронювання.');
+            return;
+        }
+
+        let seatDetails = [];
+        selectedSeats.forEach(seat => {
+            seatDetails.push({
+                row: seat.dataset.rowNumber,
+                seat: seat.dataset.seatNumber
+            });
+        });
+
+        // Відправка даних на сервер через POST-запит
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'booking' showtime.id %}";
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = '{{ csrf_token }}';
+        form.appendChild(csrfToken);
+
+        seatDetails.forEach(seat => {
+            const seatInput = document.createElement('input');
+            seatInput.type = 'hidden';
+            seatInput.name = 'selected_seats';
+            seatInput.value = `${seat.row},${seat.seat}`;
+            form.appendChild(seatInput);
+        });
+
+        document.body.appendChild(form);
+        form.submit(); // Відправка форми, яка перезавантажує сторінку
+    });
+    {% endif %}
+</script>
+
+<style>
+    .seating-chart-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .seat-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .row-label {
+        margin-right: 10px;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    .seat {
+        width: 40px;
+        height: 40px;
+        background-color: #FFA500; /* Початковий колір місця */
+        margin: 5px;
+        text-align: center;
+        line-height: 40px; /* Вирівнювання тексту по вертикалі */
+        cursor: pointer;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+
+    .seat.selected {
+        background-color: #00FF00; /* Зміна кольору при виборі */
+    }
+
+    .seat.reserved {
+        background-color: #FF0000; /* Колір для зарезервованих місць */
+        cursor: not-allowed;
+    }
+
+    .seat:disabled {
+        cursor: not-allowed;
+    }
+</style>
+{% endblock %}

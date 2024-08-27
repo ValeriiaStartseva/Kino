@@ -1,10 +1,12 @@
 from django.db import models
 from src.core.models import Gallery, GalleryImage
 from src.core.models import SEOMixin
-
+from django.utils.text import slugify
+from django.urls import reverse
 
 class Cinema(SEOMixin, models.Model):
     name = models.CharField(max_length=20, unique=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     title = models.TextField()
     city = models.CharField(max_length=12)
     logo = models.OneToOneField(
@@ -26,9 +28,15 @@ class Cinema(SEOMixin, models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
 
 class Hall(SEOMixin, models.Model):
     name = models.CharField(max_length=20, unique=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     description = models.TextField()
     schema_json = models.JSONField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -57,3 +65,11 @@ class Hall(SEOMixin, models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('hall_detail', args=[str(self.slug)])

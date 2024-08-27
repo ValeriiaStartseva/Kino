@@ -1,0 +1,96 @@
+{
+    "movies": [
+        "Avoid to.",
+        "Address.",
+        "Day human.",
+        "Thought.",
+        "Low lose."
+    ],
+    "cinemas": [
+        "Orr LLC",
+        "Bailey LLC",
+        "Morrison L"
+    ],
+    "halls": [
+        "Player focus.",
+        "Determine move.",
+        "Think ago talk."
+    ],
+    "users": [
+        {
+            "name": "Peter",
+            "last_name": "Hall",
+            "nickname": "richardrob",
+            "email": "edwardsvirginia@example.net",
+            "address": "640 Morrison",
+            "num_card": "372802820906",
+            "language": "ua",
+            "gender": "F",
+            "phone": "335-499-1181",
+            "date_birthday": "1986-03-21",
+            "city": "Colinton"
+        },
+        {
+            "name": "Sara",
+            "last_name": "Perez",
+            "nickname": "tgolden",
+            "email": "scott03@example.org",
+            "address": "467 Gonzales",
+            "num_card": "346480934163",
+            "language": "ua",
+            "gender": "M",
+            "phone": "551-785-9704x8716",
+            "date_birthday": "1936-03-16",
+            "city": "South Patric"
+        },
+        {
+            "name": "Jeff",
+            "last_name": "Cohen",
+            "nickname": "stephanie4",
+            "email": "ncoleman@example.org",
+            "address": "42371 Smith ",
+            "num_card": "303344116991",
+            "language": "ua",
+            "gender": "F",
+            "phone": "208.735.5272x152",
+            "date_birthday": "1952-03-29",
+            "city": "West Courtne"
+        },
+        {
+            "name": "David",
+            "last_name": "Gray",
+            "nickname": "josephbran",
+            "email": "nchaney@example.org",
+            "address": "2296 Yoder C",
+            "num_card": "270869230656",
+            "language": "ru",
+            "gender": "M",
+            "phone": "+19546170300",
+            "date_birthday": "1983-02-13",
+            "city": "Wheelerton"
+        },
+        {
+            "name": "Joseph",
+            "last_name": "Oliver",
+            "nickname": "ewilliams",
+            "email": "brownmichael@example.org",
+            "address": "6073 Justin ",
+            "num_card": "358236358941",
+            "language": "ru",
+            "gender": "M",
+            "phone": "(789)832-1814x457",
+            "date_birthday": "2019-03-30",
+            "city": "Mcneilstad"
+        }
+    ],
+    "posts": [
+        "Instead participant mean away.",
+        "Whom pretty feeling try while forget.",
+        "Knowledge alone air."
+    ],
+    "pages": [
+        "Threat long.",
+        "Direction.",
+        "Opportunity."
+    ]
+}

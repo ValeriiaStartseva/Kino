@@ -1,5 +1,4 @@
 from django.db import models
-from src.users.models import User
 
 
 class EmailTemplate(models.Model):
@@ -11,10 +10,9 @@ class EmailCampaign(models.Model):
     name = models.CharField(max_length=30)
     email_template = models.ForeignKey(EmailTemplate, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-
-
-class UserEmailCampaign(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    email_campaign_id = models.ForeignKey(EmailCampaign, on_delete=models.CASCADE)
-
+    status = models.CharField(max_length=30, default='pending')
+    send_to_all = models.BooleanField(default=False)
+    selected_users_ids = models.JSONField(null=True, blank=True)
+    progress = models.IntegerField(default=0)
+    sent_count = models.IntegerField(default=0)
 

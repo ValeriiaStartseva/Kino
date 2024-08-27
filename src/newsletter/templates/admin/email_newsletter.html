@@ -1,0 +1,294 @@
+{% extends 'admin/base_admin.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="row mb-3 justify-content-center">
+            <label for="banner_list" class="h1">Email розсилка</label>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <div class="col-md-6">
+                <form method="post" enctype="multipart/form-data" id="email-campaign-form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Користувачі:</label><br>
+                        <label>
+                            <input type="radio" name="user_selection" value="all" checked> Всі користувачі
+                        </label><br>
+                        <label>
+                            <input type="radio" name="user_selection" value="selected"> Вибрані користувачі
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="html_file">Завантажити HTML-лист:</label>
+                        {{ form.html_file }}
+                        <input type="hidden" id="template-name" name="template_name" value="">
+                    </div>
+                </form>
+
+                <div class="mt-3">
+                    <p>Завантажений файл: <a href="#" id="uploaded-file-name">Файл не вибрано</a></p>
+                    <p>Шаблон використаний в поточній розсилці: <a href="#" id="template-name-display">{{ template_name }}</a></p>
+                    <p>Кількість листів: <a href="#" id="email_count">0</a></p>
+                    <p>Розсилка виконана на: <span id="campaign-progress">{{ progress }}%</span></p>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <h4 class="mb-4">Останні розсилки:</h4>
+                <ul class="list-group">
+                    {% for campaign in latest_campaigns %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <label>
+                            <input type="radio" name="selected_template" value="{{ campaign.id }}" onclick="selectTemplate('{{ campaign.name }}')"> {{ campaign.name }}
+                        </label>
+                        <a href="{% url 'delete_template' campaign.id %}" class="btn btn-danger btn-sm">Видалити</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-center mb-4">
+    <button type="button" class="btn btn-success" onclick="startCampaign()">Почати розсилку</button>
+</div>
+
+<div class="modal fade" id="selectUsersModal" tabindex="-1" aria-labelledby="selectUsersModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="selectUsersModalLabel">Виберіть користувачів</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="select-users-form">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col"><input type="checkbox" id="select_all_modal"></th>
+                                <th scope="col">id</th>
+                                <th scope="col">День народження</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Телефон</th>
+                                <th scope="col">Імʼя</th>
+                                <th scope="col">Прізвище</th>
+                                <th scope="col">Місто</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            {% for user in page_obj.object_list %}
+                            <tr>
+                                <td><input type="checkbox" name="selected_users" value="{{ user.id }}" {% if user.id|stringformat:"s" in selected_users %}checked{% endif %}></td>
+                                <th scope="row">{{ user.id }}</th>
+                                <td>{{ user.date_birthday }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.phone }}</td>
+                                <td>{{ user.name }}</td>
+                                <td>{{ user.last_name }}</td>
+                                <td>{{ user.city }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center" id="pagination-container">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link page-link-modal" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% for i in page_obj.paginator.page_range %}
+                        <li class="page-item {% if page_obj.number == i %}active{% endif %}">
+                            <a class="page-link page-link-modal" href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link page-link-modal" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                <button type="button" class="btn btn-primary" id="save-users-selection">Зберегти вибір</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Глобальна змінна для зберігання вибраних користувачів
+var selectedUsers = new Set();
+
+document.querySelectorAll('input[name="user_selection"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        if (this.value === 'selected') {
+            var modal = new bootstrap.Modal(document.getElementById('selectUsersModal'));
+            modal.show();
+        }
+    });
+});
+
+document.getElementById('select_all_modal').onclick = function() {
+    var checkboxes = document.querySelectorAll('#select-users-form input[type="checkbox"]');
+    for (var checkbox of checkboxes) {
+        checkbox.checked = this.checked;
+        updateSelectedUsers(checkbox);
+    }
+}
+
+document.addEventListener('change', function(event) {
+    if (event.target.name === 'selected_users') {
+        updateSelectedUsers(event.target);
+    }
+});
+
+function updateSelectedUsers(checkbox) {
+    if (checkbox.checked) {
+        selectedUsers.add(checkbox.value);
+    } else {
+        selectedUsers.delete(checkbox.value);
+    }
+}
+
+document.getElementById('save-users-selection').onclick = function() {
+    var hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'selected_users';
+    hiddenInput.value = Array.from(selectedUsers).join(',');
+    document.getElementById('email-campaign-form').appendChild(hiddenInput);
+
+    var modal = bootstrap.Modal.getInstance(document.getElementById('selectUsersModal'));
+    modal.hide();
+}
+
+function selectTemplate(templateName) {
+    var templateNameWithoutExtension = templateName.split('.').slice(0, -1).join('.');
+    document.getElementById('template-name').value = templateNameWithoutExtension;
+    document.getElementById('uploaded-file-name').innerText = templateNameWithoutExtension;
+    document.getElementById('template-name-display').innerText = templateNameWithoutExtension;
+}
+
+document.getElementById('id_html_file').addEventListener('change', function(event) {
+    var fileName = event.target.files[0].name;
+    var fileNameWithoutExtension = fileName.split('.').slice(0, -1).join('.');
+    document.getElementById('uploaded-file-name').innerText = fileNameWithoutExtension;
+    document.getElementById('template-name').value = fileNameWithoutExtension;
+});
+
+
+function startCampaign() {
+    var selectedTemplate = document.querySelector('input[name="selected_template"]:checked');
+    var fileInput = document.getElementById('id_html_file');
+
+    if (!selectedTemplate && fileInput.files.length === 0) {
+        alert('Будь ласка, виберіть HTML файл для розсилки або оберіть існуючий шаблон.');
+        return;
+    }
+
+    var formData = new FormData(document.getElementById('email-campaign-form'));
+
+    if (selectedTemplate) {
+        formData.append('selected_template', selectedTemplate.value);
+    }
+
+    var selectedUserOption = document.querySelector('input[name="user_selection"]:checked').value;
+    formData.append('users', selectedUserOption);
+
+    if (selectedUserOption === 'selected') {
+        formData.append('selected_users', Array.from(selectedUsers).join(','));
+    }
+
+    fetch('{% url "email_campaign" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+    }).then(response => response.json().catch(() => {
+        throw new Error('Невірний формат відповіді від сервера');
+    })).then(data => {
+        if (data.status === 'success') {
+            document.getElementById('campaign-progress').innerText = "0%";
+            var templateName = document.getElementById('template-name').value || 'Обраний шаблон';
+            document.getElementById('template-name-display').innerText = templateName;
+            checkCampaignProgress(data.campaign_id);  // Виклик функції для перевірки прогресу
+            console.log(data);
+        } else {
+            alert(data.message);
+        }
+    }).catch(error => {
+        console.error('Помилка:', error);
+        alert('Сталася помилка під час обробки вашого запиту.');
+    });
+}
+
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('page-link-modal')) {
+        event.preventDefault();
+        fetch(event.target.href, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newTableBody = doc.querySelector('#users-table-body').innerHTML;
+            const newPagination = doc.querySelector('#pagination-container').innerHTML;
+            document.querySelector('#users-table-body').innerHTML = newTableBody;
+            document.querySelector('#pagination-container').innerHTML = newPagination;
+
+            document.querySelectorAll('#select-users-form input[type="checkbox"]').forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    updateSelectedUsers(checkbox);
+                });
+
+                // Перевіряємо стан кожного чекбокса
+                if (selectedUsers.has(checkbox.value)) {
+                    checkbox.checked = true;
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Помилка:', error);
+        });
+    }
+});
+
+function checkCampaignProgress(campaignId) {
+    fetch(`/email-campaign/progress/${campaignId}/`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('campaign-progress').innerText = `${data.progress}%`;
+        document.getElementById('email_count').innerText = data.sent_count;
+        if (data.progress < 100) {
+            setTimeout(function() {
+                checkCampaignProgress(campaignId);
+            }, 1000); // Перевіряти кожну 1 секунду
+        }
+    })
+    .catch(error => {
+        console.error('Помилка:', error);
+    });
+}
+</script>
+{% endblock %}
