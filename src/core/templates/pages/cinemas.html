@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5" style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <h2 class="text-center">Наші кінотеатри</h2>
+    <div class="row">
+        {% for cinema in cinemas %}
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <a href="{% url 'cinema_detail' cinema.slug %}">
+                    <img src="{{ cinema.main_image.image.url }}" height="360" class="card-img-top" alt="{{ cinema.name }}">
+                </a>
+                <div class="card-body text-center">
+                    <h5 class="card-title">
+                        <a href="{% url 'cinema_detail' cinema.slug %}" class="text-dark text-decoration-none">
+                            {{ cinema.name }}
+                        </a>
+                    </h5>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+    .card img {
+        max-height: 300px;
+        object-fit: cover;
+    }
+
+    .card-title {
+        margin-top: 10px;
+        font-size: 18px;
+    }
+</style>
+{% endblock %}

@@ -7,28 +7,21 @@ from django.http import JsonResponse
 from .forms import EmailCampaignForm
 from .models import EmailCampaign
 from .tasks import send_email_campaign
-
-import logging
-
-logger = logging.getLogger(__name__)
-
-
+from django.contrib.auth.decorators import login_required
+@login_required
 def email_campaign_view(request):
     if request.method == 'POST':
         form = EmailCampaignForm(request.POST, request.FILES)
-        logger.debug(f"POST data: {request.POST}")
-        logger.debug(f"FILES data: {request.FILES}")
+
         if not form.is_valid():
-            logger.debug(f"Form errors: {form.errors}")
-            return JsonResponse({'status': 'error', 'message': 'Форма містить помилки.'}, status=400)
+
+            return JsonResponse({'status': 'error', 'message': 'There is a mistake in form'}, status=400)
 
         try:
             if 'selected_template' in request.POST:
                 template_id = request.POST.get('selected_template')
                 email_campaign = EmailCampaign.objects.get(id=template_id)
                 email_template = email_campaign.email_template
-
-                logger.debug(f"Selected template ID: {template_id}")
 
                 campaign = form.save(commit=False)
                 campaign.name = email_template.name
@@ -64,17 +57,18 @@ def email_campaign_view(request):
                     campaign.selected_users_ids = selected_users
             else:
                 return JsonResponse(
-                    {'status': 'error', 'message': 'HTML файл не завантажений і шаблон не вибраний.'}, status=400)
+                    {'status': 'error',
+                     'message': 'HTML file is not uploaded or template is not choose'}, status=400)
 
             campaign.save()
 
             send_email_campaign.delay(campaign.id)
 
             return JsonResponse({'status': 'success', 'campaign_id': campaign.id,
-                                 'message': 'Кампанія розпочата успішно!'})
+                                 'message': 'Newsletter started successfully!'}, status=200)
 
         except EmailTemplate.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Шаблон не знайдено.'}, status=404)
+            return JsonResponse({'status': 'error', 'message': 'Template is not found'}, status=404)
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
@@ -97,23 +91,22 @@ def email_campaign_view(request):
 
     return render(request, 'admin/email_newsletter.html', context)
 
-
+@login_required
 def save_selected_users(request):
     if request.method == 'POST':
         selected_users = request.POST.getlist('selected_users')
         request.session['selected_users'] = selected_users
         return redirect('email_campaign')
 
-
+@login_required
 def delete_template(request, template_id):
     template = get_object_or_404(EmailCampaign, id=template_id)
     template.delete()
     return redirect('email_campaign')
 
-
+@login_required
 def check_campaign_progress(request, campaign_id):
     campaign = EmailCampaign.objects.get(id=campaign_id)
-    logger.info(f"Перевірка прогресу кампанії: {campaign_id}, поточний прогрес: {campaign.progress}%")
     data = {
         'progress': campaign.progress,
         'sent_count': campaign.sent_count,

@@ -4,7 +4,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, User
 from .models import User
 from django.contrib.auth import authenticate
 
-# create or register a user
+
+# create or register a user on site
 class RegistrationForm(UserCreationForm):
     class Meta:
         model = User
@@ -12,8 +13,7 @@ class RegistrationForm(UserCreationForm):
                   'gender', 'phone', 'date_birthday', 'city']
 
 
-# authenticate a user
-
+# authenticate a user on site
 class LoginForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
     password = forms.CharField(widget=PasswordInput(attrs={'class': 'form-control'}))
@@ -42,3 +42,14 @@ class UserUpdateForm(UserChangeForm):
         widgets = {
             'email': forms.EmailInput(),
         }
+
+
+class AdminAuthenticationForm(AuthenticationForm):
+    def confirm_login_allowed(self, user):
+        if not user.is_active or not user.is_superuser:
+            raise forms.ValidationError(
+                "This user does not have access to admin",
+                code='no_access'
+            )
+
+

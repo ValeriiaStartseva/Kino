@@ -5,8 +5,8 @@
             <img src="{{ form.instance.logo.image.url }}" id="id_logo_preview" alt="img" style="width: 150px; height: 100px; border: 1px solid #ccc;">
         </div>
         <div>
-            <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#logoModal" onclick="loadOneGalleryImages()">Завантажити</button>
-            <button class="btn btn-secondary btn-sm" id="removeLogoButton">Видалити</button>
+            <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#logoModal" onclick="loadOneGalleryImages()">Змінити</button>
+{#            <button class="btn btn-secondary btn-sm" id="removeLogoButton">Видалити</button>#}
             <input type="hidden" id="id_logo" name="logo" value="{{ form.instance.logo.id }}">
         </div>
     </div>

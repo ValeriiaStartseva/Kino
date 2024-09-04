@@ -36,16 +36,16 @@
             Афіша
           </h6>
           <p>
-            <a href="#!" class="text-reset">Розклад</a>
+            <a href="{% url 'timetable' %}" class="text-reset">Розклад</a>
           </p>
           <p>
-            <a href="#!" class="text-reset">Скоро в кіно</a>
+            <a href="{% url 'coming_soon' %}" class="text-reset">Скоро в кіно</a>
           </p>
           <p>
-            <a href="#!" class="text-reset">Кінотеатри</a>
+            <a href="{% url 'cinemas' %}" class="text-reset">Кінотеатри</a>
           </p>
           <p>
-            <a href="#!" class="text-reset">Акції</a>
+            <a href="{% url 'promotions' %}" class="text-reset">Акції</a>
           </p>
         </div>
         <!-- Grid column -->
@@ -55,11 +55,13 @@
         Про кінотеатр
     </h6>
     <ul class="list-unstyled">
+    <a class="nav-link active" aria-current="page" href="{% url 'news' %}">Новини</a>
         {% for page in pages %}
             <li class="footer-item">
                 <a class="fot-link active" aria-current="page" href="{{ page.get_absolute_url }}">{{ page.name }}</a>
             </li>
         {% endfor %}
+    <a class="nav-link active" aria-current="page" href="{% url 'contact_us' %}">Контакти</a>
     </ul>
 </div>
 

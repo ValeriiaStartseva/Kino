@@ -4,16 +4,62 @@ from django.urls import reverse
 from src.core.forms import GalleryImageFormSet
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import Page, MainPage, SEOMixin, Contacts
+from .models import Page, MainPage, SEOMixin
 from .forms import PageForm, GalleryImageFormSet, MainPageForm, ContactsFormSet
 from django.db import transaction
 from src.core.models import GalleryImage, Gallery
-import logging
 from src.core.forms import SEOMixinForm
+from django.db import models
+from src.users.models import User
 
-logger = logging.getLogger(__name__)
+from django.contrib.auth.decorators import login_required
+
+from ..movies.models import Movie
+from ..showtimes.models import Ticket
 
 
+from django.db.models import Count
+from django.utils import timezone
+from datetime import timedelta
+
+
+@login_required
+def admin_dashboard(request):
+    # users information
+    total_users = User.objects.count()
+    male_users = User.objects.filter(gender='M').count()
+    female_users = User.objects.filter(gender='F').count()
+    users_by_city = User.objects.values('city').annotate(count=Count('id')).order_by('-count')
+
+    # tickets
+    total_tickets = Ticket.objects.count()
+
+    # most popular movie last month
+    one_month_ago = timezone.now() - timedelta(days=30)
+    most_popular_movies = (
+        Movie.objects
+        .annotate(ticket_count=Count('showtime__ticket', filter=models.Q(showtime__show_time__gte=one_month_ago)))
+        .order_by('-ticket_count')[:5]  # 5 movies
+    )
+
+    # data for diagram
+    movie_names = [movie.name for movie in most_popular_movies]
+    tickets_sold = [movie.ticket_count for movie in most_popular_movies]
+
+    context = {
+        'total_users': total_users,
+        'male_users': male_users,
+        'female_users': female_users,
+        'users_by_city': users_by_city,
+        'total_tickets': total_tickets,
+        'movie_names': movie_names,
+        'tickets_sold': tickets_sold,
+    }
+
+    return render(request, 'admin/pages/admin_dashboard.html', context)
+
+
+@login_required
 @transaction.atomic
 def add_page(request):
     if request.method == 'POST':
@@ -23,16 +69,16 @@ def add_page(request):
         if form.is_valid() and formset.is_valid():
             page = form.save(commit=False)
 
-            # Зберігаємо головне зображення
+            # save main img
             main_image_id = form.cleaned_data['main_image']
             if main_image_id:
                 try:
                     main_image = GalleryImage.objects.get(pk=main_image_id.id)
                     page.main_image = main_image
                 except GalleryImage.DoesNotExist:
-                    logger.error('Main image does not exist')
-                    messages.error(request, 'Картинка не існує.')
-                    return render(request, 'admin/pages/add_page.html', {'form': form, 'formset': formset})
+                    messages.error(request, 'Image not found')
+                    return render(request, 'admin/pages/add_page.html',
+                                  {'form': form, 'formset': formset})
 
             gallery = Gallery.objects.create()
             page.gallery = gallery
@@ -41,10 +87,10 @@ def add_page(request):
             formset.instance = gallery
             formset.save(commit=True)
 
-            messages.success(request, 'Сторінку успішно додано.')
+            messages.success(request, 'Page successfully added')
             return redirect('pages_list')
         else:
-            messages.error(request, 'Форма або набір форм недійсні.')
+            messages.error(request, 'Form or formset not valid')
     else:
         form = PageForm()
         formset = GalleryImageFormSet()
@@ -53,11 +99,13 @@ def add_page(request):
 
 
 # view for get template for success page
+@login_required
 def page_success(request):
     return render(request, 'admin/pages/page_success.html')
 
 
 # view for getting list of all pages
+@login_required
 def get_page_list(request):
     if request.method == 'GET':
         page_list = Page.objects.all()
@@ -74,11 +122,13 @@ def get_page_list(request):
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
+@login_required
 def page_list_view(request):
     pages = Page.objects.all()
     return render(request, 'admin/pages/pages_list.html', {'pages': pages})
 
 
+@login_required
 @transaction.atomic
 def edit_page(request, page_id):
     page = get_object_or_404(Page, id=page_id)
@@ -91,7 +141,7 @@ def edit_page(request, page_id):
         if form.is_valid() and formset.is_valid():
             page = form.save(commit=False)
 
-            # Зберігаємо головне зображення
+            # save main img
             new_main_image_id = form.cleaned_data.get('main_image')
             if new_main_image_id:
                 try:
@@ -99,14 +149,12 @@ def edit_page(request, page_id):
                     if page.main_image != new_main_image:
                         page.main_image = new_main_image
                 except GalleryImage.DoesNotExist:
-                    messages.error(request, 'Картинка не існує.')
+                    messages.error(request, 'Image not found')
                     return render(request, 'admin/pages/edit_page.html',
                                   {'form': form, 'formset': formset, 'page': page, 'gallery': gallery})
             else:
-                # Якщо нове зображення не вибране, залишаємо старе
                 page.main_image = page.main_image
 
-            # Перевірка та збереження галереї
             if not gallery:
                 gallery = Gallery.objects.create()
                 page.gallery = gallery
@@ -115,18 +163,20 @@ def edit_page(request, page_id):
             formset.instance = gallery
             formset.save()
 
-            messages.success(request, 'Сторінку успішно оновлено.')
+            messages.success(request, 'Page edited successfully')
             return redirect('all_page_list')
         else:
-            messages.error(request, 'Форма або набір форм недійсні.')
+            messages.error(request, 'Form or formset not valid')
     else:
         form = PageForm(instance=page)
         formset = GalleryImageFormSet(instance=gallery)
 
-    return render(request, 'admin/pages/edit_page.html', {'form': form, 'formset': formset, 'page': page})
+    return render(request, 'admin/pages/edit_page.html',
+                  {'form': form, 'formset': formset, 'page': page})
 
 
 # view for delete page from DB
+@login_required
 def delete_page(request, page_id):
     page = get_object_or_404(Page, id=page_id)
 
@@ -137,6 +187,7 @@ def delete_page(request, page_id):
     return render(request, 'admin/pages/confirm_delete_page.html', {'page': page})
 
 
+@login_required
 def main_page(request):
     main_page_instance = MainPage.objects.first()
 
@@ -146,24 +197,22 @@ def main_page(request):
         if form.is_valid():
             main_page = form.save(commit=False)
             main_page.save()
-            messages.success(request, 'Сторінка успішно збережена.')
+            messages.success(request, 'Page edited successfully')
             return redirect('pages_list')
         else:
-            messages.error(request, 'Форма недійсна.')
+            messages.error(request, 'Form or formset not valid')
     else:
         form = MainPageForm(instance=main_page_instance)
 
     return render(request, 'admin/main_page/main_page_admin.html', {'form': form})
 
 
-
-
+@login_required
 @transaction.atomic
 def contacts_view(request):
     seo_instance, created = SEOMixin.objects.get_or_create(id=1)
 
     if request.method == 'POST':
-        logger.debug('Handling POST request')
         seo_form = SEOMixinForm(request.POST, instance=seo_instance)
         contact_formset = ContactsFormSet(request.POST, request.FILES, instance=seo_instance)
 
@@ -180,39 +229,33 @@ def contacts_view(request):
                     instance.delete()
                 contact_formset.save_m2m()
 
-                messages.success(request, 'Контакти успішно оновлено')
+                messages.success(request, 'Contact edited successfully')
                 return redirect('pages_list')
             except Exception as e:
-                logger.error('Error saving forms: %s', e)
-                messages.error(request, 'Сталася помилка при збереженні контактів.')
+                messages.error(request, 'There was an error while saving contacts')
         else:
-            logger.warning('Form or formset invalid')
-            logger.debug('SEO form errors: %s', seo_form.errors)
-            logger.debug('Contact formset errors: %s', contact_formset.errors)
-            logger.debug('SEO form cleaned data: %s', seo_form.cleaned_data)
-            logger.debug('Contact formset cleaned data: %s', contact_formset.cleaned_data)
-            messages.error(request, 'Форма або набір форм недійсні.')
+            messages.error(request, 'Form or formset is invalid')
     else:
-        logger.debug('Handling GET request')
         seo_form = SEOMixinForm(instance=seo_instance)
         contact_formset = ContactsFormSet(instance=seo_instance)
 
-    logger.debug('Rendering template with SEO form and contact formset')
     return render(request, 'admin/contacts/add_contacts.html', {
         'seo_form': seo_form,
         'contact_formset': contact_formset,
     })
 
 
+@login_required
 def pages_list(request):
     context = {
         'pages_list': [
-            {'name': 'Головна сторінка', 'edit_url': reverse('all_page_list')},
-            {'name': 'Всі сторінки', 'edit_url': reverse('main_page')},
+            {'name': 'Головна сторінка', 'edit_url': reverse('main_page')},
+            {'name': 'Всі сторінки', 'edit_url': reverse('all_page_list')},
             {'name': 'Сторінка контактів', 'edit_url': reverse('add_contacts')}
         ]
     }
     return render(request, 'admin/pages.html', context)
+
 
 
 

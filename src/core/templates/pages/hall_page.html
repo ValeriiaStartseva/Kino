@@ -5,14 +5,12 @@
 <div class="background-image">
     <div class="content-container mt-5">
         <div class="container-fluid">
-            <!-- Main Image Banner -->
             <div class="container mt-4">
                 <div class="main-image-banner" style="padding-bottom: 20px;">
                     <img src="{{ hall.main_image.image.url }}" alt="{{ hall.name }}" class="img-fluid w-100">
                 </div>
             </div>
 
-            <!-- Опис та інформація про зал -->
             <div class="row mb-4">
                 <div class="col-md-12">
                     <h2 class="text-center">{{ hall.name }}</h2>
@@ -20,7 +18,6 @@
                 </div>
             </div>
 
-            <!-- Схема залу -->
             <div class="row mb-4">
                 <div class="col-md-12 text-center">
                     <h3>Карта залу</h3>
@@ -28,21 +25,25 @@
                 </div>
             </div>
 
-            <!-- Список сеансів -->
             <div class="row mt-5">
                 <div class="col-md-12">
                     <h3>Сеанси сьогодні</h3>
                     <ul class="list-group">
-                        {% for showtime in showtimes %}
-                            <li class="list-group-item">
-                                {{ showtime.show_time|date:"H:i" }} - {{ showtime.movie.name }}
-                            </li>
-                        {% endfor %}
+                        {% if showtimes %}
+                            {% for showtime in showtimes %}
+                                <li class="list-group-item">
+                                    <a href="{% url 'booking' showtime_id=showtime.id %}">
+                                        {{ showtime.show_time|date:"H:i" }} - {{ showtime.movie_id.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="list-group-item">На сьогодні сеансів немає.</li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
 
-            <!-- Фотогалерея -->
             <div class="row mt-5">
                 <div class="col-md-12 text-center">
                     <h3>Фотогалерея</h3>

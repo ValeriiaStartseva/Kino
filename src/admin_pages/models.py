@@ -1,4 +1,6 @@
 from django.db import models
+from django.urls import reverse
+
 from src.core.models import Gallery, GalleryImage
 from src.core.models import SEOMixin
 from django.core.exceptions import ValidationError
@@ -24,9 +26,12 @@ class Page(SEOMixin, models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
+
+        self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('page_detail', kwargs={'slug': self.slug})
 
 
 class Contacts(models.Model):
@@ -60,5 +65,3 @@ class MainPage(SEOMixin, models.Model):
         if not self.pk and MainPage.objects.exists():
             raise ValidationError('There is can be only one MainPage instance')
         return super(MainPage, self).save(*args, **kwargs)
-
-

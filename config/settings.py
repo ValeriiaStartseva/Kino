@@ -18,8 +18,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'adminlte3_theme',
-    'django.contrib.admin',
+    # 'django.contrib.admin', comment because i use my custom admin
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -35,7 +34,6 @@ INSTALLED_APPS = [
     'src.newsletter',
     'src.promotion',
     'src.showtimes',
-    'adminlte3',
     'storages',
     'anymail'
 ]
@@ -48,6 +46,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'config.middleware.admin_access_middleware.AdminAccessMiddleware',
+
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -63,7 +63,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'src.core.context_processors.navbar_pages'
+                'src.core.context_processors.navbar_pages',
+                'src.core.context_processors.footer_pages',
+                'src.core.context_processors.background_banner_processor',
+
             ],
         },
     },

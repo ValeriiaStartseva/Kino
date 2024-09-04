@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<div class="container">
+<div class="container mt-5" style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
     <div class="row my-4">
         <div class="col-md-12">
             <h2>Розклад фільмів</h2>
@@ -63,29 +63,29 @@
         <div class="col-md-12">
             {% for showtime in showtimes %}
                 <div class="timetable-day">
-                    <h4>{{ showtime.date|date:"d M, l" }}</h4>
-                    <table class="table table-striped">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Час</th>
-                                <th>Фільм</th>
-                                <th>Зал</th>
-                                <th>Ціна в грн.</th>
-                                <th>Бронювання</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for session in showtime.sessions %}
-                                <tr>
-                                    <td>{{ session.show_time|date:"H:i" }}</td>
-                                    <td>{{ session.movie_id.name }}</td>
-                                    <td>{{ session.hall_id.name }}</td>
-                                    <td>{{ session.price }}</td>
-                                    <td><a href="{% url 'booking' session.id %}" class="btn btn-warning">Бронювати</a></td> <!-- Перехід на сторінку бронювання -->
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                  <h4>{{ showtime.date|date:"d M, l" }}</h4>
+                  <table class="table table-striped equal-width-table">
+                      <thead class="thead-dark">
+                          <tr>
+                              <th>Час</th>
+                              <th>Фільм</th>
+                              <th>Зал</th>
+                              <th>Ціна в грн.</th>
+                              <th>Бронювання</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          {% for session in showtime.sessions %}
+                              <tr>
+                                  <td>{{ session.show_time|date:"H:i" }}</td>
+                                  <td>{{ session.movie_id.name }}</td>
+                                  <td>{{ session.hall_id.name }}</td>
+                                  <td>{{ session.price }}</td>
+                                  <td><a href="{% url 'booking' session.id %}" class="btn btn-warning">Бронювати</a></td> <!-- Перехід на сторінку бронювання -->
+                              </tr>
+                          {% endfor %}
+                      </tbody>
+                  </table>
                 </div>
             {% endfor %}
         </div>

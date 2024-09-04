@@ -6,8 +6,10 @@ from django.contrib import messages
 from .models import Movie, Gallery, GalleryImage
 from .forms import MovieForm, GalleryImageFormSet
 from django.db import transaction
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 @transaction.atomic
 def add_movie(request):
     if request.method == 'POST':
@@ -17,14 +19,14 @@ def add_movie(request):
         if form.is_valid() and formset.is_valid():
             movie = form.save(commit=False)
 
-            # Зберігаємо головне зображення
+            # save main img
             main_image_id = form.cleaned_data['main_image']
             if main_image_id:
                 try:
                     main_image = GalleryImage.objects.get(pk=main_image_id.id)
                     movie.main_image = main_image
                 except GalleryImage.DoesNotExist:
-                    messages.error(request, 'Картинка не існує.')
+                    messages.error(request, 'Image does not exist.')
                     return render(request, 'admin/add_movie.html', {'form': form, 'formset': formset})
 
             gallery = Gallery.objects.create()
@@ -33,17 +35,11 @@ def add_movie(request):
 
             formset.instance = gallery
             formset.save(commit=True)
-            # галерея вже прив'язана в formset.instance = gallery
 
-            # instances = formset.save(commit=False)
-            # for instance in instances:
-            #     instance.gallery = gallery
-            #     instance.save()
-
-            messages.success(request, 'Фільм успішно додано.')
+            messages.success(request, 'Movie successfully added!')
             return redirect('movie_list')
         else:
-            messages.error(request, 'Форма або набір форм недійсні.')
+            messages.error(request, 'Form or formset is invalid.')
     else:
         form = MovieForm()
         formset = GalleryImageFormSet()
@@ -52,11 +48,13 @@ def add_movie(request):
 
 
 # view for get template for success movie page
+@login_required
 def movie_success(request):
     return render(request, 'admin/movie_success.html')
 
 
 # view for getting list of all movies
+@login_required
 def get_movie_list(request):
     if request.method == 'GET':
         movie_list = Movie.objects.all()
@@ -72,12 +70,12 @@ def get_movie_list(request):
         return JsonResponse({'movies_list': movies_data})
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-
+@login_required
 def movie_list_view(request):
     movies = Movie.objects.all()
     return render(request, 'admin/movies_list.html', {'movies': movies})
 
-
+@login_required
 @transaction.atomic
 def edit_movie(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
@@ -90,7 +88,7 @@ def edit_movie(request, movie_id):
         if form.is_valid() and formset.is_valid():
             movie = form.save(commit=False)
 
-            # Зберігаємо головне зображення
+            # save main img
             new_main_image_id = form.cleaned_data.get('main_image')
             if new_main_image_id:
                 try:
@@ -98,14 +96,12 @@ def edit_movie(request, movie_id):
                     if movie.main_image != new_main_image:
                         movie.main_image = new_main_image
                 except GalleryImage.DoesNotExist:
-                    messages.error(request, 'Картинка не існує.')
+                    messages.error(request, 'Image not found')
                     return render(request, 'admin/edit_movie.html',
                                   {'form': form, 'formset': formset, 'movie': movie, 'gallery': gallery})
             else:
-                # Якщо нове зображення не вибране, залишаємо старе
                 movie.main_image = movie.main_image
 
-            # Перевірка та збереження галереї
             if not gallery:
                 gallery = Gallery.objects.create()
                 movie.gallery = gallery
@@ -114,18 +110,20 @@ def edit_movie(request, movie_id):
             formset.instance = gallery
             formset.save()
 
-            messages.success(request, 'Фільм успішно оновлено.')
+            messages.success(request, 'Movie edited')
             return redirect('movie_list')
         else:
-            messages.error(request, 'Форма або набір форм недійсні.')
+            messages.error(request, 'Form or formset not valid')
     else:
         form = MovieForm(instance=movie)
         formset = GalleryImageFormSet(instance=gallery)
 
-    return render(request, 'admin/edit_movie.html', {'form': form, 'formset': formset, 'movie': movie})
+    return render(request, 'admin/edit_movie.html', {'form': form, 'formset': formset,
+                                                     'movie': movie})
 
 
 # view for delete movie from DB
+@login_required
 def delete_movie(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
 

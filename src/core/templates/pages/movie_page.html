@@ -46,7 +46,7 @@
             <div class="row mt-3">
                 {% for showtime in showtimes %}
                 <div class="col-md-3 mb-4">
-                    <div class="card text-center">
+                    <div class="card text-center showtime-card" data-showtime-id="{{ showtime.id }}">
                         <div class="card-header">
                             <strong>{{ showtime.show_time|date:"H:i" }}</strong> <span>{{ showtime.get_movie_type_display }}</span>
                         </div>
@@ -60,18 +60,18 @@
             </div>
 
             <!-- Зображення та інформація про фільм -->
-            <div class="row mb-4">
-                <!-- Ліворуч зображення фільму -->
-                <div class="col-md-6">
-                    <img src="{{ movie.main_image.image.url }}" alt="{{ movie.name }}" class="img-fluid">
-                </div>
-                <!-- Праворуч інформація та кнопка -->
-                <div class="col-md-6">
-                    <a href="#" class="btn btn-warning mt-auto">Купити квиток</a>
-                    <h2>{{ movie.name }}</h2>
-                    <p>{{ movie.description }}</p>
-                </div>
-            </div>
+            <div class="row mb-4 justify-content-center">
+    <!-- Ліворуч зображення фільму -->
+    <div class="col-md-6 d-flex justify-content-center">
+        <img src="{{ movie.main_image.image.url }}" alt="{{ movie.name }}" class="img-fluid movie-main-image" height="180">
+    </div>
+    <!-- Праворуч інформація та кнопка -->
+    <div class="col-md-6">
+        <a href="#" id="buy-ticket-btn" class="btn btn-warning mt-auto" disabled>Купити квиток</a>
+        <h2>{{ movie.name }}</h2>
+        <p>{{ movie.description }}</p>
+    </div>
+</div>
 
             <!-- Кадри і постери -->
             <div class="row mt-5">
@@ -107,4 +107,48 @@
         </div>
     </div>
 </div>
+
+  <style>
+    .movie-main-image {
+        max-width: 50%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const showtimeCards = document.querySelectorAll('.showtime-card');
+        const buyTicketBtn = document.getElementById('buy-ticket-btn');
+        let selectedShowtimeId = null;
+
+        showtimeCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Видалити виділення з усіх карток
+                showtimeCards.forEach(c => c.classList.remove('selected-showtime'));
+
+                // Додати виділення до обраної картки
+                card.classList.add('selected-showtime');
+                selectedShowtimeId = card.getAttribute('data-showtime-id');
+
+                // Активувати кнопку покупки
+                buyTicketBtn.removeAttribute('disabled');
+                buyTicketBtn.href = `{% url 'booking' showtime_id=0 %}`.replace('0', selectedShowtimeId);
+            });
+        });
+    });
+</script>
+
+<style>
+    .showtime-card {
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .showtime-card.selected-showtime {
+        background-color: #f0ad4e;
+        color: white;
+    }
+</style>
+
 {% endblock %}

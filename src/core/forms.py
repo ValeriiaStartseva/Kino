@@ -17,6 +17,11 @@ class GalleryImageForm(forms.ModelForm):
             'gallery': forms.Select(attrs={'class': 'form-control'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super(GalleryImageForm, self).__init__(*args, **kwargs)
+        # Робимо alt_text необов'язковим у формі
+        self.fields['alt_text'].required = False
+
 
 GalleryImageFormSet = forms.inlineformset_factory(Gallery, GalleryImage, fields=['alt_text', 'image'], extra=10,
                                                   can_delete=True)

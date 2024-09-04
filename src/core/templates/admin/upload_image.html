@@ -1,9 +1,20 @@
 {% extends "admin/base_admin.html" %}
 {% load static %}
 
+
 {% block content %}
 <form method="post" enctype="multipart/form-data" action="{% url 'upload_image' %}">
     {% csrf_token %}
+
+    {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
     <div class="mb-3 row align-items-center">
         <label for="alt_text" class="col-sm-4 col-form-label">Введіть alt-text</label>
@@ -57,15 +68,12 @@ document.querySelector('form').addEventListener('submit', async (event) => {
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
-            console.error('Error:', errorData);
             alert('Зображення не завантажено.');
             return;
         }
 
-        const data = await response.json();
-        console.log('Success:', data);
         alert('Зображення успішно завантажено.');
+        window.location.reload();  // Перезавантажуємо сторінку після успішного завантаження
     } catch (error) {
         console.error('Error:', error);
         alert('Сталася помилка при завантаженні зображення.');

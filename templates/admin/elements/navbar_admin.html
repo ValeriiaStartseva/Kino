@@ -4,11 +4,22 @@
             <img src='/static/images/site_icons/logo.png' alt="Logo" style="height: 40px;">
         </a>
         <div class="ml-auto d-flex align-items-center">
-            <a href="#" class="d-flex align-items-center text-decoration-none text-dark mr-5">
-                <img src="/static/images/site_icons/user.png" alt="user-profile" style="height: 40px;">
-                <span class="ms-2 me-2">Мій кабінет</span>
-            </a>
-            <a href="#" class="btn btn-secondary" id="exit-btn">Вийти</a>
+            {% if request.user.is_authenticated %}
+    {% if request.user.is_superuser %}
+        <a href="#" class="d-flex align-items-center text-decoration-none text-dark mr-5">
+            <img src="/static/images/site_icons/user.png" alt="user-profile" style="height: 40px;">
+            <span class="ms-2 me-2">{{ request.user.email }}</span>
+        </a>
+        <form action="{% url 'logout' %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary" id="exit-btn">Вийти</button>
+        </form>
+    {% else %}
+        <span class="text-danger">У вас немає доступу до цієї частини сайту</span>
+    {% endif %}
+{% else %}
+    <a href="{% url 'custom_admin_login' %}" class="btn btn-secondary" id="login-btn">Вхід</a>
+{% endif %}
         </div>
     </div>
 </nav>
