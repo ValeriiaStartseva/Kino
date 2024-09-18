@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <div class="background-image">
     <div class="content-container mt-5">
         <div class="container-fluid">
-            <!-- Main Image Banner -->
             <div class="container mt-4">
                 <div class="main-image-banner" style="padding-bottom: 20px;">
                     <img src="{{ cinema.main_image.image.url }}" alt="{{ cinema.name }}" class="img-fluid w-100">
@@ -17,7 +17,7 @@
                     <img src="{{ cinema.logo.image.url }}" alt="{{ cinema.name }}" class="img-fluid">
                 </div>
                 <div class="col-md-6">
-                    <a href="#" class="btn btn-success mb-3">Розклад сеансів</a>
+                    <a href="#" class="btn btn-success mb-3">{% trans "Showtimes" %}</a>
                     <h2>{{ cinema.name }}</h2>
                     <p>{{ cinema.title }}</p>
                 </div>
@@ -25,7 +25,7 @@
 
             <div class="row mt-5">
                 <div class="col-md-6">
-                    <h3>Кількість залів: {{ cinema.halls.count }}</h3>
+                    <h3>{% trans "Number of Halls" %}: {{ cinema.halls.count }}</h3>
                     <ul class="list-group">
                         {% for hall in cinema.halls.all %}
                             <li class="list-group-item">
@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <h3>Сеанси сьогодні</h3>
+                    <h3>{% trans "Showtimes Today" %}</h3>
                     <ul class="list-group">
                         {% if showtimes %}
                             {% for showtime in showtimes %}
@@ -47,7 +47,7 @@
                                 </li>
                             {% endfor %}
                         {% else %}
-                            <li class="list-group-item">На сьогодні сеансів немає.</li>
+                            <li class="list-group-item">{% trans "No showtimes available for today." %}</li>
                         {% endif %}
                     </ul>
                 </div>
@@ -56,7 +56,7 @@
             <div class="row mt-5 justify-content-center">
                 <div class="col-md-10">
                     <div class="p-4 text-light" style="background-color: #2c2c2c; border-radius: 8px;">
-                        <h3 class="text-center mb-4">Умови</h3>
+                        <h3 class="text-center mb-4">{% trans "Terms and Conditions" %}</h3>
                         <div class="row">
                             {% for page in pages %}
                                 <div class="col-md-6 mb-4">
@@ -71,7 +71,7 @@
 
             <div class="row mt-5">
                 <div class="col-md-12 text-center">
-                    <h3>Галерея</h3>
+                    <h3>{% trans "Gallery" %}</h3>
                     <div id="carouselGalleryIndicators" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-indicators">
                             {% for image in cinema.gallery.galleryimage_set.all %}

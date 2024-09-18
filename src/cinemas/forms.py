@@ -2,23 +2,29 @@ from .models import Cinema, Hall
 from django import forms
 from django.forms import inlineformset_factory
 from src.core.models import GalleryImage, Gallery
+from modeltranslation.forms import TranslationModelForm
 
 
 class CinemaForm(forms.ModelForm):
     main_image = forms.ModelChoiceField(queryset=GalleryImage.objects.all(), required=True, widget=forms.HiddenInput())
-    gallery_form = forms.ModelMultipleChoiceField(queryset=GalleryImage.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
+    gallery_form = forms.ModelMultipleChoiceField(queryset=GalleryImage.objects.all(), required=False,
+                                                  widget=forms.CheckboxSelectMultiple)
     logo = forms.ModelChoiceField(queryset=GalleryImage.objects.all(), required=True, widget=forms.HiddenInput())
 
     class Meta:
         model = Cinema
         fields = [
-            'name', 'title', 'city', 'gallery_form', 'main_image', 'logo',
+            'name_uk', 'description_uk',
+            'name_en', 'description_en',
+            'city', 'gallery_form', 'main_image', 'logo',
             'url_seo', 'title_seo', 'keywords_seo', 'description_seo'
         ]
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Назва кінотеатру'}),
-            'title': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Опис кінотеатру'}),
-            'city': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Місто'}),
+            'name_uk': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Cinema name (UK)'}),
+            'name_en': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Cinema name (EN)'}),
+            'description_uk': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description (UK)'}),
+            'description_en': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description (EN)'}),
+            'city': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}),
             'main_image': forms.Select(attrs={'class': 'form-control'}),
             'logo': forms.Select(attrs={'class': 'form-control'}),
             'gallery_form': forms.SelectMultiple(attrs={'class': 'form-control'}),
@@ -43,14 +49,18 @@ class HallForm(forms.ModelForm):
     class Meta:
         model = Hall
         fields = [
-            'name', 'description', 'schema_json', 'gallery_form', 'main_image', 'schema_picture',
+            'name_uk', 'description_uk',
+            'name_en', 'description_en',
+            'schema_json', 'gallery_form', 'main_image', 'schema_picture',
             'url_seo', 'title_seo', 'keywords_seo', 'description_seo'
         ]
 
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Назва залу'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Опис залу'}),
-            'schema_json': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Схема у форматі JSON'}),
+            'name_uk': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Hall name (UK)'}),
+            'name_en': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Hall name (EN)'}),
+            'description_uk': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description (UK)'}),
+            'description_en': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description (EN)'}),
+            'schema_json': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'hall schema JSON'}),
             'main_image': forms.Select(attrs={'class': 'form-control'}),
             'schema_picture': forms.Select(attrs={'class': 'form-control'}),
             'gallery_form': forms.SelectMultiple(attrs={'class': 'form-control'}),

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <div class="background-image">
@@ -7,7 +8,7 @@
         <div class="container-fluid">
             <div class="row mb-4">
                 <div class="col-md-12 text-center">
-                    <h2 class="text-dark">Скоро в Кіно</h2>
+                    <h2 class="text-dark">{% trans "Coming Soon" %}</h2>
                 </div>
             </div>
 
@@ -20,8 +21,8 @@
                                 <h5 class="card-title">
                                     <a href="{% url 'movie_detail' movie.slug %}" class="text-warning">{{ movie.name }}</a>
                                 </h5>
-                                <p class="card-text">З {{ movie.first_showtime|date:"d.m.Y" }}</p>
-                                <a href="{% url 'movie_detail' movie.slug %}" class="btn btn-warning mt-auto">Детальніше</a>
+                                <p class="card-text">{% trans "From" %}  {{ movie.first_showtime|date:"d.m.Y" }}</p>
+                                <a href="{% url 'movie_detail' movie.slug %}" class="btn btn-warning mt-auto">{% trans "Learn More" %}</a>
                             </div>
                         </div>
                     </div>

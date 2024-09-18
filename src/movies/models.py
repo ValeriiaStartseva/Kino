@@ -3,8 +3,7 @@ from src.core.models import Gallery, GalleryImage
 from src.core.models import SEOMixin
 from multiselectfield import MultiSelectField
 from django.utils.text import slugify
-
-
+from django.urls import reverse
 
 class Movie(SEOMixin, models.Model):
     AGE_CHOICES = (
@@ -19,12 +18,12 @@ class Movie(SEOMixin, models.Model):
         ('3D', '3D'),
     )
 
-    name = models.CharField(max_length=20, unique=True)
+    name = models.CharField(max_length=20)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     description = models.TextField()
     trailer = models.URLField()
 
-    gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE)
+    gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE, null=True, blank=True)
     main_image = models.OneToOneField(
         GalleryImage,
         on_delete=models.SET_NULL,
@@ -41,4 +40,10 @@ class Movie(SEOMixin, models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('movie_detail', kwargs={'slug': self.slug})
+
+
+
 

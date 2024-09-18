@@ -12,13 +12,13 @@
         </a>
         <form action="{% url 'logout' %}" method="post" class="d-inline">
             {% csrf_token %}
-            <button type="submit" class="btn btn-secondary" id="exit-btn">Вийти</button>
+            <button type="submit" class="btn btn-secondary" id="exit-btn">Logout</button>
         </form>
     {% else %}
-        <span class="text-danger">У вас немає доступу до цієї частини сайту</span>
+        <span class="text-danger">You do not have permissions for this part of site!</span>
     {% endif %}
 {% else %}
-    <a href="{% url 'custom_admin_login' %}" class="btn btn-secondary" id="login-btn">Вхід</a>
+    <a href="{% url 'custom_admin_login' %}" class="btn btn-secondary" id="login-btn">Login</a>
 {% endif %}
         </div>
     </div>

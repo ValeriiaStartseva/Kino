@@ -5,14 +5,14 @@
 <div class="container">
     <form id="MainPageBannersForm" method="post" enctype="multipart/form-data" action="{% url 'main_page_banner' %}">
         {% csrf_token %}
-        <h2>Верхній банер на головній</h2>
+        <h2>Banner on a main page</h2>
         <div class="form-check form-switch mb-3">
             {{ form.status }}
             <label class="form-check-label" for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
         </div>
 
         <div class="mb-3 row align-items-center">
-            <label for="movie_name" class="col-sm-4 col-form-label">Швидкість перемикання</label>
+            <label for="movie_name" class="col-sm-4 col-form-label">Rotation speed</label>
             <div class="col-sm-8">
                 {{ form.rotation_speed }}
                 {% if form.rotation_speed.errors %}
@@ -32,15 +32,15 @@
             {{ form.id }}
             {% if form.instance.gallery_image %}
             <div class="position-relative" style="width: 150px;">
-                <!-- Поле для вибору зображення -->
+
                 <div class="d-none">
                     {{ form.gallery_image }}
                 </div>
 
-                <!-- Прев'ю зображення -->
+
                 <img id="image-preview-{{ forloop.counter0 }}" src="{{ form.instance.gallery_image.image.url }}" class="img-thumbnail" style="width: 100%; height: 100px;" alt="{{ form.instance.alt_text }}">
 
-                <!-- Поле для введення URL -->
+
                 <div class="mt-2">
                     <label for="{{ form.url.id_for_label }}">Введіть URL</label>
                     {{ form.url }}
@@ -51,7 +51,7 @@
                     {% endif %}
                 </div>
 
-                <!-- Поле для прихованого видалення -->
+  
                 <div class="d-none">
                     {{ form.DELETE }}
                 </div>
@@ -63,7 +63,7 @@
         {% endfor %}
     </div>
     {% else %}
-    <p>Немає доступних зображень для відображення.</p>
+    <p>There is no aviable img.</p>
     {% endif %}
 </div>
 
@@ -71,12 +71,12 @@
 
         <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#galleryImageModal" onclick="loadGalleryImages()">Додати</button>
 
-        <!-- Modal для вибору зображень з галереї -->
+
         <div class="modal fade" id="galleryImageModal" tabindex="-1" aria-labelledby="galleryImageModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="galleryImageModalLabel">Вибрати зображення</h5>
+                        <h5 class="modal-title" id="galleryImageModalLabel">Choose img</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
                     </div>
                     <div class="modal-body">
@@ -85,8 +85,8 @@
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <button id="galleryModalCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
-                        <button type="button" class="btn btn-primary" onclick="selectGalleryImage()">Вибрати</button>
+                        <button id="galleryModalCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="selectGalleryImage()">Choose</button>
                     </div>
                 </div>
             </div>

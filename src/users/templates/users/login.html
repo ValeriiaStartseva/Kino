@@ -1,39 +1,40 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <div class="background-image">
     <div class="content-container mt-5">
         <div class="container" style="background-color: #ffffff; padding: 20px; border-radius: 8px;">
-            <h1 class="mb-4 text-center">Вхід</h1>
+            <h1 class="mb-4 text-center">{% trans "Log in" %}</h1>
             <form id="loginForm" method="post" action="{% url 'login' %}">
                 {% csrf_token %}
                 {{ loginform.non_field_errors }}
                 <div class="row justify-content-center">
                     <div class="col-md-6">
                         <div class="mb-3 row align-items-center">
-                            <label for="id_email" class="col-sm-4 col-form-label text-end">Email</label>
+                            <label for="id_email" class="col-sm-4 col-form-label text-end">{% trans "Email" %}</label>
                             <div class="col-sm-8">
                                 {{ loginform.email }}
                                 <div class="text-danger">{{ loginform.email.errors }}</div>
                             </div>
                         </div>
                         <div class="mb-3 row align-items-center">
-                            <label for="id_password" class="col-sm-4 col-form-label text-end">Пароль</label>
+                            <label for="id_password" class="col-sm-4 col-form-label text-end">{% trans "Password" %}</label>
                             <div class="col-sm-8">
                                 {{ loginform.password }}
                                 <div class="text-danger">{{ loginform.password.errors }}</div>
                             </div>
                         </div>
                         <div class="text-center mb-2">
-                            <button type="submit" class="btn btn-warning">Увійти</button>
+                            <button type="submit" class="btn btn-warning">{% trans "Log in" %}</button>
                         </div>
                     </div>
                 </div>
             </form>
             <div class="text-center mb-2">
-                Ще не маєш акаунту?
-                <a href="{% url 'register' %}" class="btn btn-warning btn-sm">Зареєструватись</a>
+                {% trans "Don't have an account?" %}
+                <a href="{% url 'register' %}" class="btn btn-warning btn-sm">{% trans "Register" %}</a>
             </div>
         </div>
     </div>

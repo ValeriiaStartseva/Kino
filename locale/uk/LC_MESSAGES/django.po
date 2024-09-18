@@ -1,0 +1,469 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-18 12:34+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#: config/settings.py:126
+msgid "Ukrainian"
+msgstr "укр"
+
+#: config/settings.py:127
+msgid "English"
+msgstr "англ"
+
+#: src/cinemas/templates/cinemas/our_cinemas.html:14
+msgid "Our theaters"
+msgstr "Наші кінотеатри"
+
+#: src/core/templates/pages/billboard.html:11
+msgid "In theaters today"
+msgstr "В кінотеатрах сьогодні"
+
+#: src/core/templates/pages/billboard.html:24
+msgid "Learn more"
+msgstr "Детальніше"
+
+#: src/core/templates/pages/book_ticket.html:17
+#: src/core/templates/pages/contacts_cinema.html:18
+msgid "Ticket Booking"
+msgstr "Бронювання квитка"
+
+#: src/core/templates/pages/book_ticket.html:25
+msgid "Date and Time"
+msgstr "Дата та час"
+
+#: src/core/templates/pages/book_ticket.html:26
+msgid "Price"
+msgstr "Ціна"
+
+#: src/core/templates/pages/book_ticket.html:27
+#: src/core/templates/pages/movie_page.html:52
+#: src/core/templates/pages/timetable.html:47
+#: src/core/templates/pages/timetable.html:71
+msgid "Hall"
+msgstr "Зал"
+
+#: src/core/templates/pages/book_ticket.html:31
+msgid "Select a Seat"
+msgstr "Вибрати місце"
+
+#: src/core/templates/pages/book_ticket.html:37
+msgid "Book Now"
+msgstr "Забронювати"
+
+#: src/core/templates/pages/book_ticket.html:39
+msgid "To book a ticket, please"
+msgstr "Щоб забронювати квиток"
+
+#: src/core/templates/pages/book_ticket.html:39
+msgid "log in to your account"
+msgstr "зайдійть у аккаунт"
+
+#: src/core/templates/pages/book_ticket.html:44
+msgid "Total Price"
+msgstr "Сума"
+
+#: src/core/templates/pages/book_ticket.html:44
+msgid "UAH"
+msgstr "грн"
+
+#: src/core/templates/pages/cinema_page.html:20
+msgid "Showtimes"
+msgstr "Сеанси"
+
+#: src/core/templates/pages/cinema_page.html:28
+msgid "Number of Halls"
+msgstr "Кількість залів"
+
+#: src/core/templates/pages/cinema_page.html:39
+#: src/core/templates/pages/hall_page.html:31
+msgid "Showtimes Today"
+msgstr "Сеанси на сьогодні"
+
+#: src/core/templates/pages/cinema_page.html:50
+#: src/core/templates/pages/hall_page.html:42
+msgid "No showtimes available for today."
+msgstr "На сьогодні сеансів немає"
+
+#: src/core/templates/pages/cinema_page.html:59
+msgid "Terms and Conditions"
+msgstr "Умови"
+
+#: src/core/templates/pages/cinema_page.html:74
+msgid "Gallery"
+msgstr "Фотогалерея"
+
+#: src/core/templates/pages/cinemas.html:7
+msgid "Our Cinemas"
+msgstr "Наші кінотеатри"
+
+#: src/core/templates/pages/coming_soon_page.html:11
+#: templates/elements/footer.html:33 templates/elements/navbar.html:125
+msgid "Coming Soon"
+msgstr "Скоро в прокаті"
+
+#: src/core/templates/pages/coming_soon_page.html:24
+msgid "From"
+msgstr "З"
+
+#: src/core/templates/pages/coming_soon_page.html:25
+#: src/core/templates/pages/news.html:34
+#: src/core/templates/pages/promotions.html:33
+msgid "Learn More"
+msgstr "Детальніше"
+
+#: src/core/templates/pages/contacts_cinema.html:9
+msgid "Contacts"
+msgstr "Контакти"
+
+#: src/core/templates/pages/contacts_cinema.html:16
+#: src/core/templates/pages/timetable.html:32
+msgid "Cinema"
+msgstr "Кінотеатр"
+
+#: src/core/templates/pages/contacts_cinema.html:17
+#: src/users/templates/users/register.html:48
+#: src/users/templates/users/register.html:50
+#: src/users/templates/users/user_acc.html:38
+#: src/users/templates/users/user_acc.html:40
+msgid "Address"
+msgstr "Адреса"
+
+#: src/core/templates/pages/contacts_cinema.html:32
+msgid "Coordinates for this cinema are not specified."
+msgstr "Координати для цього кінотеатру невизначені"
+
+#: src/core/templates/pages/hall_page.html:24
+msgid "Hall Map"
+msgstr "Схема залу"
+
+#: src/core/templates/pages/hall_page.html:50
+#: src/core/templates/pages/pages_page.html:24
+msgid "Photo Gallery"
+msgstr "Фотогралерея"
+
+#: src/core/templates/pages/movie_page.html:22
+msgid "Showtimes in the Cinema"
+msgstr "Сеанси в кіно"
+
+#: src/core/templates/pages/movie_page.html:26
+msgid "All Cinemas"
+msgstr "Всі кінотеатри"
+
+#: src/core/templates/pages/movie_page.html:39
+#: src/core/templates/pages/timetable.html:56
+msgid "Show"
+msgstr "Показати"
+
+#: src/core/templates/pages/movie_page.html:65
+msgid "Buy Ticket"
+msgstr "Бронювати квиток"
+
+#: src/core/templates/pages/movie_page.html:73
+msgid "Photos and Posters"
+msgstr "Фото та постери"
+
+#: src/core/templates/pages/news.html:17 templates/elements/footer.html:48
+#: templates/elements/navbar.html:139
+msgid "News"
+msgstr "Новини"
+
+#: src/core/templates/pages/promotions.html:18
+msgid "Promotions and Discounts"
+msgstr "Акції та знижки"
+
+#: src/core/templates/pages/search_results.html:7
+#, fuzzy
+#| msgid "Search"
+msgid "Search Results"
+msgstr "Пошук"
+
+#: src/core/templates/pages/search_results.html:11
+#: templates/elements/navbar.html:183 templates/elements/navbar.html:184
+msgid "Search"
+msgstr "Пошук"
+
+#: src/core/templates/pages/search_results.html:15
+msgid "Results for"
+msgstr "Результати для"
+
+#: src/core/templates/pages/search_results.html:27
+msgid "No results found."
+msgstr "Результати не знайдені"
+
+#: src/core/templates/pages/search_results.html:30
+msgid "Enter a search term to find results."
+msgstr "Введіть запит для пошуку"
+
+#: src/core/templates/pages/timetable.html:9
+msgid "Movie Schedule"
+msgstr "Розклад сеансів"
+
+#: src/core/templates/pages/timetable.html:16
+msgid "Show only"
+msgstr "Показувати тільки"
+
+#: src/core/templates/pages/timetable.html:34
+#: src/core/templates/pages/timetable.html:49
+msgid "All"
+msgstr "Всі"
+
+#: src/core/templates/pages/timetable.html:42
+msgid "Date"
+msgstr "Дата"
+
+#: src/core/templates/pages/timetable.html:69
+msgid "Time"
+msgstr "Час"
+
+#: src/core/templates/pages/timetable.html:70
+msgid "Movie"
+msgstr "Фільм"
+
+#: src/core/templates/pages/timetable.html:72
+msgid "Price in UAH"
+msgstr "Ціна"
+
+#: src/core/templates/pages/timetable.html:73
+msgid "Booking"
+msgstr "Забронювати квиток"
+
+#: src/core/templates/pages/timetable.html:83
+msgid "Book"
+msgstr "Бронювати"
+
+#: src/users/models.py:48
+msgid "staff status"
+msgstr ""
+
+#: src/users/models.py:49
+msgid "active"
+msgstr ""
+
+#: src/users/models.py:50
+msgid "date joined"
+msgstr ""
+
+#: src/users/models.py:51
+msgid "last login"
+msgstr ""
+
+#: src/users/models.py:59
+msgid "user"
+msgstr ""
+
+#: src/users/models.py:60
+msgid "users"
+msgstr ""
+
+#: src/users/templates/users/login.html:9
+#: src/users/templates/users/login.html:30
+msgid "Log in"
+msgstr "Вхід"
+
+#: src/users/templates/users/login.html:16
+#: src/users/templates/users/register.html:41
+#: src/users/templates/users/register.html:43
+#: src/users/templates/users/user_acc.html:32
+#: src/users/templates/users/user_acc.html:34
+msgid "Email"
+msgstr ""
+
+#: src/users/templates/users/login.html:23
+#: src/users/templates/users/register.html:55
+#: src/users/templates/users/register.html:57
+#: src/users/templates/users/user_acc.html:44
+#: src/users/templates/users/user_acc.html:46
+msgid "Password"
+msgstr "Пароль"
+
+#: src/users/templates/users/login.html:36
+msgid "Don't have an account?"
+msgstr "Ще не маєш аккаунту?"
+
+#: src/users/templates/users/login.html:37
+#: src/users/templates/users/register.html:134
+#: templates/elements/user_navbar.html:14
+msgid "Register"
+msgstr "Зареєструватись"
+
+#: src/users/templates/users/register.html:14
+msgid "Registration"
+msgstr "Реєстрація"
+
+#: src/users/templates/users/register.html:20
+#: src/users/templates/users/register.html:22
+#: src/users/templates/users/user_acc.html:14
+#: src/users/templates/users/user_acc.html:16
+msgid "First Name"
+msgstr "Імʼя"
+
+#: src/users/templates/users/register.html:27
+#: src/users/templates/users/register.html:29
+#: src/users/templates/users/user_acc.html:20
+#: src/users/templates/users/user_acc.html:22
+msgid "Last Name"
+msgstr "Прізвище"
+
+#: src/users/templates/users/register.html:34
+#: src/users/templates/users/register.html:36
+#: src/users/templates/users/user_acc.html:26
+#: src/users/templates/users/user_acc.html:28
+msgid "Nickname"
+msgstr "Нікнейм"
+
+#: src/users/templates/users/register.html:62
+#: src/users/templates/users/register.html:64
+#: src/users/templates/users/user_acc.html:50
+#: src/users/templates/users/user_acc.html:52
+msgid "Repeat Password"
+msgstr "Повторити пароль"
+
+#: src/users/templates/users/register.html:71
+#: src/users/templates/users/user_acc.html:58
+msgid "Language"
+msgstr "Мова"
+
+#: src/users/templates/users/register.html:75
+msgid "UK"
+msgstr ""
+
+#: src/users/templates/users/register.html:79
+msgid "EN"
+msgstr ""
+
+#: src/users/templates/users/register.html:85
+#: src/users/templates/users/user_acc.html:71
+msgid "Gender"
+msgstr "Стать"
+
+#: src/users/templates/users/register.html:89
+#: src/users/templates/users/user_acc.html:75
+msgid "M"
+msgstr "Ч"
+
+#: src/users/templates/users/register.html:93
+#: src/users/templates/users/user_acc.html:79
+msgid "F"
+msgstr "Ж"
+
+#: src/users/templates/users/register.html:99
+#: src/users/templates/users/user_acc.html:84
+msgid "Date of Birth"
+msgstr "Дата народження"
+
+#: src/users/templates/users/register.html:106
+#: src/users/templates/users/register.html:108
+#: src/users/templates/users/user_acc.html:90
+#: src/users/templates/users/user_acc.html:92
+msgid "City"
+msgstr "Місто"
+
+#: src/users/templates/users/register.html:109
+#: src/users/templates/users/user_acc.html:93
+msgid "Choose a city"
+msgstr "Вибрати місто"
+
+#: src/users/templates/users/register.html:118
+#: src/users/templates/users/register.html:120
+#: src/users/templates/users/user_acc.html:98
+#: src/users/templates/users/user_acc.html:100
+msgid "Card Number"
+msgstr "Номер карти"
+
+#: src/users/templates/users/register.html:125
+#: src/users/templates/users/register.html:127
+#: src/users/templates/users/user_acc.html:104
+#: src/users/templates/users/user_acc.html:106
+msgid "Phone Number"
+msgstr "Номер телефону"
+
+#: src/users/templates/users/user_acc.html:9
+msgid "Customer Page"
+msgstr "Сторінка користувача"
+
+#: src/users/templates/users/user_acc.html:62
+msgid "UKR"
+msgstr ""
+
+#: src/users/templates/users/user_acc.html:66
+msgid "RU"
+msgstr ""
+
+#: src/users/templates/users/user_acc.html:112
+msgid "Save"
+msgstr "Зберегти"
+
+#: templates/elements/footer.html:13
+msgid "Our Mobile Apps"
+msgstr "Наші мобільні застосунки"
+
+#: templates/elements/footer.html:27 templates/elements/navbar.html:119
+msgid "Billboard"
+msgstr "Афіша"
+
+#: templates/elements/footer.html:30 templates/elements/navbar.html:122
+msgid "Schedule"
+msgstr "Розклад"
+
+#: templates/elements/footer.html:36 templates/elements/navbar.html:128
+msgid "Cinemas"
+msgstr "Кінотеатри"
+
+#: templates/elements/footer.html:39 templates/elements/navbar.html:131
+msgid "Promotions"
+msgstr "Акції"
+
+#: templates/elements/footer.html:45 templates/elements/navbar.html:135
+msgid "About Cinema"
+msgstr "Про кінотеатр"
+
+#: templates/elements/footer.html:54 templates/elements/navbar.html:147
+msgid "Contact Us"
+msgstr "Контакти"
+
+#: templates/elements/footer.html:60
+msgid "Our Social Media"
+msgstr "Наші соціальні мережі"
+
+#: templates/elements/news_and_promotions.html:4
+msgid "News and promotions"
+msgstr "Новини та акції"
+
+#: templates/elements/user_navbar.html:10
+msgid "Logout"
+msgstr "Вийти"
+
+#: templates/elements/user_navbar.html:13
+msgid "Login"
+msgstr "Вхід"
+
+#: templates/elements/watch_soon.html:5
+msgid "Soon in theaters"
+msgstr "Скоро в кінотеатрах"
+
+#: templates/elements/watch_soon.html:16 templates/elements/watch_today.html:16
+msgid "Book a ticket"
+msgstr "Бронювання квитка"
+
+#: templates/elements/watch_today.html:5
+msgid "Watch today"
+msgstr "Дивитись сьогодні"

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <div class="background-image">
@@ -13,7 +14,7 @@
 
             <div class="row mb-4">
                 <div class="col-md-12 text-center">
-                    <h2 class="text-dark">Бронювання квитка</h2>
+                    <h2 class="text-dark">{% trans "Ticket Booking" %}</h2>
                 </div>
             </div>
 
@@ -21,26 +22,26 @@
                 <div class="col-md-3">
                     <img src="{{ showtime.movie_id.main_image.image.url }}" class="img-fluid" alt="{{ showtime.movie_id.name }}">
                     <h3>{{ showtime.movie_id.name }}</h3>
-                    <p><strong>Дата і час:</strong> {{ showtime.show_time|date:"d M Y, H:i" }}</p>
-                    <p><strong>Ціна:</strong> {{ showtime.price }} грн.</p>
-                    <p><strong>Зал:</strong> {{ showtime.hall_id.name }}</p>
+                    <p><strong>{% trans "Date and Time" %}:</strong> {{ showtime.show_time|date:"d M Y, H:i" }}</p>
+                    <p><strong>{% trans "Price" %}:</strong> {{ showtime.price }} UAH</p>
+                    <p><strong>{% trans "Hall" %}:</strong> {{ showtime.hall_id.name }}</p>
                 </div>
 
                 <div class="col-md-9">
-                    <h4>Обрати місце:</h4>
+                    <h4>{% trans "Select a Seat" %}:</h4>
                     <div id="seating-chart" class="seating-chart-container">
                     </div>
 
                     <div class="mt-4">
                         {% if user.is_authenticated %}
-                            <button id="book-tickets" class="btn btn-warning btn-lg">Забронювати</button>
+                            <button id="book-tickets" class="btn btn-warning btn-lg">{% trans "Book Now" %}</button>
                         {% else %}
-                            <p>Для того, щоб забронювати квиток, будь ласка, <a href="{% url 'login' %}?next={{ request.path }}">увійдіть у аккаунт</a>.</p>
+                            <p>{% trans "To book a ticket, please" %} <a href="{% url 'login' %}?next={{ request.path }}">{% trans "log in to your account" %}</a>.</p>
                         {% endif %}
                     </div>
 
                     <div class="mt-2">
-                        <p><strong>Загальна вартість:</strong> <span id="total-price">0</span> грн.</p>
+                        <p><strong>{% trans "Total Price" %}:</strong> <span id="total-price">0</span> {% trans "UAH" %}.</p>
                     </div>
                 </div>
             </div>
@@ -49,11 +50,11 @@
 </div>
 
 <script>
-    const hallSchema = {{ hall_schema|safe }}; // Завантажуємо JSON з Django в JavaScript
+    const hallSchema = {{ hall_schema|safe }}; // Load JSON from Django into JavaScript
 
     function drawSeatingChart(schema) {
         const seatingChart = document.getElementById('seating-chart');
-        seatingChart.innerHTML = ''; // Очищаємо вміст контейнера
+        seatingChart.innerHTML = ''; // Clear the content of the container
 
         schema.rows.forEach(row => {
             const rowDiv = document.createElement('div');
@@ -61,7 +62,7 @@
 
             const rowLabel = document.createElement('span');
             rowLabel.classList.add('row-label');
-            rowLabel.textContent = `Ряд ${row.row_number}`;
+            rowLabel.textContent = `Row ${row.row_number}`;
             rowDiv.appendChild(rowLabel);
 
             row.seats.forEach(seat => {
@@ -75,7 +76,7 @@
                     seatDiv.classList.add('reserved');
                 } else {
                     seatDiv.addEventListener('click', () => {
-                        seatDiv.classList.toggle('selected'); // Вибір або зняття вибору з місця
+                        seatDiv.classList.toggle('selected'); // Toggle seat selection
                         calculateTotalPrice();
                     });
                 }
@@ -93,14 +94,14 @@
         document.getElementById('total-price').textContent = totalPrice;
     }
 
-    // Викликаємо функцію для відмалювання схеми
+    // Call the function to draw the seating chart
     drawSeatingChart(hallSchema);
 
     {% if user.is_authenticated %}
     document.getElementById('book-tickets').addEventListener('click', () => {
         const selectedSeats = document.querySelectorAll('.seat.selected');
         if (selectedSeats.length === 0) {
-            alert('Будь ласка, оберіть місця для бронювання.');
+            alert('Please select seats to book.');
             return;
         }
 
@@ -112,7 +113,7 @@
             });
         });
 
-        // Відправка даних на сервер через POST-запит
+        // Send data to the server via a POST request
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = "{% url 'booking' showtime.id %}";
@@ -131,15 +132,15 @@
         });
 
         document.body.appendChild(form);
-        form.submit(); // Відправка форми, яка перезавантажує сторінку
+        form.submit(); // Submit the form, which reloads the page
     });
     {% endif %}
 </script>
 
 <style>
     .main-banner-image {
-        max-height: 500px; /* Обмеження максимальної висоти банера */
-        object-fit: cover; /* Зображення масштабується з обрізкою, щоб заповнити контейнер */
+        max-height: 500px; /* Limit the maximum height of the banner */
+        object-fit: cover; /* Image is scaled with cropping to fill the container */
     }
 
     .seating-chart-container {
@@ -163,21 +164,21 @@
     .seat {
         width: 40px;
         height: 40px;
-        background-color: #FFA500; /* Початковий колір місця */
+        background-color: #FFA500; /* Initial seat color */
         margin: 5px;
         text-align: center;
-        line-height: 40px; /* Вирівнювання тексту по вертикалі */
+        line-height: 40px; /* Vertical text alignment */
         cursor: pointer;
         border-radius: 5px;
         border: 1px solid #ddd;
     }
 
     .seat.selected {
-        background-color: #00FF00; /* Зміна кольору при виборі */
+        background-color: #00FF00; /* Change color when selected */
     }
 
     .seat.reserved {
-        background-color: #FF0000; /* Колір для зарезервованих місць */
+        background-color: #FF0000; /* Color for reserved seats */
         cursor: not-allowed;
     }
 
@@ -186,13 +187,13 @@
     }
 
     .btn-warning {
-        background-color: #FFC107; /* Жовтий колір кнопки */
-        border-color: #FFC107; /* Жовтий колір бордюру кнопки */
+        background-color: #FFC107; /* Yellow button color */
+        border-color: #FFC107; /* Yellow button border */
     }
 
     .btn-warning:hover {
-        background-color: #E0A800; /* Трохи темніший жовтий при наведенні */
-        border-color: #D39E00; /* Трохи темніший бордюр при наведенні */
+        background-color: #E0A800; /* Darker yellow on hover */
+        border-color: #D39E00; /* Darker border on hover */
     }
 </style>
 {% endblock %}

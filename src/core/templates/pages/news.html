@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <div class="background-image">
     <div class="content-container mt-5">
         <div class="container-fluid">
-            <!-- Main Banner Image -->
             <div class="container mt-4">
                 <div class="main-image-banner" style="padding-bottom: 20px;">
                     <img src="{% static 'images/news_banner.jpg' %}" alt="Promotions Banner" class="img-fluid w-100">
@@ -14,7 +14,7 @@
 
             <div class="row mb-4">
                 <div class="col-md-12 text-center">
-                    <h2 class="text-dark">Новини</h2>
+                    <h2 class="text-dark">{% trans "News" %}</h2>
                 </div>
             </div>
 
@@ -31,7 +31,7 @@
                                 </h5>
                                 <p class="card-text">{{ post.published_date|date:"d.m.Y" }}</p>
                                 <p class="card-text">{{ post.description|truncatewords:20 }}</p>
-                                <a href="{{ post.get_absolute_url }}" class="btn btn-warning mt-auto">Детальніше</a>
+                                <a href="{{ post.get_absolute_url }}" class="btn btn-warning mt-auto">{% trans "Learn More" %}</a>
                             </div>
                         </div>
                     </div>
@@ -72,9 +72,9 @@
 
 <style>
     .news-image {
-        width: 100%; /* Забезпечує, що зображення займатиме всю ширину контейнера */
-        height: 200px; /* Фіксована висота для всіх зображень новин */
-        object-fit: cover; /* Забезпечує пропорційне обрізання зображення */
+        width: 100%; /* Ensures the image takes up the full width of the container */
+        height: 200px; /* Fixed height for all news images */
+        object-fit: cover; /* Ensures proportional image cropping */
     }
 </style>
-{% endblock %}
+{% endblock %}  

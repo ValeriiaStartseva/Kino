@@ -5,7 +5,7 @@
 <div class="container">
     <form id="BackgroundBannerForm" method="post" enctype="multipart/form-data" action="{% url 'back_banner' %}">
         {% csrf_token %}
-        <h2>Банер на задньому фоні</h2>
+        <h2>Background banner</h2>
 
         <div class="form-check">
             <input class="form-check-input" type="radio" name="background_type" id="flexRadioDefault1" value="css_background" onclick="toggleFields()" {% if banner_instance and banner_instance.back == 'css' %}checked{% endif %}>
@@ -32,7 +32,7 @@
 
         <input type="hidden" name="back" id="id_back" value="{{ form.back.initial }}">
 
-        <button type="submit" class="btn btn-primary mt-3">Зберегти</button>
+        <button type="submit" class="btn btn-primary mt-3">Save</button>
     </form>
 </div>
 

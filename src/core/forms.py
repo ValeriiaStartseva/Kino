@@ -8,8 +8,8 @@ class GalleryImageForm(forms.ModelForm):
         fields = ['alt_text', 'image', 'gallery']
         labels = {
             'alt_text': 'Alt-text',
-            'image': 'Картинка',
-            'gallery': 'Галерея',
+            'image': 'img',
+            'gallery': 'gallery',
         }
         widgets = {
             'alt_text': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'alt-text'}),
@@ -19,7 +19,6 @@ class GalleryImageForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(GalleryImageForm, self).__init__(*args, **kwargs)
-        # Робимо alt_text необов'язковим у формі
         self.fields['alt_text'].required = False
 
 
@@ -31,3 +30,11 @@ class SEOMixinForm(forms.ModelForm):
     class Meta:
         model = SEOMixin
         fields = ['url_seo', 'title_seo', 'keywords_seo', 'description_seo']
+
+
+class SearchForm(forms.Form):
+    query = forms.CharField(max_length=255, required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control form-control-sm',
+        'placeholder': 'Search...',
+        'aria-label': 'Search'
+    }))

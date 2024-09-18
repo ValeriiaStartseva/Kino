@@ -1,6 +1,8 @@
+{% load i18n %}
+
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4" style="text-align: center">Дивіться сьогодні</h1>
+        <h1 class="mb-4" style="text-align: center">{% trans "Watch today" %}</h1>
         <div class="row">
             {% for movie in movies %}
                 <div class="col-md-3 mb-4">
@@ -11,7 +13,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ movie.title }}</h5>
                             
-                          <a href="{% url 'movie_detail' movie.slug %}" class="btn btn-warning mt-auto">Купити квиток</a>
+                          <a href="{% url 'movie_detail' movie.slug %}" class="btn btn-warning mt-auto">{% trans "Book a ticket" %}</a>
 
                         </div>
                     </div>

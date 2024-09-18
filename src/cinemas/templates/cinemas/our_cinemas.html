@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 
@@ -10,7 +11,7 @@
 <body>
 <div class="cinemas-wrapper">
     <div class="container mt-5">
-        <h1 class="mb-4" style="text-align: center">Наші кінотеатри</h1>
+        <h1 class="mb-4" style="text-align: center">{% trans "Our theaters" %}</h1>
         <div class="row">
             {% for cinema in cinemas %}
                 <div class="col-md-6 mb-4">
@@ -23,11 +24,6 @@
                 </div>
             {% endfor %}
         </div>
-    </div>
-    <div class="adv-container mt-5">
-      {% block advertising %}
-        {% include 'elements/ad_block.html' %}
-      {% endblock %}
     </div>
 </div>
 

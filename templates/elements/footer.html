@@ -1,98 +1,81 @@
 {% load static %}
+{% load i18n %}
 
-<!-- Footer -->
 <footer class="text-center text-lg-start bg-body-tertiary text-muted">
-  <!-- Section: Social media -->
-  <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
-  </section>
-  <!-- Section: Social media -->
+    <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+    </section>
 
-  <!-- Section: Links  -->
-  <section class="">
-    <div class="container text-center text-md-start mt-5">
-      <!-- Grid row -->
-      <div class="row mt-3">
-        <!-- Grid column -->
-        <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mb-4">
-          <!-- Content -->
-          <h6 class="text-uppercase fw-bold mb-4">
-            <i class="fas fa-gem me-3"></i>Наші мобільні застосунки
-          </h6>
-          <div>
-              <a href="" style="text-decoration: none">
-                  <img alt="google" src="/static/images/site_icons/google.png" width="125" height="60" />
-              </a>
-              <a href="https://www.instagram.com/" style="text-decoration: none">
-                  <img alt="apple" src="/static/images/site_icons/apple.png" width="135" height="80" />
-              </a>
-          </div>
+    <section class="">
+        <div class="container text-center text-md-start mt-5">
+            <div class="row mt-3">
+                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mb-4">
+                    <h6 class="text-uppercase fw-bold mb-4">
+                        <i class="fas fa-gem me-3"></i>{% trans "Our Mobile Apps" %}
+                    </h6>
+                    <div>
+                        <a href="" style="text-decoration: none">
+                            <img alt="google" src="{% static 'images/site_icons/google.png' %}" width="125" height="60" />
+                        </a>
+                        <a href="https://www.instagram.com/" style="text-decoration: none">
+                            <img alt="apple" src="{% static 'images/site_icons/apple.png' %}" width="135" height="80" />
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                    <h6 class="text-uppercase fw-bold mb-4">
+                        {% trans "Billboard" %}
+                    </h6>
+                    <p>
+                        <a href="{% url 'timetable' %}" class="text-reset">{% trans "Schedule" %}</a>
+                    </p>
+                    <p>
+                        <a href="{% url 'coming_soon' %}" class="text-reset">{% trans "Coming Soon" %}</a>
+                    </p>
+                    <p>
+                        <a href="{% url 'cinemas' %}" class="text-reset">{% trans "Cinemas" %}</a>
+                    </p>
+                    <p>
+                        <a href="{% url 'promotions' %}" class="text-reset">{% trans "Promotions" %}</a>
+                    </p>
+                </div>
+
+                <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                    <h6 class="text-uppercase fw-bold mb-4">
+                        {% trans "About Cinema" %}
+                    </h6>
+                    <ul class="list-unstyled">
+                        <a class="nav-link active" aria-current="page" href="{% url 'news' %}">{% trans "News" %}</a>
+                        {% for page in pages %}
+                        <li class="footer-item">
+                            <a class="fot-link active" aria-current="page" href="{{ page.get_absolute_url }}">{{ page.name }}</a>
+                        </li>
+                        {% endfor %}
+                        <a class="nav-link active" aria-current="page" href="{% url 'contact_us' %}">{% trans "Contact Us" %}</a>
+                    </ul>
+                </div>
+
+                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                    <h6 class="text-uppercase fw-bold mb-4">
+                        {% trans "Our Social Media" %}
+                    </h6>
+                    <div>
+                        <a href="https://web.telegram.org/" style="text-decoration: none">
+                            <img src="{% static 'images/site_icons/telegram.png' %}" width="30" height="30" />
+                        </a>
+                        <a href="https://www.instagram.com/" style="text-decoration: none">
+                            <img src="{% static 'images/site_icons/insta.png' %}" width="30" height="30" />
+                        </a>
+                        <a href="https://x.com/home" style="text-decoration: none">
+                            <img src="{% static 'images/site_icons/twitter.png' %}" width="30" height="30" />
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- Grid column -->
+    </section>
 
-        <!-- Grid column -->
-        <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-          <!-- Links -->
-          <h6 class="text-uppercase fw-bold mb-4">
-            Афіша
-          </h6>
-          <p>
-            <a href="{% url 'timetable' %}" class="text-reset">Розклад</a>
-          </p>
-          <p>
-            <a href="{% url 'coming_soon' %}" class="text-reset">Скоро в кіно</a>
-          </p>
-          <p>
-            <a href="{% url 'cinemas' %}" class="text-reset">Кінотеатри</a>
-          </p>
-          <p>
-            <a href="{% url 'promotions' %}" class="text-reset">Акції</a>
-          </p>
-        </div>
-        <!-- Grid column -->
-
-        <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
-    <h6 class="text-uppercase fw-bold mb-4">
-        Про кінотеатр
-    </h6>
-    <ul class="list-unstyled">
-    <a class="nav-link active" aria-current="page" href="{% url 'news' %}">Новини</a>
-        {% for page in pages %}
-            <li class="footer-item">
-                <a class="fot-link active" aria-current="page" href="{{ page.get_absolute_url }}">{{ page.name }}</a>
-            </li>
-        {% endfor %}
-    <a class="nav-link active" aria-current="page" href="{% url 'contact_us' %}">Контакти</a>
-    </ul>
-</div>
-
-        <!-- Grid column -->
-
-        <!-- Grid column -->
-        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-          <!-- Links -->
-          <h6 class="text-uppercase fw-bold mb-4">Наші соціальні мережі</h6>
-          <div>
-              <a href="https://web.telegram.org/" style="text-decoration: none">
-                  <img src="/static/images/site_icons/telegram.png" width="30" height="30" />
-              </a>
-
-              <a href="https://www.instagram.com/" style="text-decoration: none">
-                  <img src="/static/images/site_icons/insta.png" width="30" height="30" />
-              </a>
-              <a href="https://x.com/home" style="text-decoration: none">
-                  <img src="/static/images/site_icons/twitter.png" width="30" height="30" />
-              </a>
-          </div>
-        </div>
-        <!-- Grid column -->
-      </div>
-      <!-- Grid row -->
+    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+        © 2024 Development team
     </div>
-  </section>
-  <!-- Section: Links  -->
-
-  <!-- Copyright -->
-  <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-    © 2024 Development team
-  </div>
 </footer>

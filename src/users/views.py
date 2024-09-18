@@ -53,7 +53,7 @@ def users_list_admin(request):
     if request.method == 'GET':
         users_list = User.objects.all().order_by('id')
 
-        paginator = Paginator(users_list, 2)
+        paginator = Paginator(users_list, 5)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 

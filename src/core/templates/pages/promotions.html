@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <div class="background-image">
@@ -11,15 +12,13 @@
                     <img src="{% static 'images/prom_banner.jpg' %}" alt="Promotions Banner" class="img-fluid w-100">
                 </div>
             </div>
-
-            <!-- Заголовок сторінки -->
+        
             <div class="row mb-4">
                 <div class="col-md-12 text-center">
-                    <h2 class="text-dark">Акції та Знижки</h2>
+                    <h2 class="text-dark">{% trans "Promotions and Discounts" %}</h2>
                 </div>
             </div>
-
-            <!-- Список акцій -->
+        
             <div class="row">
                 {% for post in posts %}
                     <div class="col-md-4 mb-4">
@@ -31,14 +30,13 @@
                                 </h5>
                                 <p class="card-text">{{ post.published_date|date:"d.m.Y" }}</p>
                                 <p class="card-text">{{ post.description|truncatewords:20 }}</p>
-                                <a href="{{ post.get_absolute_url }}" class="btn btn-warning mt-auto">Детальніше</a>
+                                <a href="{{ post.get_absolute_url }}" class="btn btn-warning mt-auto">{% trans "Learn More" %}</a>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
             </div>
-
-            <!-- Пагінація -->
+        
             <div class="row">
                 <div class="col-md-12">
                     <nav aria-label="Page navigation">
@@ -73,9 +71,9 @@
 
 <style>
     .promo-image {
-        width: 100%; /* Зображення заповнює всю ширину контейнера */
-        height: 200px; /* Встановлює однакову висоту для всіх зображень акцій */
-        object-fit: cover; /* Забезпечує пропорційне обрізання зображення */
+        width: 100%; /* Ensures the image fills the container width */
+        height: 200px; /* Sets a consistent height for all promotion images */
+        object-fit: cover; /* Ensures proportional cropping of the image */
     }
 </style>
 {% endblock %}

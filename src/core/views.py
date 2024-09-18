@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
-from .forms import GalleryImageForm
+from .forms import GalleryImageForm, SearchForm
 from .models import GalleryImage, Gallery
 from django.http import JsonResponse
 from src.movies.models import Movie
@@ -335,3 +335,18 @@ def cinemas_view(request):
         'cinemas': cinemas,
     }
     return render(request, 'pages/cinemas.html', context)
+
+
+
+def search_view(request):
+    form = SearchForm()
+    query = None
+    results = []
+
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            results = Movie.objects.filter(name__icontains=query)
+
+    return render(request, 'pages/search_results.html', {'form': form, 'query': query, 'results': results})

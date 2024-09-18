@@ -13,7 +13,7 @@
     </div>
 
  <div class="mb-3 row align-items-center">
-            <label for="post_type" class="col-sm-4 col-form-label">Тип</label>
+            <label for="post_type" class="col-sm-4 col-form-label">Type</label>
             <div class="col-sm-8">
                 {{ form.type }}
                 {% if form.type.errors %}
@@ -23,7 +23,7 @@
         </div>
 
     <div class="mb-3 row align-items-center">
-            <label for="published_date" class="col-sm-4 col-form-label">Дата публікації</label>
+            <label for="published_date" class="col-sm-4 col-form-label">Publication date</label>
             <div class="col-sm-8">
                 {{ form.published_date }}
                 {% if form.published_date.errors %}
@@ -34,24 +34,45 @@
 
 
         <div class="mb-3 row align-items-center">
-            <label for="movie_name" class="col-sm-4 col-form-label">Назва</label>
+            <label for="movie_name_en" class="col-sm-4 col-form-label">Post name (EN)</label>
             <div class="col-sm-8">
-                {{ form.name }}
-                {% if form.name.errors %}
-                    <div class="alert alert-danger">{{ form.name.errors }}</div>
+                {{ form.name_en }}
+                {% if form.name_en.errors %}
+                    <div class="alert alert-danger">{{ form.name_en.errors }}</div>
                 {% endif %}
             </div>
         </div>
 
         <div class="mb-3 row align-items-center">
-            <label for="description" class="col-sm-4 col-form-label">Опис</label>
+            <label for="description_en" class="col-sm-4 col-form-label">Description (EN)</label>
             <div class="col-sm-8">
-                {{ form.description }}
-                {% if form.description.errors %}
-                    <div class="alert alert-danger">{{ form.description.errors }}</div>
+                {{ form.description_en }}
+                {% if form.description_en.errors %}
+                    <div class="alert alert-danger">{{ form.description_en.errors }}</div>
                 {% endif %}
             </div>
         </div>
+
+        <div class="mb-3 row align-items-center">
+            <label for="movie_name_uk" class="col-sm-4 col-form-label">Post name (UA)</label>
+            <div class="col-sm-8">
+                {{ form.name_uk }}
+                {% if form.name_uk.errors %}
+                    <div class="alert alert-danger">{{ form.name_uk.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+            <label for="description_uk" class="col-sm-4 col-form-label">Description (UA)</label>
+            <div class="col-sm-8">
+                {{ form.description_uk }}
+                {% if form.description_uk.errors %}
+                    <div class="alert alert-danger">{{ form.description_uk.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
 
 
 
@@ -74,7 +95,7 @@
         </div>
 
         <div class="mb-3 row align-items-center">
-            <label for="link" class="col-sm-4 col-form-label">Лінк на відео</label>
+            <label for="link" class="col-sm-4 col-form-label">URL</label>
             <div class="col-sm-8">
                 {{ form.link }}
                 {% if form.link.errors %}
@@ -85,7 +106,7 @@
 
 
         <div class="mb-3">
-            <label class="form-label">SEO блок:</label>
+            <label class="form-label">SEO block:</label>
             <div class="row mb-3 align-items-center">
                 <label for="seo_url" class="col-sm-2 col-form-label">URL</label>
                 <div class="col-sm-10">
@@ -125,7 +146,7 @@
         </div>
 
         <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-secondary">Зберегти</button>
+            <button type="submit" class="btn btn-secondary">Save</button>
         </div>
     </form>
 </div>

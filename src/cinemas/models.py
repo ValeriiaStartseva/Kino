@@ -8,7 +8,7 @@ from django.urls import reverse
 class Cinema(SEOMixin, models.Model):
     name = models.CharField(max_length=20, unique=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
-    title = models.TextField()
+    description = models.TextField()
     city = models.CharField(max_length=12)
     logo = models.OneToOneField(
         GalleryImage,
@@ -17,7 +17,7 @@ class Cinema(SEOMixin, models.Model):
         null=True,
         related_name='cinema_logo'
     )
-    gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE)
+    gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE, null=True, blank=True)
     main_image = models.OneToOneField(
         GalleryImage,
         on_delete=models.SET_NULL,
@@ -47,7 +47,7 @@ class Hall(SEOMixin, models.Model):
         null=True,
         related_name='hall_schema_picture'
     )
-    gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE)
+    gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE, null=True, blank=True)
     main_image = models.OneToOneField(
         GalleryImage,
         on_delete=models.SET_NULL,

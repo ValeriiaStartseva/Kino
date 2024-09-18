@@ -1,18 +1,19 @@
+{% load i18n %}
+
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4" style="text-align: center">Скоро в кіно</h1>
+        <h1 class="mb-4" style="text-align: center">{% trans "Soon in theaters" %}</h1>
         <div class="row">
             {% for soon_movie in soon_movies %}
                 <div class="col-md-3 mb-4">
                     <div class="card">
-                        <!-- Посилання на деталі фільму -->
                         <a href="{% url 'movie_detail' soon_movie.slug %}">
                             <img src="{{ soon_movie.poster_url }}" height="360" class="card-img-top" alt="{{ soon_movie.title }}">
                         </a>
                         <div class="card-body">
                             <h5 class="card-title">{{ soon_movie.title }}</h5>
                             <h6>{{ soon_movie.show_time|date:"d M Y" }}</h6>
-                            <a href="{% url 'movie_detail' soon_movie.slug %}" class="btn btn-warning mt-auto">Купити квиток</a>
+                            <a href="{% url 'movie_detail' soon_movie.slug %}" class="btn btn-warning mt-auto">{% trans "Book a ticket" %}</a>
                         </div>
                     </div>
                 </div>

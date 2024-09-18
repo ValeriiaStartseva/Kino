@@ -3,7 +3,7 @@
 {% load custom_filters %}
 
 {% block content %}
-    <div class="row justify-content-betweens">
+    <div class="row justify-content-between">
 
       <div class="col-md-8">
         <div id="popularMoviesChart" style="width: 100%; height: 500px;"></div>
@@ -13,7 +13,7 @@
             <div class="card-body d-flex align-items-center justify-content-between">
                 <div>
                     <h1>{{ total_users }}</h1>
-                    <div>Кількість користувачів</div>
+                    <div>Users</div>
                 </div>
                 <img src="/static/images/site_icons/user.png" alt="user-profile" style="height: 60px; width: 60px">
             </div>
@@ -41,14 +41,14 @@
 
       function drawPopularMovieChart() {
         const data = google.visualization.arrayToDataTable([
-          ['Фільм', 'Кількість проданих квитків'],
-                {% for name, tickets in movie_names|zip_lists:tickets_sold %}
-                    ['{{ name }}', {{ tickets }}],
+          ['Movie', 'Number of Tickets Sold'],
+                {% for name_uk, tickets in movie_names|zip_lists:tickets_sold %}
+                    ['{{ name_uk }}', {{ tickets }}],
                 {% endfor %}
         ]);
 
         var options = {
-          title: 'Найпопулярніші фільми за останній місяць',
+          title: 'The Most Popular Movies Last Month',
           pieHole: 0.4,  
         };
 
@@ -58,13 +58,13 @@
 
       function drawGenderChart() {
         const data = google.visualization.arrayToDataTable([
-          ['Стать', 'Кількість'],
-          ['Чоловіки', {{ male_users }}],
-          ['Жінки', {{ female_users }}]
+          ['Gender', 'Count'],
+          ['Male', {{ male_users }}],
+          ['Female', {{ female_users }}]
         ]);
 
         var options = {
-          title: 'Розподіл користувачів за статтю',
+          title: 'Gender',
           pieHole: 0.4,
           colors: ['#1E90FF', '#FF69B4'],
         };
@@ -75,16 +75,16 @@
 
       function drawCityChart() {
         const data = google.visualization.arrayToDataTable([
-          ['Місто', 'Кількість користувачів'],
+          ['City', 'Users'],
           {% for city in users_by_city %}
             ['{{ city.city }}', {{ city.count }}],
           {% endfor %}
         ]);
 
         var options = {
-          title: 'Розподіл користувачів за містами',
-          hAxis: {title: 'Місто'},
-          vAxis: {title: 'Кількість користувачів'},
+          title: 'User Distribution by City',
+          hAxis: {title: 'City'},
+          vAxis: {title: 'Number of Users'},
           legend: {position: 'none'}
         };
 

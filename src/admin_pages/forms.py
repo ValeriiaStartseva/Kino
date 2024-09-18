@@ -5,17 +5,22 @@ from .models import Page, GalleryImage, Gallery, MainPage, Contacts, SEOMixin
 
 class PageForm(forms.ModelForm):
     main_image = forms.ModelChoiceField(queryset=GalleryImage.objects.all(), required=True, widget=forms.HiddenInput())
-    gallery_form = forms.ModelMultipleChoiceField(queryset=GalleryImage.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
+    gallery_form = forms.ModelMultipleChoiceField(queryset=GalleryImage.objects.all(), required=False,
+                                                  widget=forms.CheckboxSelectMultiple)
 
     class Meta:
         model = Page
         fields = [
-            'name', 'description', 'main_image', 'gallery_form', 'status',
+            'name_uk', 'description_uk',
+            'name_en', 'description_en',
+            'main_image', 'gallery_form', 'status',
             'url_seo', 'title_seo', 'keywords_seo', 'description_seo'
         ]
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Назва'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Опис'}),
+            'name_uk': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Page name (UK)'}),
+            'name_en': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Page name (EN)'}),
+            'description_uk': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description (UK)'}),
+            'description_en': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description (EN)'}),
             'main_image': forms.Select(attrs={'class': 'form-control'}),
             'gallery_form': forms.SelectMultiple(attrs={'class': 'form-control'}),
             'url_seo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'URL'}),
@@ -40,6 +45,16 @@ class MainPageForm(forms.ModelForm):
         fields = ('phone', 'seo_text_main_page', 'status',
                   'url_seo', 'title_seo', 'keywords_seo', 'description_seo')
 
+        widgets = {
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone'}),
+            'seo_text_main_page': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'SEO Text'}),
+            'url_seo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'URL'}),
+            'title_seo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title'}),
+            'keywords_seo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Keywords'}),
+            'description_seo': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description'}),
+            'status': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
 
 class ContactsForm(forms.ModelForm):
     logo = forms.ModelChoiceField(queryset=GalleryImage.objects.all(), required=True,
@@ -53,15 +68,14 @@ class ContactsForm(forms.ModelForm):
         ]
 
         widgets = {
-            'cinema_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Назва кінотеатру'}),
-            'adress_cinema_contacts': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Адреса'}),
-            'numbers_contacts': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Телефони'}),
-            'email_cinema_contacts': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Електронна пошта'}),
-            'coordinates_long': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Координати, довгота'}),
-            'coordinates_lat': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Координати, широта'}),
+            'cinema_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Cinema name'}),
+            'adress_cinema_contacts': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Adress'}),
+            'numbers_contacts': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phones'}),
+            'email_cinema_contacts': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'email'}),
+            'coordinates_long': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Coordinates, long'}),
+            'coordinates_lat': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Coordinates, lat'}),
             'logo': forms.Select(attrs={'class': 'form-control'}),
         }
 
 
 ContactsFormSet = forms.inlineformset_factory(SEOMixin, Contacts, form=ContactsForm, extra=0)
-

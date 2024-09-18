@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <div class="container mt-5" style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-    <h2 class="text-center">Наші кінотеатри</h2>
+    <h2 class="text-center">{% trans "Our Cinemas" %}</h2>
     <div class="row">
         {% for cinema in cinemas %}
         <div class="col-md-6 mb-4">

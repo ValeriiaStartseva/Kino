@@ -1,119 +1,119 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <body>
 <div class="cinemas-wrapper">
     <div class="container mt-5">
-        <h1 class="mb-4 text-center">Сторінка клієнта</h1>
+        <h1 class="mb-4 text-center">{% trans "Customer Page" %}</h1>
         <form>
           <div class="row g-3">
             <div class="col-md-6">
               <div class="mb-3 row align-items-center">
-                <label for="firstName" class="col-sm-4 col-form-label">Ім'я</label>
+                <label for="firstName" class="col-sm-4 col-form-label">{% trans "First Name" %}</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control" id="firstName" aria-label="First name">
+                  <input type="text" class="form-control" id="firstName" aria-label="{% trans 'First Name' %}">
                 </div>
               </div>
               <div class="mb-3 row align-items-center">
-                <label for="lastName" class="col-sm-4 col-form-label">Прізвище</label>
+                <label for="lastName" class="col-sm-4 col-form-label">{% trans "Last Name" %}</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control" id="lastName" aria-label="Last name">
+                  <input type="text" class="form-control" id="lastName" aria-label="{% trans 'Last Name' %}">
                 </div>
               </div>
               <div class="mb-3 row align-items-center">
-                <label for="nickname" class="col-sm-4 col-form-label">Нікнейм</label>
+                <label for="nickname" class="col-sm-4 col-form-label">{% trans "Nickname" %}</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control" id="nickname" aria-label="Nickname">
+                  <input type="text" class="form-control" id="nickname" aria-label="{% trans 'Nickname' %}">
                 </div>
               </div>
               <div class="mb-3 row align-items-center">
-                <label for="email" class="col-sm-4 col-form-label">Email</label>
+                <label for="email" class="col-sm-4 col-form-label">{% trans "Email" %}</label>
                 <div class="col-sm-8">
-                  <input type="email" class="form-control" id="email" aria-label="Email">
+                  <input type="email" class="form-control" id="email" aria-label="{% trans 'Email' %}">
                 </div>
               </div>
               <div class="mb-3 row align-items-center">
-                <label for="address" class="col-sm-4 col-form-label">Адреса</label>
+                <label for="address" class="col-sm-4 col-form-label">{% trans "Address" %}</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control" id="address" aria-label="Address">
+                  <input type="text" class="form-control" id="address" aria-label="{% trans 'Address' %}">
                 </div>
               </div>
               <div class="mb-3 row align-items-center">
-                <label for="password" class="col-sm-4 col-form-label">Пароль</label>
+                <label for="password" class="col-sm-4 col-form-label">{% trans "Password" %}</label>
                 <div class="col-sm-8">
-                  <input type="password" class="form-control" id="password" aria-label="Password">
+                  <input type="password" class="form-control" id="password" aria-label="{% trans 'Password' %}">
                 </div>
               </div>
               <div class="mb-3 row align-items-center">
-                <label for="rePassword" class="col-sm-4 col-form-label">Повторити пароль</label>
+                <label for="rePassword" class="col-sm-4 col-form-label">{% trans "Repeat Password" %}</label>
                 <div class="col-sm-8">
-                  <input type="password" class="form-control" id="rePassword" aria-label="RePassword">
+                  <input type="password" class="form-control" id="rePassword" aria-label="{% trans 'Repeat Password' %}">
                 </div>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3 row align-items-center">
-                <label class="col-sm-4 col-form-label">Мова</label>
+                <label class="col-sm-4 col-form-label">{% trans "Language" %}</label>
                 <div class="col-sm-8 d-flex align-items-center">
                   <div class="form-check me-3">
                     <input class="form-check-input" type="radio" name="languageOptions" id="languageUkr" value="ukr">
-                    <label class="form-check-label" for="languageUkr">УКР</label>
+                    <label class="form-check-label" for="languageUkr">{% trans "UKR" %}</label>
                   </div>
                   <div class="form-check">
                     <input class="form-check-input" type="radio" name="languageOptions" id="languageRus" value="rus">
-                    <label class="form-check-label" for="languageRus">РУ</label>
+                    <label class="form-check-label" for="languageRus">{% trans "RU" %}</label>
                   </div>
                 </div>
               </div>
               <div class="mb-3 row align-items-center">
-                <label class="col-sm-4 col-form-label">Стать</label>
+                <label class="col-sm-4 col-form-label">{% trans "Gender" %}</label>
                 <div class="col-sm-8 d-flex align-items-center">
                   <div class="form-check me-3">
                     <input class="form-check-input" type="radio" name="genderOptions" id="genderMale" value="male">
-                    <label class="form-check-label" for="genderMale">Ч</label>
+                    <label class="form-check-label" for="genderMale">{% trans "M" %}</label>
                   </div>
                   <div class="form-check">
                     <input class="form-check-input" type="radio" name="genderOptions" id="genderFemale" value="female">
-                    <label class="form-check-label" for="genderFemale">Ж</label>
+                    <label class="form-check-label" for="genderFemale">{% trans "F" %}</label>
                   </div>
                 </div>
               </div>
               <div class="mb-3 row align-items-center">
-                <label for="dob" class="col-sm-4 col-form-label">Дата народження</label>
+                <label for="dob" class="col-sm-4 col-form-label">{% trans "Date of Birth" %}</label>
                 <div class="col-sm-8">
                   <input type="date" class="form-control" id="dob" name="dob">
                 </div>
               </div>
               <div class="mb-3 row align-items-center">
-                <label for="city" class="col-sm-4 col-form-label">Місто</label>
+                <label for="city" class="col-sm-4 col-form-label">{% trans "City" %}</label>
                 <div class="col-sm-8">
-                  <select class="form-select" id="city" aria-label="City">
-                    <option selected>Оберіть місто</option>
+                  <select class="form-select" id="city" aria-label="{% trans 'City' %}">
+                    <option selected>{% trans "Choose a city" %}</option>
                   </select>
                 </div>
               </div>
               <div class="mb-3 row align-items-center">
-                <label for="cardNumber" class="col-sm-4 col-form-label">Номер карти</label>
+                <label for="cardNumber" class="col-sm-4 col-form-label">{% trans "Card Number" %}</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control" id="cardNumber" aria-label="Card number">
+                  <input type="text" class="form-control" id="cardNumber" aria-label="{% trans 'Card Number' %}">
                 </div>
               </div>
               <div class="mb-3 row align-items-center">
-                <label for="phoneNumber" class="col-sm-4 col-form-label">Телефон</label>
+                <label for="phoneNumber" class="col-sm-4 col-form-label">{% trans "Phone Number" %}</label>
                 <div class="col-sm-8">
-                  <input type="tel" class="form-control" id="phoneNumber" aria-label="Phone number">
+                  <input type="tel" class="form-control" id="phoneNumber" aria-label="{% trans 'Phone Number' %}">
                 </div>
               </div>
             </div>
           </div>
           <div class="text-center mb-2">
-            <button type="submit" class="btn btn-primary">Зберегти</button>
+            <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
           </div>
         </form>
     </div>
 </div>
-
 
 </body>
 {% endblock %}

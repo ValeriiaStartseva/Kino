@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+    <div class="container" style="background-color: white; padding: 20px; border-radius: 5px;">
+        <h1>{% trans "Search Results" %}</h1>
+
+        <form method="get" action="{% url 'search' %}" class="d-flex mb-3">
+            {{ form.query }}
+            <button class="btn btn-outline-success btn-sm" type="submit">{% trans 'Search' %}</button>
+        </form>
+
+        {% if query %}
+            <h2>{% trans "Results for" %} "{{ query }}":</h2>
+
+            {% if results %}
+                <ul class="list-group">
+                    {% for result in results %}
+                        <li class="list-group-item">
+                            <!-- Перехід на сторінку фільму по slug -->
+                            <a href="{{ result.get_absolute_url }}">{{ result.name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>{% trans "No results found." %}</p>
+            {% endif %}
+        {% else %}
+            <p>{% trans "Enter a search term to find results." %}</p>
+        {% endif %}
+    </div>
+{% endblock %}

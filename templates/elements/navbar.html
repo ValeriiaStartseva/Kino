@@ -1,6 +1,110 @@
+{#{% load static %}#}
+{#{% load i18n %}#}
+{##}
+{#{% block content %}#}
+{#<nav class="navbar navbar-expand-lg bg-body-tertiary">#}
+{#    <div class="container-fluid mb-2">#}
+{#        <a class="navbar-brand" href="/kino-cms/">#}
+{#            <img src="{% static 'images/site_icons/logo.png' %}" alt="Logo" style="height: 40px;">#}
+{#        </a>#}
+{#        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">#}
+{#            <span class="navbar-toggler-icon"></span>#}
+{#        </button>#}
+{#        <div class="collapse navbar-collapse" id="navbarSupportedContent">#}
+{#            <ul class="navbar-nav me-auto mb-2 mb-lg-0">#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link active" aria-current="page" href="{% url 'billboard' %}">{% trans "Billboard" %}</a>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link active" aria-current="page" href="{% url 'timetable' %}">{% trans "Schedule" %}</a>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link active" aria-current="page" href="{% url 'coming_soon' %}">{% trans "Coming Soon" %}</a>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link active" aria-current="page" href="/cinemas/">{% trans "Cinemas" %}</a>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link active" aria-current="page" href="{% url 'promotions' %}">{% trans "Promotions" %}</a>#}
+{#                </li>#}
+{#                <li class="nav-item dropdown">#}
+{#                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">#}
+{#                        {% trans "About Cinema" %}#}
+{#                    </a>#}
+{#                    <ul class="dropdown-menu">#}
+{#                        <li class="nav-item">#}
+{#                            <a class="nav-link active" aria-current="page" href="{% url 'news' %}">{% trans "News" %}</a>#}
+{#                        </li>#}
+{#                        {% for page in pages %}#}
+{#                        <li class="nav-item">#}
+{#                            <a class="nav-link active" aria-current="page" href="{{ page.get_absolute_url }}">{{ page.name }}</a>#}
+{#                        </li>#}
+{#                        {% endfor %}#}
+{#                        <li class="nav-item">#}
+{#                            <a class="nav-link active" aria-current="page" href="{% url 'contact_us' %}">{% trans "Contact Us" %}</a>#}
+{#                        </li>#}
+{#                    </ul>#}
+{#                </li>#}
+{#            </ul>#}
+{##}
+{#            <!-- Aligning Logout button above language selection and search, and keeping them in one row -->#}
+{#            <div class="d-flex flex-column align-items-end">#}
+{#                <!-- User navbar with Logout button -->#}
+{#                <div class="user-navbar mb-2"> <!-- mb-2 to create space between Logout and the rest -->#}
+{#                    {% include 'elements/user_navbar.html' %}#}
+{#                </div>#}
+{##}
+{#                <!-- Language selection and search in one row -->#}
+{#                <div class="d-flex align-items-center">#}
+{#                    <!-- Dropdown for language selection -->#}
+{#                    <form method="post" action="{% url 'set_language' %}" class="me-3">#}
+{#                        {% csrf_token %}#}
+{#                        <input name="next" type="hidden" value="{{ request.path }}">#}
+{#                        <div class="btn-group" style="width: 70px;">#}
+{#                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">#}
+{#                                {{ request.LANGUAGE_CODE|upper }}#}
+{#                            </button>#}
+{#                            <ul class="dropdown-menu">#}
+{#                                <li>#}
+{#                                    <button class="dropdown-item" name="language" value="uk" type="submit">uk</button>#}
+{#                                </li>#}
+{#                                <li>#}
+{#                                    <button class="dropdown-item" name="language" value="en" type="submit">en</button>#}
+{#                                </li>#}
+{#                            </ul>#}
+{#                        </div>#}
+{#                    </form>#}
+{##}
+{#                    <!-- Search form -->#}
+{#                    <form class="d-flex" role="search">#}
+{#                        <input class="form-control form-control-sm me-2" type="search" placeholder="{% trans 'Search' %}" aria-label="{% trans 'Search' %}">#}
+{#                        <button class="btn btn-outline-success btn-sm" type="submit">{% trans 'Search' %}</button>#}
+{#                    </form>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</nav>#}
+{#{% endblock %}#}
+
+
 {% load static %}
+{% load i18n %}
 
 {% block content %}
+<style>
+    .btn {
+        background-color: #ffc107; /* Жовтий колір */
+        border-color: #ffc107;
+        color: #000; /* Чорний текст */
+    }
+
+    .btn:hover {
+        background-color: #e0a800; /* Темніший жовтий при наведенні */
+        border-color: #e0a800;
+    }
+</style>
+
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid mb-2">
         <a class="navbar-brand" href="/kino-cms/">
@@ -12,63 +116,76 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'billboard' %}">Афіша</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'billboard' %}">{% trans "Billboard" %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'timetable' %}">Розклад</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'timetable' %}">{% trans "Schedule" %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'coming_soon' %}">Скоро в кіно</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'coming_soon' %}">{% trans "Coming Soon" %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/cinemas/">Кінотеатри</a>
+                    <a class="nav-link active" aria-current="page" href="/cinemas/">{% trans "Cinemas" %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'promotions' %}">Акції</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'promotions' %}">{% trans "Promotions" %}</a>
                 </li>
                 <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Про кінотеатр
-    </a>
-    <ul class="dropdown-menu">
-        <!-- Статична URL для новин -->
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'news' %}">Новини</a>
-        </li>
-
-        <!-- Динамічні сторінки з бази даних -->
-        {% for page in pages %}
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ page.get_absolute_url }}">{{ page.name }}</a>
-        </li>
-        {% endfor %}  
-    <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'contact_us' %}">Контакти</a>
-        </li>
-    </ul>
-</li>
-
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {% trans "About Cinema" %}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'news' %}">{% trans "News" %}</a>
+                        </li>
+                        {% for page in pages %}
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{{ page.get_absolute_url }}">{{ page.name }}</a>
+                        </li>
+                        {% endfor %}
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'contact_us' %}">{% trans "Contact Us" %}</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
+
+            <!-- Aligning Logout button above language selection and search, and keeping them in one row -->
             <div class="d-flex flex-column align-items-end">
-                <div class="user-navbar">
+                <!-- User navbar with Logout button -->
+                <div class="user-navbar mb-2"> <!-- mb-2 to create space between Logout and the rest -->
                     {% include 'elements/user_navbar.html' %}
                 </div>
-                <form class="d-flex" role="search">
-                    <div class="btn-group pe-2" style="width: 70px;">
-                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        УКР
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">РУ</a></li>
-                            <li><a class="dropdown-item" href="#">УКР</a></li>
-                        </ul>
-                    </div>
-                    <input class="form-control form-control-sm me-2" type="search" placeholder="Пошук" aria-label="Пошук">
-                    <button class="btn btn-outline-success btn-sm" type="submit">Пошук</button>
-                </form>
+
+                <!-- Language selection and search in one row -->
+                <div class="d-flex align-items-center">
+                    <!-- Dropdown for language selection -->
+                    <form method="post" action="{% url 'set_language' %}" class="me-3">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.path }}">
+                        <div class="btn-group" style="width: 70px;">
+                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ request.LANGUAGE_CODE|upper }}
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <button class="dropdown-item" name="language" value="uk" type="submit">uk</button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item" name="language" value="en" type="submit">en</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </form>
+
+                    <!-- Search form -->
+                    <form class="d-flex" role="search" method="get" action="{% url 'search' %}">
+                        <input class="form-control form-control-sm me-2" type="search" name="query" placeholder="{% trans 'Search' %}" aria-label="{% trans 'Search' %}">
+                        <button class="btn btn-outline-success btn-sm" type="submit">{% trans 'Search' %}</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </nav>
 {% endblock %}
-

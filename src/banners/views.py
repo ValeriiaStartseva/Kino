@@ -103,9 +103,9 @@ def back_banners(request):
 def banner_list(request):
     context = {
         'banner_list': [
-            {'name': 'Банера на головній сторінці', 'edit_url': reverse('main_page_banner')},
-            {'name': 'Банер на задньому фоні', 'edit_url': reverse('back_banner')},
-            {'name': 'Банер новин та акцій на головній сторінці', 'edit_url': reverse('main_page_news_banner')}
+            {'name': 'Banners on a main page', 'edit_url': reverse('main_page_banner')},
+            {'name': 'Background banner', 'edit_url': reverse('back_banner')},
+            {'name': 'Banner for posts on a main page', 'edit_url': reverse('main_page_news_banner')}
         ]
     }
     return render(request, 'admin/banners.html', context)

@@ -7,6 +7,7 @@ from .models import Movie, Gallery, GalleryImage
 from .forms import MovieForm, GalleryImageFormSet
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
+from django.utils import translation
 
 
 @login_required
@@ -47,10 +48,10 @@ def add_movie(request):
     return render(request, 'admin/add_movie.html', {'form': form, 'formset': formset})
 
 
-# view for get template for success movie page
-@login_required
-def movie_success(request):
-    return render(request, 'admin/movie_success.html')
+# # view for get template for success movie page
+# @login_required
+# def movie_success(request):
+#     return render(request, 'admin/movie_success.html')
 
 
 # view for getting list of all movies

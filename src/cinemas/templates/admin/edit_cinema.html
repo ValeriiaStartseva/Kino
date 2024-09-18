@@ -7,27 +7,47 @@
         {% csrf_token %}
 
         <div class="mb-3 row align-items-center">
-            <label for="cinema_name" class="col-sm-4 col-form-label">Назва кінотеатру</label>
+            <label for="movie_name_en" class="col-sm-4 col-form-label">Cinema name (EN)</label>
             <div class="col-sm-8">
-                {{ form.name }}
-                {% if form.name.errors %}
-                    <div class="alert alert-danger">{{ form.name.errors }}</div>
+                {{ form.name_en }}
+                {% if form.name_en.errors %}
+                    <div class="alert alert-danger">{{ form.name_en.errors }}</div>
                 {% endif %}
             </div>
         </div>
 
         <div class="mb-3 row align-items-center">
-            <label for="title" class="col-sm-4 col-form-label">Опис кінотеатру</label>
+            <label for="description_en" class="col-sm-4 col-form-label">Description (EN)</label>
             <div class="col-sm-8">
-                {{ form.title }}
-                {% if form.title.errors %}
-                    <div class="alert alert-danger">{{ form.title.errors }}</div>
+                {{ form.description_en }}
+                {% if form.description_en.errors %}
+                    <div class="alert alert-danger">{{ form.description_en.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+            <label for="movie_name_uk" class="col-sm-4 col-form-label">Cinema name (UA)</label>
+            <div class="col-sm-8">
+                {{ form.name_uk }}
+                {% if form.name_uk.errors %}
+                    <div class="alert alert-danger">{{ form.name_uk.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+            <label for="description_uk" class="col-sm-4 col-form-label">Description (UA)</label>
+            <div class="col-sm-8">
+                {{ form.description_uk }}
+                {% if form.description_uk.errors %}
+                    <div class="alert alert-danger">{{ form.description_uk.errors }}</div>
                 {% endif %}
             </div>
         </div>
 
     <div class="mb-3 row align-items-center">
-            <label for="city" class="col-sm-4 col-form-label">Місто</label>
+            <label for="city" class="col-sm-4 col-form-label">City</label>
             <div class="col-sm-8">
                 {{ form.city }}
                 {% if form.city.errors %}
@@ -35,6 +55,7 @@
                 {% endif %}
             </div>
         </div>
+
 
         <div class="mb-3">
             {% include 'admin/elements/gallery_img_elements/logo_img_edit.html' %}
@@ -58,15 +79,15 @@
             {% endfor %}
         </div>
 <div class="mb-3 row align-items-center justify-content-center">
-        <label for="hall_list" class="h1">Список всіх залів</label>
+        <label for="hall_list" class="h1">List of all halls</label>
     </div>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th scope="col">Назва залу</th>
-                <th scope="col">Дата створення</th>
-                <th scope="col">Редагувати</th>
-                <th scope="col">Видалити</th>
+                <th scope="col">Hall name</th>
+                <th scope="col">Date of creation</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -76,12 +97,12 @@
                 <td>{{ hall.created_at }}</td>
                 <td>
                     <a href="{% url 'edit_hall' hall_id=hall.id %}" class="btn btn-outline-primary btn-sm">
-                        <i class="fa fa-pencil" aria-hidden="true"></i> Редагувати
+                        <i class="fa fa-pencil" aria-hidden="true"></i> Edit
                     </a>
                 </td>
                 <td>
                     <a href="{% url 'delete_hall' hall_id=hall.id %}" class="btn btn-outline-danger btn-sm">
-                        <i class="fa fa-trash" aria-hidden="true"></i> Видалити
+                        <i class="fa fa-trash" aria-hidden="true"></i> Delete
                     </a>
                 </td>
             </tr>
@@ -89,11 +110,11 @@
         </tbody>
     </table>
     <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'add_hall' cinema_id=cinema.id %}'">Додати новий зал</button>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'add_hall' cinema_id=cinema.id %}'">Add new hall</button>
     </div>
 
         <div class="mb-3">
-            <label class="form-label">SEO блок:</label>
+            <label class="form-label">SEO clock:</label>
             <div class="row mb-3 align-items-center">
                 <label for="seo_url" class="col-sm-2 col-form-label">URL</label>
                 <div class="col-sm-10">
@@ -133,7 +154,7 @@
         </div>
 
         <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-secondary">Зберегти</button>
+            <button type="submit" class="btn btn-secondary">Save</button>
         </div>
     </form>
 </div>

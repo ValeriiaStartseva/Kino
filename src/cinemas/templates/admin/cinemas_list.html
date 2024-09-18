@@ -4,15 +4,15 @@
 {% block content %}
 <div class="container">
     <div class="mb-3 row align-items-center justify-content-center">
-        <label for="movie_success" class="h1">Список всіх кінотеатрів</label>
+        <label for="cinema_success" class="h1">List of all theaters</label>
     </div>
     <table class="table table-striped">
         <thead>
             <tr>
                 <th scope="col">id</th>
-                <th scope="col">Назва кінотеатру</th>
-                <th scope="col">Редагувати</th>
-              <th scope="col">Видалити</th>
+                <th scope="col">Cinema name</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -21,44 +21,21 @@
                 <th scope="row">{{ cinema.id }}</th>
                 <td>{{ cinema.name }}</td>
                 <td>
-                    <a href="{% url 'edit_cinema' cinema_id=cinema.id %}" class="btn btn-outline-primary btn-sm">
-    <i class="fa fa-pencil" aria-hidden="true"></i> Редагувати
-</a>
+                    <a href="{% url 'edit_cinema' cinema_id=cinema.id %}" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center">
+                        <i class="fa fa-pencil-alt" aria-hidden="true"></i> <span class="sr-only">Edit</span>
+                    </a>
                 </td>
-            <td>
-                    <a href="{% url 'delete_cinema' cinema_id=cinema.id %}" class="btn btn-outline-primary btn-sm">
-    <i class="fa fa-pencil" aria-hidden="true"></i> Видалити
-</a>
+                <td>
+                    <a href="{% url 'delete_cinema' cinema_id=cinema.id %}" class="btn btn-outline-danger btn-sm d-inline-flex align-items-center">
+                        <i class="fa fa-trash-alt" aria-hidden="true"></i> <span class="sr-only">Delete</span>
+                    </a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     <div class="d-flex justify-content-center">
-    <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'add_cinema' %}'">Додати новий кінотеатр</button>
-</div>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'add_cinema' %}'">Add new theater</button>
+    </div>
 </div>
 {% endblock %}
-
-
-<script>
-        function deleteCinema(cinemaId) {
-            if (confirm('Ви впевнені, що хочете видалити цей кінотеатр?')) {
-                fetch(`/cinema/delete/${cinemaId}/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}',  // обов'язково включіть токен CSRF
-                        'Content-Type': 'application/json'
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById(`cinema-${cinemaId}`).remove(); // видаляє рядок таблиці або елемент списку
-                    } else {
-                        alert('Сталася помилка при видаленні кінотеатру.');
-                    }
-                });
-            }
-        }
-    </script>

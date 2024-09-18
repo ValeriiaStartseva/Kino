@@ -5,6 +5,7 @@ from src.core.models import Gallery, GalleryImage
 from src.core.models import SEOMixin
 from django.utils.text import slugify
 
+
 class Post(SEOMixin, models.Model):
     TYPE = (
         ('news', 'Новина'),
@@ -17,7 +18,7 @@ class Post(SEOMixin, models.Model):
     status = models.BooleanField(default=False)
     link = models.URLField()
     type = models.CharField(max_length=4, choices=TYPE)
-    gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE)
+    gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE, null=True, blank=True)
     main_image = models.OneToOneField(
         GalleryImage,
         on_delete=models.SET_NULL,
@@ -30,8 +31,12 @@ class Post(SEOMixin, models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
+        if not self.id:
+            super().save(*args, **kwargs)
+
+        if not self.slug:
+            self.slug = f'post-{self.id}'
+            super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('promotion_detail', args=[str(self.slug)])

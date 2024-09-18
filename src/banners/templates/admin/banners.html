@@ -4,20 +4,24 @@
 {% block content %}
 <div class="container">
     <div class="mb-3 row align-items-center justify-content-center">
-        <label for="banner_list" class="h1">Список всіх банерів</label>
+        <label for="banner_list" class="h1">List of all banners</label>
     </div>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th scope="col">Назва банеру</th>
-                <th scope="col">Редагувати</th>
+                <th scope="col">Banners name</th>
+                <th scope="col">Edit</th>
             </tr>
         </thead>
         <tbody>
             {% for banner in banner_list %}
                 <tr>
                     <td>{{ banner.name }}</td>
-                    <td><a href="{{ banner.edit_url }}" class="btn btn-primary">Редагувати</a></td>
+                    <td>
+                        <a href="{{ banner.edit_url }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fa fa-pencil" aria-hidden="true"></i> Edit
+                        </a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

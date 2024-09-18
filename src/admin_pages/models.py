@@ -13,7 +13,7 @@ class Page(SEOMixin, models.Model):
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=False)
-    gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE)
+    gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE, null=True, blank=True)
     main_image = models.OneToOneField(
         GalleryImage,
         on_delete=models.SET_NULL,

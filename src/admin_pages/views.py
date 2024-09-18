@@ -43,7 +43,7 @@ def admin_dashboard(request):
     )
 
     # data for diagram
-    movie_names = [movie.name for movie in most_popular_movies]
+    movie_names = [movie.name_uk for movie in most_popular_movies]
     tickets_sold = [movie.ticket_count for movie in most_popular_movies]
 
     context = {
@@ -182,7 +182,7 @@ def delete_page(request, page_id):
 
     if request.method == 'POST':
         page.delete()
-        return redirect('page_list')
+        return redirect('pages_list')
 
     return render(request, 'admin/pages/confirm_delete_page.html', {'page': page})
 
@@ -249,9 +249,9 @@ def contacts_view(request):
 def pages_list(request):
     context = {
         'pages_list': [
-            {'name': 'Головна сторінка', 'edit_url': reverse('main_page')},
-            {'name': 'Всі сторінки', 'edit_url': reverse('all_page_list')},
-            {'name': 'Сторінка контактів', 'edit_url': reverse('add_contacts')}
+            {'name': 'Main page', 'edit_url': reverse('main_page')},
+            {'name': 'All pages', 'edit_url': reverse('all_page_list')},
+            {'name': 'Contacts page', 'edit_url': reverse('add_contacts')}
         ]
     }
     return render(request, 'admin/pages.html', context)

@@ -1,20 +1,21 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <body>
     <div class="cinemas-wrapper contacts">
         <div class="container mt-5" style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-            <h1 class="mb-4 text-center">Контакти</h1>
+            <h1 class="mb-4 text-center">{% trans "Contacts" %}</h1>
             <div class="theater-list">
                 {% for cinema in cinemas %}
                 <div class="theater">
                     <h3>{{ cinema.cinema_name }}</h3>
                     <div class="theater-content">
                         <div class="theater-info">
-                            <p>Кінотеатр {{ cinema.cinema_name }}</p>
-                            <p>Адреса: {{ cinema.adress_cinema_contacts }}</p>
-                            <p>Бронювання квитків: {{ cinema.numbers_contacts }}</p>
+                            <p>{% trans "Cinema" %}: {{ cinema.cinema_name }}</p>
+                            <p>{% trans "Address" %}: {{ cinema.adress_cinema_contacts }}</p>
+                            <p>{% trans "Ticket Booking" %}: {{ cinema.numbers_contacts }}</p>
                             <p>Email: {{ cinema.email_cinema_contacts }}</p>
                             {% if cinema.logo %}
                                 <img src="{{ cinema.logo.image.url }}" alt="{{ cinema.cinema_name }} logo" style="max-width: 150px; max-height: 100px;">
@@ -23,12 +24,12 @@
                         {% if cinema.coordinates_long and cinema.coordinates_lat %}
                         <iframe
                             class="theater-map"
-                            src="https://www.google.com/maps?q={{ cinema.coordinates_lat }},{{ cinema.coordinates_long }}&hl=uk&z=14&output=embed"
+                            src="https://www.google.com/maps?q={{ cinema.coordinates_lat }},{{ cinema.coordinates_long }}&hl=en&z=14&output=embed"
                             loading="lazy"
                             referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
                         {% else %}
-                        <p>Координати для цього кінотеатру не вказані.</p>
+                        <p>{% trans "Coordinates for this cinema are not specified." %}</p>
                         {% endif %}
                     </div>
                 </div>

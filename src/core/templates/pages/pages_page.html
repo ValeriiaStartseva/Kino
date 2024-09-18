@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <div class="background-image">
     <div class="content-container mt-5">
         <div class="container-fluid">
-            <!-- Main Image Banner -->
             <div class="container mt-4">
                 <div class="main-image-banner" style="padding-bottom: 20px;">
                     <img src="{{ page.main_image.image.url }}" alt="{{ page.name }}" class="img-fluid w-100">
@@ -21,7 +21,7 @@
 
             <div class="row mt-5">
                 <div class="col-md-12 text-center">
-                    <h3>Фотогалерея</h3>
+                    <h3>{% trans "Photo Gallery" %}</h3>
                     <div id="carouselGalleryIndicators" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-indicators">
                             {% for image in page.gallery.galleryimage_set.all %}

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <div class="background-image">
@@ -20,14 +21,14 @@
 
             <div class="row mb-4">
                 <div class="col-md-12 text-center">
-                    <h3>Карта залу</h3>
-                    <img src="{{ hall.schema_picture.image.url }}" alt="Схема залу {{ hall.name }}" class="img-fluid">
+                    <h3>{% trans "Hall Map" %}</h3>
+                    <img src="{{ hall.schema_picture.image.url }}" alt="Hall Map of {{ hall.name }}" class="img-fluid">
                 </div>
             </div>
 
             <div class="row mt-5">
                 <div class="col-md-12">
-                    <h3>Сеанси сьогодні</h3>
+                    <h3>{% trans "Showtimes Today" %}</h3>
                     <ul class="list-group">
                         {% if showtimes %}
                             {% for showtime in showtimes %}
@@ -38,7 +39,7 @@
                                 </li>
                             {% endfor %}
                         {% else %}
-                            <li class="list-group-item">На сьогодні сеансів немає.</li>
+                            <li class="list-group-item">{% trans "No showtimes available for today." %}</li>
                         {% endif %}
                     </ul>
                 </div>
@@ -46,7 +47,7 @@
 
             <div class="row mt-5">
                 <div class="col-md-12 text-center">
-                    <h3>Фотогалерея</h3>
+                    <h3>{% trans "Photo Gallery" %}</h3>
                     <div id="carouselGalleryIndicators" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-indicators">
                             {% for image in hall.gallery.galleryimage_set.all %}

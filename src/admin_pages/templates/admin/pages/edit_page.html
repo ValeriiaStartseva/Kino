@@ -13,21 +13,41 @@
     </div>
 
         <div class="mb-3 row align-items-center">
-            <label for="movie_name" class="col-sm-4 col-form-label">Назва сторінки</label>
+            <label for="movie_name_en" class="col-sm-4 col-form-label">Page name (EN)</label>
             <div class="col-sm-8">
-                {{ form.name }}
-                {% if form.name.errors %}
-                    <div class="alert alert-danger">{{ form.name.errors }}</div>
+                {{ form.name_en }}
+                {% if form.name_en.errors %}
+                    <div class="alert alert-danger">{{ form.name_en.errors }}</div>
                 {% endif %}
             </div>
         </div>
 
         <div class="mb-3 row align-items-center">
-            <label for="description" class="col-sm-4 col-form-label">Опис сторінки</label>
+            <label for="description_en" class="col-sm-4 col-form-label">Description (EN)</label>
             <div class="col-sm-8">
-                {{ form.description }}
-                {% if form.description.errors %}
-                    <div class="alert alert-danger">{{ form.description.errors }}</div>
+                {{ form.description_en }}
+                {% if form.description_en.errors %}
+                    <div class="alert alert-danger">{{ form.description_en.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+            <label for="movie_name_uk" class="col-sm-4 col-form-label">Page name (UA)</label>
+            <div class="col-sm-8">
+                {{ form.name_uk }}
+                {% if form.name_uk.errors %}
+                    <div class="alert alert-danger">{{ form.name_uk.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+            <label for="description_uk" class="col-sm-4 col-form-label">Description (UA)</label>
+            <div class="col-sm-8">
+                {{ form.description_uk }}
+                {% if form.description_uk.errors %}
+                    <div class="alert alert-danger">{{ form.description_uk.errors }}</div>
                 {% endif %}
             </div>
         </div>
@@ -44,7 +64,7 @@
         <div class="mb-3">
             {% include 'admin/elements/gallery_img_elements/gallery_carousel_edit.html' %}
         </div>
-{#  тут можеш прибрати hidden="hidden", щоб побачити як воно працює  #}
+
         <div id="formset-container" hidden="hidden">
             {% for form in formset %}
                 <div id="form-{{ forloop.counter }}">
@@ -57,7 +77,7 @@
 
 
         <div class="mb-3">
-            <label class="form-label">SEO блок:</label>
+            <label class="form-label">SEO block:</label>
             <div class="row mb-3 align-items-center">
                 <label for="seo_url" class="col-sm-2 col-form-label">URL</label>
                 <div class="col-sm-10">
@@ -97,7 +117,7 @@
         </div>
 
         <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-secondary">Зберегти</button>
+            <button type="submit" class="btn btn-secondary">Save</button>
         </div>
     </form>
 </div>

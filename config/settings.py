@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from decouple import config
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'modeltranslation',
     'phonenumber_field',
     'src.users',
     'src.cinemas',
@@ -35,12 +37,15 @@ INSTALLED_APPS = [
     'src.promotion',
     'src.showtimes',
     'storages',
-    'anymail'
+    'anymail',
+
+
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -91,7 +96,6 @@ DATABASES = {
 
 
 # Password validation
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -110,13 +114,24 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 
-LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
+LANGUAGE_CODE = 'uk'
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
+MODELTRANSLATION_LANGUAGES = ('en', 'uk')
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'uk'
+MODELTRANSLATION_DEBUG = True
+LANGUAGES = [
+    ('uk', _('Ukrainian')),
+    ('en', _('English')),
+]
+
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
+TIME_ZONE = 'UTC'
 
 
 # Static files (CSS, JavaScript, Images) + media files
@@ -137,19 +152,6 @@ AUTH_USER_MODEL = 'users.User'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG',
-    },
-}
 
 # Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

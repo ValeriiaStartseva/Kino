@@ -10,15 +10,19 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = [
-            'name', 'description', 'main_image', 'gallery_form', 'link', 'type', 'published_date', 'status',
+            'name_uk', 'description_uk',
+            'name_en', 'description_en',
+            'main_image', 'gallery_form', 'link', 'type', 'published_date', 'status',
             'url_seo', 'title_seo', 'keywords_seo', 'description_seo'
         ]
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Назва'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Опис'}),
+            'name_uk': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Movie name (UK)'}),
+            'name_en': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Movie name (EN)'}),
+            'description_uk': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description (UK)'}),
+            'description_en': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description (EN)'}),
             'main_image': forms.Select(attrs={'class': 'form-control'}),
             'gallery_form': forms.SelectMultiple(attrs={'class': 'form-control'}),
-            'link': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Посилання на відео'}),
+            'link': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'URL'}),
             'type': forms.Select(choices=Post.TYPE),
             'published_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'url_seo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'URL'}),
