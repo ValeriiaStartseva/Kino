@@ -2,24 +2,21 @@ from pathlib import Path
 import os
 from decouple import config
 from django.utils.translation import gettext_lazy as _
+from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# load .env file
+load_dotenv()
+
+# path for base dir of project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# main settings
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', cast=bool, default=False)
+ALLOWED_HOSTS = ['*']
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-tg2*k5m3f1hs--$h8ed$09kt5)c*%)yi)kl==7^1*$id&y%@^+'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
-
-# Application definition
-
+# Apps
 INSTALLED_APPS = [
-    # 'django.contrib.admin', comment because i use my custom admin
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -38,10 +35,9 @@ INSTALLED_APPS = [
     'src.showtimes',
     'storages',
     'anymail',
-
-
 ]
 
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -52,11 +48,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'config.middleware.admin_access_middleware.AdminAccessMiddleware',
-
 ]
 
+# path for dir of URL
 ROOT_URLCONF = 'config.urls'
 
+# Templates setting
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -71,31 +68,27 @@ TEMPLATES = [
                 'src.core.context_processors.navbar_pages',
                 'src.core.context_processors.footer_pages',
                 'src.core.context_processors.background_banner_processor',
-
             ],
         },
     },
 ]
 
+# WSGI
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
-LOGOUT_REDIRECT_URL = '/'
-
-# Database settings
+# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Kino_db',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
     }
 }
 
-
-# Password validation
+# Password Validators
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -111,74 +104,64 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
-
-
 LANGUAGE_CODE = 'uk'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+TIME_ZONE = 'UTC'
+
 MODELTRANSLATION_LANGUAGES = ('en', 'uk')
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'uk'
 MODELTRANSLATION_DEBUG = True
+
 LANGUAGES = [
     ('uk', _('Ukrainian')),
     ('en', _('English')),
 ]
 
-
 LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
-TIME_ZONE = 'UTC'
 
-
-# Static files (CSS, JavaScript, Images) + media files
-
+# Static and Media Files
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# User settings
+# user settings
 AUTH_USER_MODEL = 'users.User'
 
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
-
-# Email configuration
+# Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config("EMAIL_HOST")
-EMAIL_PORT = config("EMAIL_PORT", cast=int)
-EMAIL_HOST_USER = config("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
-EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool)
-EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool, default=False)
-
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+EMAIL_USE_SSL = config('EMAIL_USE_SSL', cast=bool, default=False)
 
 # Admins and Managers
 ADMIN_USER_NAME = config("ADMIN_USER_NAME", default="Admin user")
 ADMIN_USER_EMAIL = config("ADMIN_USER_EMAIL", default=None)
 
-MANAGERS = []
 ADMINS = []
-if all([ADMIN_USER_NAME, ADMIN_USER_EMAIL]):
-    ADMINS += [
-        (f'{ADMIN_USER_NAME}', f'{ADMIN_USER_EMAIL}')
-    ]
+MANAGERS = []
+if ADMIN_USER_NAME and ADMIN_USER_EMAIL:
+    ADMINS = [(ADMIN_USER_NAME, ADMIN_USER_EMAIL)]
     MANAGERS = ADMINS
 
-# Celery settings should be at the end or in a separate file
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+# Celery
+CELERY_BROKER_URL = config('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Europe/Kiev'
+
+LOGOUT_REDIRECT_URL = '/'

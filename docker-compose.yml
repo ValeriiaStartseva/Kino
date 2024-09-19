@@ -1,0 +1,75 @@
+services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["./wait-for-it.sh", "db:3306", "--", "gunicorn", "KinoCMS.wsgi:application", "--bind", "0.0.0.0:8000"]
+    volumes:
+      - .:/config
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    networks:
+      - mynetwork
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["./wait-for-it.sh", "db:3306", "--", "celery", "-A", "KinoCMS", "worker", "--loglevel=info"]
+    volumes:
+      - .:/config
+    depends_on:
+      - redis
+      - db
+    env_file:
+      - .env
+    networks:
+      - mynetwork
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["./wait-for-it.sh", "db:3306", "--", "celery", "-A", "KinoCMS", "beat", "--loglevel=info"]
+    volumes:
+      - .:/config
+    depends_on:
+      - redis
+      - db
+    env_file:
+      - .env
+    networks:
+      - mynetwork
+
+  db:
+    image: mysql:8.0
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_DATABASE: Kino_DB
+      MYSQL_USER: root
+      MYSQL_PASSWORD:
+    ports:
+      - "3306:3306"
+    networks:
+      - mynetwork
+
+  redis:
+    image: "redis:alpine"
+    volumes:
+      - redis_data:/data
+    networks:
+      - mynetwork
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  mynetwork:

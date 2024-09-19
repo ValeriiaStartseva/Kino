@@ -79,7 +79,7 @@ admin_urlpatterns = [
          name='check_campaign_progress'),
 ]
 urlpatterns = [
-    path('i18n/', include('django.conf.urls.i18n')),  # Для перемикання мов
+    path('i18n/', include('django.conf.urls.i18n')),  
 ]
 
 urlpatterns += i18n_patterns(

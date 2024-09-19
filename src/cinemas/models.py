@@ -30,7 +30,10 @@ class Cinema(SEOMixin, models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        if hasattr(self, 'name_en') and self.name_en:
+            self.slug = slugify(self.name_en)
+        else:
+            self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
 
