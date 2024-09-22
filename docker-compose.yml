@@ -1,11 +1,13 @@
+version: '3.8'
+
 services:
   django:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["./wait-for-it.sh", "db:3306", "--", "gunicorn", "KinoCMS.wsgi:application", "--bind", "0.0.0.0:8000"]
+    command: ["./wait-for-it.sh", "db:3306", "--", "gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
     volumes:
-      - .:/config
+      - .:/KinoCMS
     ports:
       - "8000:8000"
     env_file:
@@ -20,9 +22,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["./wait-for-it.sh", "db:3306", "--", "celery", "-A", "KinoCMS", "worker", "--loglevel=info"]
+    command: ["./wait-for-it.sh", "db:3306", "--", "celery", "-A", "config", "worker", "--loglevel=info"]
     volumes:
-      - .:/config
+      - .:/KinoCMS
     depends_on:
       - redis
       - db
@@ -35,9 +37,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["./wait-for-it.sh", "db:3306", "--", "celery", "-A", "KinoCMS", "beat", "--loglevel=info"]
+    command: ["./wait-for-it.sh", "db:3306", "--", "celery", "-A", "config", "beat", "--loglevel=info"]
     volumes:
-      - .:/config
+      - .:/KinoCMS
     depends_on:
       - redis
       - db
@@ -56,6 +58,8 @@ services:
       - "3306:3306"
     networks:
       - mynetwork
+    environment:
+      MYSQL_ROOT_PASSWORD: sandora12345
 
   redis:
     image: "redis:alpine"
