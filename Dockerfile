@@ -38,4 +38,4 @@ COPY . /KinoCMS/
 EXPOSE 8000
 
 # Вказуємо команду для запуску Gunicorn (у випадку, якщо Docker Compose не передає команду)
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "KinoCMS.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]

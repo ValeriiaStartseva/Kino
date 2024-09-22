@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["./wait-for-it.sh", "db:3306", "--", "gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+    command: ["/KinoCMS/wait-for-it.sh", "db:3306", "--", "gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
     volumes:
       - .:/KinoCMS
     ports:
@@ -22,7 +22,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["./wait-for-it.sh", "db:3306", "--", "celery", "-A", "config", "worker", "--loglevel=info"]
+    command: ["/KinoCMS/wait-for-it.sh", "db:3306", "--", "celery", "-A", "config", "worker", "--loglevel=info"]
     volumes:
       - .:/KinoCMS
     depends_on:
@@ -37,7 +37,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["./wait-for-it.sh", "db:3306", "--", "celery", "-A", "config", "beat", "--loglevel=info"]
+    command: ["/KinoCMS/wait-for-it.sh", "db:3306", "--", "celery", "-A", "config", "beat", "--loglevel=info"]
     volumes:
       - .:/KinoCMS
     depends_on:
@@ -59,7 +59,7 @@ services:
     networks:
       - mynetwork
     environment:
-      MYSQL_ROOT_PASSWORD: sandora12345
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
   redis:
     image: "redis:alpine"
