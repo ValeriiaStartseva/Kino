@@ -1,11 +1,10 @@
 FROM python:3.11-slim
 
-
 WORKDIR /KinoCMS
 
 # Встановлюємо pip
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends python3-pip \
+    apt-get install -y --no-install-recommends python3-pip
 
 COPY requirements.txt /KinoCMS/
 
