@@ -19,12 +19,6 @@ RUN apt-get update && apt-get install -y \
 # Встановлюємо робочу директорію в контейнері
 WORKDIR /KinoCMS
 
-# Копіюємо wait-for-it.sh для очікування сервісів
-COPY wait-for-it.sh /KinoCMS/
-
-# Додаємо права на виконання для wait-for-it.sh
-RUN chmod +x /KinoCMS/wait-for-it.sh
-
 # Копіюємо файл залежностей
 COPY requirements.txt /KinoCMS/
 
@@ -37,5 +31,5 @@ COPY . /KinoCMS/
 # Відкриваємо порт 8000 для зовнішніх підключень
 EXPOSE 8000
 
-# Вказуємо команду для запуску Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
+# Вказуємо команду для запуску Gunicorn з міграціями
+CMD ["sh", "-c", "python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:8000"]
