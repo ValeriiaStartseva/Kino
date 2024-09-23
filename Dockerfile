@@ -4,7 +4,7 @@ WORKDIR /KinoCMS
 
 # Встановлюємо необхідні пакети
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends python3-pip pkg-config libmysqlclient-dev
+    apt-get install -y --no-install-recommends python3-pip pkg-config libmariadb-dev libmariadb-dev-compat
 
 COPY requirements.txt /KinoCMS/
 
