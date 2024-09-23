@@ -24,6 +24,7 @@ django-multiselectfield==0.1.13
 django-phonenumber-field==7.3.0
 django-storages==1.14.3
 Faker==27.0.0
+gunicorn==20.1.0
 idna==3.7
 jmespath==1.0.1
 kombu==5.3.7
@@ -33,6 +34,7 @@ packaging==24.1
 phonenumbers==8.13.39
 pillow==10.3.0
 prompt_toolkit==3.0.47
+PyMySQL==1.0.2
 python-dateutil==2.9.0.post0
 python-decouple==3.8
 python-dotenv==1.0.1
@@ -46,4 +48,3 @@ tzdata==2024.1
 urllib3==2.2.2
 vine==5.1.0
 wcwidth==0.2.13
-gunicorn==20.1.0
