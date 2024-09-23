@@ -12,24 +12,24 @@ RUN apt-get update && apt-get install -y \
     libffi-dev \
     python3-dev \
     default-libmysqlclient-dev \
+    libmariadb-dev \
     pkg-config \
     && apt-get clean
 
 # Встановлюємо робочу директорію в контейнері
 WORKDIR /KinoCMS
 
-# Копіюємо wait-for-it.sh
+# Копіюємо wait-for-it.sh для очікування сервісів
 COPY wait-for-it.sh /KinoCMS/
 
-# Додаємо права на виконання
+# Додаємо права на виконання для wait-for-it.sh
 RUN chmod +x /KinoCMS/wait-for-it.sh
 
 # Копіюємо файл залежностей
 COPY requirements.txt /KinoCMS/
 
-# Оновлюємо pip і встановлюємо залежності
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+# Оновлюємо pip і встановлюємо залежності з requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Копіюємо всі файли проекту в контейнер
 COPY . /KinoCMS/
@@ -37,5 +37,5 @@ COPY . /KinoCMS/
 # Відкриваємо порт 8000 для зовнішніх підключень
 EXPOSE 8000
 
-# Вказуємо команду для запуску Gunicorn (у випадку, якщо Docker Compose не передає команду)
+# Вказуємо команду для запуску Gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
