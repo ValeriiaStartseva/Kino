@@ -14,7 +14,8 @@
 
 .venv
 .env
-
+.env.local
+.env.prod
 debug.log
 
 

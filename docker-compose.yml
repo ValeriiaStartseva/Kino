@@ -9,9 +9,9 @@ services:
     volumes:
       - .:/KinoCMS
     ports:
-      - "8000:8000"
+      - "8001:8000"
     env_file:
-      - .env
+      - .env.prod
     depends_on:
       - db
       - redis
@@ -29,7 +29,7 @@ services:
       - redis
       - db
     env_file:
-      - .env
+      - .env.prod
     networks:
       - mynetwork
 
@@ -44,7 +44,7 @@ services:
       - redis
       - db
     env_file:
-      - .env
+      - .env.prod
     networks:
       - mynetwork
 
@@ -52,8 +52,9 @@ services:
     image: mysql:8.0
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./Kino_DB_backup.sql:/docker-entrypoint-initdb.d/dump.sql
     env_file:
-      - .env
+      - .env.prod
     ports:
       - "3306:3306"
     networks:

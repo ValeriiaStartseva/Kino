@@ -16,6 +16,7 @@ help:
 	@echo "  seed_data           Seed the database with fake data."
 	@echo "  clean               Remove Python file caches."
 	@echo "  install             Install Python dependencies from requirements.txt."
+	@echo "  git_push            Add, commit, and push changes to Git."
 
 # Django commands
 migrate:
@@ -47,5 +48,11 @@ seed_data:
 install:
 	pip install -r requirements.txt
 
+# Git commands
+git_push:
+	@git add .
+	@git commit -m "Закомічено оновлення проекту $(PROJECT_NAME)"
+	@git push origin main
+
 # Phony targets
-.PHONY: help migrate makemigrations runserver shell test collectstatic createsuperuser seed_data install clean
+.PHONY: help migrate makemigrations runserver shell test collectstatic createsuperuser seed_data install clean git_push
