@@ -2,9 +2,9 @@ FROM python:3.11-slim
 
 WORKDIR /KinoCMS
 
-# Встановлюємо pip
+# Встановлюємо необхідні пакети
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends python3-pip
+    apt-get install -y --no-install-recommends python3-pip pkg-config libmysqlclient-dev
 
 COPY requirements.txt /KinoCMS/
 
