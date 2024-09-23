@@ -5,7 +5,7 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Встановлюємо системні залежності для mysqlclient
+# Встановлюємо системні залежності для mysqlclient та pip
 RUN apt-get update && apt-get install -y \
     build-essential \
     libssl-dev \
@@ -14,7 +14,8 @@ RUN apt-get update && apt-get install -y \
     default-libmysqlclient-dev \
     libmariadb-dev \
     pkg-config \
-    && apt-get clean
+    && apt-get clean && rm -rf /var/lib/apt/lists/* \
+    && python3 -m ensurepip --upgrade  # Додаємо встановлення pip
 
 # Встановлюємо робочу директорію в контейнері
 WORKDIR /KinoCMS
