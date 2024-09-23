@@ -11,8 +11,8 @@ RUN apt-get update && \
     libmariadb-dev-compat \
     gcc \
     build-essential \
-    default-libmysqlclient-dev \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    default-libmysqlclient-dev && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy requirements.txt and install dependencies
 COPY requirements.txt /KinoCMS/
