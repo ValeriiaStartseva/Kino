@@ -22,8 +22,6 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy the rest of the application code
 COPY . /KinoCMS/
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
 
 # Expose the application port
 EXPOSE 8000
