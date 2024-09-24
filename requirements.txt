@@ -34,7 +34,6 @@ packaging==24.1
 phonenumbers==8.13.39
 pillow==10.3.0
 prompt_toolkit==3.0.47
-PyMySQL==1.0.2
 python-dateutil==2.9.0.post0
 python-decouple==3.8
 python-dotenv==1.0.1
