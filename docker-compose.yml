@@ -1,22 +1,17 @@
 version: "3.9"
 
 services:
-  web:
-    build: ./web
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/config
-    ports:
-      - '8000:8000'
-    depends_on:
-      - db
   django:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["sh", "-c", "python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:8000"]
+    command: >
+      sh -c "./wait-for-it.sh db:3306 --
+      && python manage.py migrate
+      && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
     volumes:
-      - .:/KinoCMS
+      - ./src:/KinoCMS/src
+      - ./wait-for-it.sh:/wait-for-it.sh
     ports:
       - "8001:8000"
     env_file:
@@ -33,7 +28,7 @@ services:
       dockerfile: Dockerfile
     command: ["celery", "-A", "config", "worker", "--loglevel=info"]
     volumes:
-      - .:/KinoCMS
+      - ./src:/KinoCMS/src
     depends_on:
       - redis
       - db
@@ -48,7 +43,7 @@ services:
       dockerfile: Dockerfile
     command: ["celery", "-A", "config", "beat", "--loglevel=info"]
     volumes:
-      - .:/KinoCMS
+      - ./src:/KinoCMS/src
     depends_on:
       - redis
       - db
