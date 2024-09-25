@@ -43,7 +43,6 @@ services:
     image: mysql:8.0
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./Kino_DB_backup.sql:/docker-entrypoint-initdb.d/dump.sql
     env_file:
       - .env.prod
     ports:
@@ -53,10 +52,11 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--silent"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "--silent" ]
       interval: 10s
       timeout: 5s
       retries: 5
+
 
   redis:
     image: "redis:alpine"
