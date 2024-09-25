@@ -3,9 +3,7 @@ FROM python:3.11-slim
 WORKDIR /KinoCMS
 
 # Install necessary system dependencies, including gcc and MySQL client libraries
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    python3-pip \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     pkg-config \
     libmariadb-dev \
     libmariadb-dev-compat \
