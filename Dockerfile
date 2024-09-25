@@ -1,28 +1,34 @@
 FROM python:3.11-slim
 
-WORKDIR /KinoCMS
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED=1
 
-# Install necessary system dependencies, including gcc and MySQL client libraries
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    pkg-config \
-    libmariadb-dev \
-    libmariadb-dev-compat \
-    gcc \
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
     build-essential \
-    default-libmysqlclient-dev \
-    default-mysql-client && \
-    rm -rf /var/lib/apt/lists/*
+    libpq-dev \
+    libmysqlclient-dev \
+    curl \
+    && apt-get clean
 
-# Copy requirements.txt and install dependencies
-COPY requirements.txt /KinoCMS/
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install -r requirements.txt
+# Copy requirements file
+COPY requirements.txt /app/
 
-# Copy the rest of the application code
-COPY . /KinoCMS/
+# Install Python dependencies
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Expose the application port
+# Copy project files
+COPY . /app/
+
+# Create a Celery user and set permissions
+RUN useradd -ms /bin/bash celery_user && chown -R celery_user:celery_user /app
+
+# Expose Django port
 EXPOSE 8000
 
-# Set the command to perform migrations and start Gunicorn
-CMD ["sh", "-c", "python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:8000"]
+# Start Gunicorn server (Django)
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
