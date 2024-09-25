@@ -13,6 +13,8 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libmariadb-dev-compat \
     libmariadb-dev \
+    pkg-config \
+    default-libmysqlclient-dev \
     curl \
     && apt-get clean
 
