@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean
 
 # Copy requirements file
-COPY requirements.txt //
+COPY requirements.txt /KinoCMS/
 
 # Install Python dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
