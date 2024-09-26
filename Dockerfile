@@ -5,7 +5,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED=1
 
 # Set working directory
-WORKDIR /app
+WORKDIR /KinoCMS
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -19,16 +19,16 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean
 
 # Copy requirements file
-COPY requirements.txt /app/
+COPY requirements.txt //
 
 # Install Python dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Copy project files
-COPY . /app/
+COPY . /KinoCMS/
 
 # Create a Celery user and set permissions
-RUN useradd -ms /bin/bash celery_user && chown -R celery_user:celery_user /app
+RUN useradd -ms /bin/bash celery_user && chown -R celery_user:celery_user /KinoCMS
 
 # Expose Django port
 EXPOSE 8000
