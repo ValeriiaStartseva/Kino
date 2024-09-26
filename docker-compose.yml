@@ -25,10 +25,8 @@ services:
 #      MYSQL_DATABASE: ${DB_NAME}
 #      MYSQL_USER: ${DB_USER}
 #      MYSQL_PASSWORD: ${DB_PASSWORD}
-       MYSQL_ROOT_PASSWORD: 'sandora12345'
-       MYSQL_DATABASE: root
-       MYSQL_USER: root
-       MYSQL_PASSWORD: 'sandora12345'
+      MYSQL_ROOT_PASSWORD: 'sandora12345'
+      MYSQL_DATABASE: 'root'
     ports:
       - '3307:3306'
     volumes:
