@@ -32,7 +32,7 @@ services:
 
   celery:
     build: .
-    command: celery -A KinoCMS worker --loglevel=info
+    command: ["celery", "-A", "config", "worker", "--loglevel=info"]
     env_file:
       - .env
     volumes:
