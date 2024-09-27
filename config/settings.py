@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'config.middleware.admin_access_middleware.AdminAccessMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 
