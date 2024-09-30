@@ -21,7 +21,7 @@ admin_urlpatterns = [
     # gallery admin
     path('admin/upload_image/', pages_views.upload_image, name='upload_image'),
     path('get_gallery_images/', pages_views.get_gallery_images, name='get_gallery_images'),  # url for get img from DB
-
+    path('media/<path:path>/',  pages_views.serve_media, name='serve_media'),
     # movies admin
     path('admin/movie/create/', movies_views.add_movie, name='add_movie'),
     # path('admin/movie_success/', movies_views.movie_success, name='movie_success'),
@@ -79,7 +79,7 @@ admin_urlpatterns = [
          name='check_campaign_progress'),
 ]
 urlpatterns = [
-    path('i18n/', include('django.conf.urls.i18n')),  
+    path('i18n/', include('django.conf.urls.i18n')),
 ]
 
 urlpatterns += i18n_patterns(
@@ -106,6 +106,7 @@ urlpatterns += i18n_patterns(
     path('booking/<int:showtime_id>/', pages_views.booking_view, name='booking'),
     path('cinemas/', pages_views.cinemas_view, name='cinemas'),
     path('search/', pages_views.search_view, name='search'),
+
 
 
     # user site
