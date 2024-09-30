@@ -26,7 +26,6 @@ services:
       - media:/KinoCMS/media
     depends_on:
       - django
-      -
   db:
     image: mysql:latest
     container_name: db
