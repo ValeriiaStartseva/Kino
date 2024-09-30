@@ -19,7 +19,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         self.fake = Faker()
 
-        images_path = '/Users/valeriiastartseva/Desktop/kino_cms_gallery'
+        images_path = '/KinoCMS/gallery'
 
         image_files = self._get_image_files(images_path)
         if not image_files:
