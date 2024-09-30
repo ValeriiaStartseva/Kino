@@ -12,14 +12,6 @@ services:
       - media:/KinoCMS/media
     ports:
       - "8001:8000"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.django.rule=Host(`vgg0c0sswwcowo488wk80kkg.78.141.224.252.sslip.io`)"
-      - "traefik.http.services.django.loadbalancer.server.port=8000"
-      - "traefik.http.routers.media.rule=Host(`media.vgg0c0sswwcowo488wk80kkg.78.141.224.252.sslip.io`) && PathPrefix(`/media`)"
-      - "traefik.http.middlewares.media.stripprefix.prefixes=/media"
-      - "traefik.http.routers.media.middlewares=media"
-      - "traefik.http.services.media.loadbalancer.server.port=8000"
     depends_on:
       - db
       - redis
