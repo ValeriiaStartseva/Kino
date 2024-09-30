@@ -13,9 +13,6 @@ from django.core.paginator import Paginator
 from src.promotion.models import Post
 from src.showtimes.models import Ticket
 from django.utils import timezone
-from django.http import HttpResponse, Http404
-from django.conf import settings
-import os
 
 # view for upload img to DB
 def upload_image(request):
@@ -338,14 +335,6 @@ def cinemas_view(request):
     }
     return render(request, 'pages/cinemas.html', context)
 
-
-def serve_media(request, path):
-    file_path = os.path.join(settings.MEDIA_ROOT, path)
-    if os.path.exists(file_path):
-        with open(file_path, 'rb') as f:
-            return HttpResponse(f.read(), content_type="application/octet-stream")
-    else:
-        raise Http404
 
 def search_view(request):
     form = SearchForm()

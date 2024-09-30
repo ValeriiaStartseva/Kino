@@ -21,7 +21,6 @@ admin_urlpatterns = [
     # gallery admin
     path('admin/upload_image/', pages_views.upload_image, name='upload_image'),
     path('get_gallery_images/', pages_views.get_gallery_images, name='get_gallery_images'),  # url for get img from DB
-    path('media/<path:path>/',  pages_views.serve_media, name='serve_media'),
     # movies admin
     path('admin/movie/create/', movies_views.add_movie, name='add_movie'),
     # path('admin/movie_success/', movies_views.movie_success, name='movie_success'),
