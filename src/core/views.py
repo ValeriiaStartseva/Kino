@@ -355,12 +355,9 @@ def search_view(request):
     return render(request, 'pages/search_results.html', {'form': form, 'query': query, 'results': results})
 
 
-
-
 def serve_media(request, path):
     media_path = os.path.join(settings.MEDIA_ROOT, path)
     if os.path.exists(media_path):
-        # Визначаємо MIME-тип файлу
         mime_type, _ = mimetypes.guess_type(media_path)
         if mime_type is None:
             mime_type = 'application/octet-stream'  # Випадок, якщо тип файлу не розпізнано
