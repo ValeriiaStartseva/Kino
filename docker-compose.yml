@@ -16,7 +16,6 @@ services:
       - "traefik.http.services.django_app.loadbalancer.server.port=8000"
       - "traefik.http.services.django_app.loadbalancer.server.responseTimeout=60s" # Тайм-аут для Traefik
       - "traefik.http.services.django_app.loadbalancer.server.readTimeout=60s"      # Додавання тайм-аутів читання
-      - "traefik.http.services.django_app.loadbalancer.server.forwardedHeaders.insecure=true" # Для роботи з зашифрованими з'єднаннями
     ports:
       - "8001:8000"
     depends_on:
@@ -64,7 +63,17 @@ services:
       - "traefik.http.routers.media.entrypoints=web"  # Додано точку входу для media
     networks:
       - webnet
-
+  traefik:
+    image: traefik:v2.9
+    command:
+      - "--entryPoints.web.address=:80"
+      - "--providers.docker=true"
+    ports:
+      - "80:80"  # Порт для вхідних HTTP-запитів
+    networks:
+      - webnet
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 networks:
   webnet:
 
