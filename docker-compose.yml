@@ -1,6 +1,27 @@
 version: '3.9'
 
 services:
+#  django:
+#    build: .
+#    container_name: django
+#    env_file:
+#      - .env
+#    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+#    volumes:
+#      - .:/KinoCMS
+#      - media:/KinoCMS/media
+#    labels:
+#      - "traefik.http.routers.django_app_media.rule=Host(`vgg0c0sswwcowo488wk80kkg.78.141.224.252.sslip.io`) && PathPrefix(`/media`)"
+#      - "traefik.http.middlewares.media.stripPrefix.prefixes=/media"
+#      - "traefik.http.routers.django_app_media.service=media"
+#      - "traefik.http.services.media.loadbalancer.server.port=8000"
+#    ports:
+#      - "8001:8000"
+#    depends_on:
+#      - db
+#      - redis
+#    networks:
+#      - webnet
   django:
     build: .
     container_name: django
@@ -11,10 +32,8 @@ services:
       - .:/KinoCMS
       - media:/KinoCMS/media
     labels:
-      - "traefik.http.routers.django_app_media.rule=Host(`vgg0c0sswwcowo488wk80kkg.78.141.224.252.sslip.io`) && PathPrefix(`/media`)"
-      - "traefik.http.middlewares.media.stripPrefix.prefixes=/media"
-      - "traefik.http.routers.django_app_media.service=media"
-      - "traefik.http.services.media.loadbalancer.server.port=8000"
+      - "traefik.http.routers.django.rule=Host(`vgg0c0sswwcowo488wk80kkg.78.141.224.252.sslip.io`) && PathPrefix(`/`)"  # Обслуговування запитів до основного додатку
+      - "traefik.http.services.django.loadbalancer.server.port=8000"
     ports:
       - "8001:8000"
     depends_on:
@@ -23,6 +42,17 @@ services:
     networks:
       - webnet
 
+    # Служба для обробки медіа-файлів
+  django_media:
+    build: .
+    container_name: django_media
+    volumes:
+      - media:/KinoCMS/media
+    labels:
+      - "traefik.http.routers.django_media.rule=Host(`vgg0c0sswwcowo488wk80kkg.78.141.224.252.sslip.io`) && PathPrefix(`/media`)"  # Обслуговування запитів до медіа-файлів
+      - "traefik.http.services.django_media.loadbalancer.server.port=8000"
+    networks:
+      - webnet
   db:
     image: mysql:latest
     container_name: db
