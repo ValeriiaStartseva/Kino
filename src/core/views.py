@@ -1,5 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
+
+from config import settings
 from .forms import GalleryImageForm, SearchForm
 from .models import GalleryImage, Gallery
 from django.http import JsonResponse
@@ -13,6 +15,9 @@ from django.core.paginator import Paginator
 from src.promotion.models import Post
 from src.showtimes.models import Ticket
 from django.utils import timezone
+from django.http import HttpResponse, Http404
+import mimetypes
+import os
 
 # view for upload img to DB
 def upload_image(request):
@@ -348,3 +353,18 @@ def search_view(request):
             results = Movie.objects.filter(name__icontains=query)
 
     return render(request, 'pages/search_results.html', {'form': form, 'query': query, 'results': results})
+
+
+
+
+def serve_media(request, path):
+    media_path = os.path.join(settings.MEDIA_ROOT, path)
+    if os.path.exists(media_path):
+        # Визначаємо MIME-тип файлу
+        mime_type, _ = mimetypes.guess_type(media_path)
+        if mime_type is None:
+            mime_type = 'application/octet-stream'  # Випадок, якщо тип файлу не розпізнано
+        with open(media_path, 'rb') as f:
+            return HttpResponse(f.read(), content_type=mime_type)
+    else:
+        raise Http404("Media file not found")
