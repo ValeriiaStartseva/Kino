@@ -68,8 +68,6 @@ services:
     command:
       - "--entryPoints.web.address=:80"
       - "--providers.docker=true"
-    ports:
-      - "80:80"  # Порт для вхідних HTTP-запитів
     networks:
       - webnet
     volumes:
