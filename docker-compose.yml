@@ -9,6 +9,7 @@ services:
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - .:/KinoCMS
+      - ./media:/KinoCMS/media
     ports:
       - "8001:8000"
     depends_on:
