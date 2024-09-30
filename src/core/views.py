@@ -356,7 +356,7 @@ def search_view(request):
 
 
 def serve_media(request, path):
-    media_path = os.path.join(settings.MEDIA_ROOT, path)
+    media_path = os.path.join(settings.MEDIA_ROOT, 'images', path)
     if os.path.exists(media_path):
         mime_type, _ = mimetypes.guess_type(media_path)
         if mime_type is None:
