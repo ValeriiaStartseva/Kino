@@ -52,8 +52,8 @@ services:
     image: nginx:latest
     container_name: nginx
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./media:/KinoCMS/media  # Медіафайли
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./media:/KinoCMS/media
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.media.rule=Host(`vgg0c0sswwcowo488wk80kkg.78.141.224.252.sslip.io`) && PathPrefix(`/media`)"
