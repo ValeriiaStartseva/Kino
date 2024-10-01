@@ -173,30 +173,6 @@ class Command(BaseCommand):
             self.users.append(user)
             self.stdout.write(self.style.SUCCESS(f'User "{user.email}" added to User model.'))
 
-    def _create_posts(self):
-        self.posts = []
-        for _ in range(3):
-            gallery = Gallery.objects.create()
-            self._assign_gallery_images(gallery, 3)
-
-            main_image_id = self.gallery_image_ids.pop(0)
-
-            post = Post.objects.create(
-                name=self.fake.text(max_nb_chars=40),
-                published_date=self.fake.date_this_year().isoformat(),
-                description=self.fake.text(),
-                status=self.fake.boolean(),
-                link=self.fake.url(),
-                type=self.fake.random_element(elements=('news', 'prom')),
-                gallery=gallery,
-                main_image=GalleryImage.objects.get(pk=main_image_id),
-                url_seo=self.fake.url(),
-                title_seo=self.fake.text(max_nb_chars=20),
-                keywords_seo=self.fake.text(max_nb_chars=20),
-                description_seo=self.fake.text(),
-            )
-            self.posts.append(post)
-
     def _create_pages(self):
         self.pages = []
         for _ in range(3):
