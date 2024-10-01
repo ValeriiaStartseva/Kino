@@ -95,105 +95,105 @@ class Command(BaseCommand):
                 description_seo=self.fake.text(),
             )
 
-    def _create_cinemas(self):
-        self.cinemas = []
-        for _ in range(3):
-            gallery = Gallery.objects.create()
-            self._assign_gallery_images(gallery, 3)
-
-            main_image_id = self.gallery_image_ids.pop(0)
-            logo_image_id = self.gallery_image_ids.pop(0)
-
-            cinema = Cinema.objects.create(
-                name=self.fake.company()[:10],
-                title=self.fake.catch_phrase()[:50],
-                city=self.fake.city()[:12],
-                gallery=gallery,
-                main_image=GalleryImage.objects.get(pk=main_image_id),
-                logo=GalleryImage.objects.get(pk=logo_image_id),
-                url_seo=self.fake.url(),
-                title_seo=self.fake.text(max_nb_chars=20),
-                keywords_seo=self.fake.text(max_nb_chars=20),
-                description_seo=self.fake.text(),
-            )
-            self.cinemas.append(cinema)
-
-    def _create_halls(self):
-        for cinema in self.cinemas:
-            gallery = Gallery.objects.create()
-
-            if len(self.gallery_image_ids) >= 3:
-                self._assign_gallery_images(gallery, 3)
-            else:
-                self.stdout.write(self.style.WARNING('Not enough images to assign to gallery for Hall. Skipping.'))
-                continue
-
-            if len(self.gallery_image_ids) > 0:
-                main_image_id = self.gallery_image_ids.pop(0)
-            else:
-                self.stdout.write(self.style.WARNING('Not enough images left for main_image. Skipping.'))
-                continue
-
-            if len(self.gallery_image_ids) > 0:
-                schema_picture_id = self.gallery_image_ids.pop(0)
-            else:
-                self.stdout.write(self.style.WARNING('Not enough images left for schema_picture. Skipping.'))
-                continue
-
-            Hall.objects.create(
-                name=self.fake.text(max_nb_chars=20),
-                description=self.fake.text(),
-                schema_json=self.fake.json(),
-                schema_picture=GalleryImage.objects.get(pk=schema_picture_id),
-                gallery=gallery,
-                main_image=GalleryImage.objects.get(pk=main_image_id),
-                cinema_hall=cinema,
-                url_seo=self.fake.url(),
-                title_seo=self.fake.text(max_nb_chars=20),
-                keywords_seo=self.fake.text(max_nb_chars=20),
-                description_seo=self.fake.text(),
-            )
-
-    def _create_users(self):
-        self.users = []
-        for _ in range(5):
-            user = User.objects.create(
-                name=self.fake.first_name(),
-                last_name=self.fake.last_name(),
-                nickname=self.fake.user_name()[:10],
-                email=self.fake.email(),
-                address=self.fake.address()[:12],
-                num_card=self.fake.credit_card_number()[:12],
-                language=self.fake.random_element(elements=('ru', 'ua')),
-                gender=self.fake.random_element(elements=('M', 'F')),
-                phone=str(self.fake.phone_number()),
-                date_birthday=self.fake.date_of_birth(),
-                city=self.fake.city()[:12],
-            )
-            self.users.append(user)
-            self.stdout.write(self.style.SUCCESS(f'User "{user.email}" added to User model.'))
-
-    def _create_pages(self):
-        self.pages = []
-        for _ in range(3):
-            gallery = Gallery.objects.create()
-            self._assign_gallery_images(gallery, 3)
-
-            main_image_id = self.gallery_image_ids.pop(0)
-
-            page = Page.objects.create(
-                name=self.fake.text(max_nb_chars=12),
-                description=self.fake.text(),
-                created_at=self.fake.date_time_this_year().isoformat(),
-                status=self.fake.boolean(),
-                gallery=gallery,
-                main_image=GalleryImage.objects.get(pk=main_image_id),
-                url_seo=self.fake.url(),
-                title_seo=self.fake.text(max_nb_chars=20),
-                keywords_seo=self.fake.text(max_nb_chars=20),
-                description_seo=self.fake.text(),
-            )
-            self.pages.append(page)
+    # def _create_cinemas(self):
+    #     self.cinemas = []
+    #     for _ in range(3):
+    #         gallery = Gallery.objects.create()
+    #         self._assign_gallery_images(gallery, 3)
+    #
+    #         main_image_id = self.gallery_image_ids.pop(0)
+    #         logo_image_id = self.gallery_image_ids.pop(0)
+    #
+    #         cinema = Cinema.objects.create(
+    #             name=self.fake.company()[:10],
+    #             title=self.fake.catch_phrase()[:50],
+    #             city=self.fake.city()[:12],
+    #             gallery=gallery,
+    #             main_image=GalleryImage.objects.get(pk=main_image_id),
+    #             logo=GalleryImage.objects.get(pk=logo_image_id),
+    #             url_seo=self.fake.url(),
+    #             title_seo=self.fake.text(max_nb_chars=20),
+    #             keywords_seo=self.fake.text(max_nb_chars=20),
+    #             description_seo=self.fake.text(),
+    #         )
+    #         self.cinemas.append(cinema)
+    #
+    # def _create_halls(self):
+    #     for cinema in self.cinemas:
+    #         gallery = Gallery.objects.create()
+    #
+    #         if len(self.gallery_image_ids) >= 3:
+    #             self._assign_gallery_images(gallery, 3)
+    #         else:
+    #             self.stdout.write(self.style.WARNING('Not enough images to assign to gallery for Hall. Skipping.'))
+    #             continue
+    #
+    #         if len(self.gallery_image_ids) > 0:
+    #             main_image_id = self.gallery_image_ids.pop(0)
+    #         else:
+    #             self.stdout.write(self.style.WARNING('Not enough images left for main_image. Skipping.'))
+    #             continue
+    #
+    #         if len(self.gallery_image_ids) > 0:
+    #             schema_picture_id = self.gallery_image_ids.pop(0)
+    #         else:
+    #             self.stdout.write(self.style.WARNING('Not enough images left for schema_picture. Skipping.'))
+    #             continue
+    #
+    #         Hall.objects.create(
+    #             name=self.fake.text(max_nb_chars=20),
+    #             description=self.fake.text(),
+    #             schema_json=self.fake.json(),
+    #             schema_picture=GalleryImage.objects.get(pk=schema_picture_id),
+    #             gallery=gallery,
+    #             main_image=GalleryImage.objects.get(pk=main_image_id),
+    #             cinema_hall=cinema,
+    #             url_seo=self.fake.url(),
+    #             title_seo=self.fake.text(max_nb_chars=20),
+    #             keywords_seo=self.fake.text(max_nb_chars=20),
+    #             description_seo=self.fake.text(),
+    #         )
+    #
+    # def _create_users(self):
+    #     self.users = []
+    #     for _ in range(5):
+    #         user = User.objects.create(
+    #             name=self.fake.first_name(),
+    #             last_name=self.fake.last_name(),
+    #             nickname=self.fake.user_name()[:10],
+    #             email=self.fake.email(),
+    #             address=self.fake.address()[:12],
+    #             num_card=self.fake.credit_card_number()[:12],
+    #             language=self.fake.random_element(elements=('ru', 'ua')),
+    #             gender=self.fake.random_element(elements=('M', 'F')),
+    #             phone=str(self.fake.phone_number()),
+    #             date_birthday=self.fake.date_of_birth(),
+    #             city=self.fake.city()[:12],
+    #         )
+    #         self.users.append(user)
+    #         self.stdout.write(self.style.SUCCESS(f'User "{user.email}" added to User model.'))
+    #
+    # def _create_pages(self):
+    #     self.pages = []
+    #     for _ in range(3):
+    #         gallery = Gallery.objects.create()
+    #         self._assign_gallery_images(gallery, 3)
+    #
+    #         main_image_id = self.gallery_image_ids.pop(0)
+    #
+    #         page = Page.objects.create(
+    #             name=self.fake.text(max_nb_chars=12),
+    #             description=self.fake.text(),
+    #             created_at=self.fake.date_time_this_year().isoformat(),
+    #             status=self.fake.boolean(),
+    #             gallery=gallery,
+    #             main_image=GalleryImage.objects.get(pk=main_image_id),
+    #             url_seo=self.fake.url(),
+    #             title_seo=self.fake.text(max_nb_chars=20),
+    #             keywords_seo=self.fake.text(max_nb_chars=20),
+    #             description_seo=self.fake.text(),
+    #         )
+    #         self.pages.append(page)
 
     def _create_showtimes(self):
         movies = Movie.objects.all()
