@@ -35,11 +35,12 @@ class Command(BaseCommand):
                 price = random.randint(60, 150)  # Випадкова ціна на квитки
 
                 ShowTime.objects.create(
-                    hall=hall,
-                    movie=movie,
+                    hall_id=hall,  # Використовуємо правильне поле
+                    movie_id=movie,  # Використовуємо правильне поле
                     show_time=show_time,
                     price=price,
                     movie_type=random.choice(['IMAX', '2D', '3D'])  # Випадковий тип фільму
                 )
 
-                self.stdout.write(self.style.SUCCESS(f"Showtime created for movie '{movie.name}': {show_time}, Price: {price}"))
+                self.stdout.write(
+                    self.style.SUCCESS(f"Showtime created for movie '{movie.name}': {show_time}, Price: {price}"))
