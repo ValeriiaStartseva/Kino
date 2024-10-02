@@ -44,6 +44,9 @@ createsuperuser:
 seed_data:
 	$(DJANGO_MANAGE) seed_data
 
+
+seed_showtimes:
+	$(DJANGO_MANAGE) seed_showtimes
 # Project setup commands
 install:
 	pip install -r requirements.txt
@@ -51,7 +54,7 @@ install:
 # Git commands
 git_push:
 	@git add .
-	@git commit -m "Закомічено оновлення проекту $(PROJECT_NAME)"
+	@git commit -m "add command show $(PROJECT_NAME)"
 	@git push origin main
 
 # Phony targets
