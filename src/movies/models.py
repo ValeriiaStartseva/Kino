@@ -5,6 +5,7 @@ from multiselectfield import MultiSelectField
 from django.utils.text import slugify
 from django.urls import reverse
 
+
 class Movie(SEOMixin, models.Model):
     AGE_CHOICES = (
         ('14+', '14+'),
@@ -38,7 +39,10 @@ class Movie(SEOMixin, models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        if hasattr(self, 'name_en') and self.name_en:
+            self.slug = slugify(self.name_en)
+        else:
+            self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
