@@ -31,12 +31,11 @@ class Post(SEOMixin, models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        if not self.id:
-            super().save(*args, **kwargs)
-
-        if not self.slug:
-            self.slug = f'post-{self.id}'
-            super().save(*args, **kwargs)
+        if hasattr(self, 'name_en') and self.name_en:
+            self.slug = slugify(self.name_en)
+        else:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('promotion_detail', args=[str(self.slug)])
