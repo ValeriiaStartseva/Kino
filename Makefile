@@ -45,8 +45,6 @@ seed_data:
 	$(DJANGO_MANAGE) seed_data
 
 
-seed_showtimes:
-	$(DJANGO_MANAGE) seed_showtimes
 # Project setup commands
 install:
 	pip install -r requirements.txt
