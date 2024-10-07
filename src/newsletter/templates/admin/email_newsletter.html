@@ -271,7 +271,7 @@ document.addEventListener('click', function(event) {
 });
 
 function checkCampaignProgress(campaignId) {
-    fetch(`/email-campaign/progress/${campaignId}/`, {
+    fetch(`/admin/email-campaign/progress/${campaignId}/`, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
         },
