@@ -11,7 +11,6 @@ services:
       - .:/KinoCMS
       - media:/KinoCMS/media
     labels:
-      - "traefik.enable=true"
       - "traefik.http.routers.django.rule=Host(`vgg0c0sswwcowo488wk80kkg.78.141.224.252.sslip.io`)"
       - "traefik.http.services.django.loadbalancer.server.port=8000"
     ports:
