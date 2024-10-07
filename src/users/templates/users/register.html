@@ -70,14 +70,12 @@
               <div class="mb-3 row align-items-center">
                 <label class="col-sm-4 col-form-label">{% trans "Language" %}</label>
                 <div class="col-sm-8 d-flex align-items-center">
-                  <div class="form-check me-3">
-                    <input class="form-check-input" type="radio" name="language" id="languageUkr" value="uk" {% if form.language.value == "uk" %}checked{% endif %}>
-                    <label class="form-check-label" for="languageUk">{% trans "UK" %}</label>
-                  </div>
+                  <input class="form-check-input" type="radio" name="language" id="languageUkr" value="ua" {% if form.language.value == "ua" %}checked{% endif %}>
+<label class="form-check-label" for="languageUkr">{% trans "UA" %}</label>
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="language" id="languageRus" value="eu" {% if form.language.value == "eu" %}checked{% endif %}>
-                    <label class="form-check-label" for="languageEn">{% trans "EN" %}</label>
-                  </div>
+  <input class="form-check-input" type="radio" name="language" id="languageEn" value="en" {% if form.language.value == "en" %}checked{% endif %}>
+  <label class="form-check-label" for="languageEn">{% trans "EN" %}</label>
+</div>
                   <div class="text-danger" id="languageError"></div>
                 </div>
               </div>
