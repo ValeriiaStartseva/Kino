@@ -11,12 +11,9 @@
 <body>
 <div class="cinemas-wrapper">
     <div class="container mt-5">
-        <!-- Блок з білою підложкою для заголовку -->
-        <div class="form-header bg-white p-3 shadow-sm rounded text-center">
-            <h1 class="mb-4">{% trans "Edit Profile" %}</h1>
-        </div>
+        <!-- Видалено блок з назвою та підложкою -->
         
-        <!-- Форма також обгорнута в блок з білою підложкою -->
+        <!-- Форма залишається без білої підложки під заголовком -->
         <div class="form-wrapper bg-white p-4 shadow-sm rounded mt-3">
             <form id="UserProfileUpdateForm" method="post" action="{% url 'edit_profile' %}">
               {% csrf_token %}
