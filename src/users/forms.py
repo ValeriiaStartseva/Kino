@@ -44,6 +44,35 @@ class UserUpdateForm(UserChangeForm):
         }
 
 
+class UserProfileUpdateForm(forms.ModelForm):
+    password = forms.CharField(required=False, widget=forms.PasswordInput())
+    confirm_password = forms.CharField(required=False, widget=forms.PasswordInput())
+
+    class Meta:
+        model = User
+        fields = ['name', 'last_name', 'nickname', 'email', 'address', 'num_card', 'phone', 'language', 'gender',
+                  'date_birthday', 'city']
+
+        widgets = {
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'num_card': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'date_birthday': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'city': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
+
+        if password and password != confirm_password:
+            self.add_error('confirm_password', "Passwords do not match")
+        return cleaned_data
+
+
 class AdminAuthenticationForm(AuthenticationForm):
     def confirm_login_allowed(self, user):
         if not user.is_active or not user.is_superuser:

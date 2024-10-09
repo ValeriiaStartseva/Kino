@@ -1,7 +1,6 @@
 from django.urls import reverse
-
 from .models import User
-from .forms import RegistrationForm, LoginForm, UserUpdateForm, AdminAuthenticationForm
+from .forms import RegistrationForm, LoginForm, UserUpdateForm, AdminAuthenticationForm, UserProfileUpdateForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.http import JsonResponse
@@ -9,7 +8,7 @@ from django.core.paginator import Paginator
 from django.db import transaction
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth import update_session_auth_hash
 
 def register(request):
     cities = ['Київ', 'Львів', 'Одеса', 'Харків', 'Дніпро']
@@ -123,3 +122,31 @@ def custom_admin_login(request):
 def custom_admin_logout(request):
     logout(request)
     return redirect('custom_admin_login')
+
+
+@login_required
+@transaction.atomic
+def edit_profile(request):
+    user = request.user
+    cities = ['Київ', 'Львів', 'Одеса', 'Харків', 'Дніпро']
+
+    if request.method == 'POST':
+        form = UserProfileUpdateForm(request.POST, request.FILES, instance=user)
+
+        if form.is_valid():
+            form.save()
+
+            password = form.cleaned_data.get('password')
+            confirm_password = form.cleaned_data.get('confirm_password')
+
+            if password and password == confirm_password:
+                user.set_password(password)
+                user.save()
+                update_session_auth_hash(request, user)
+
+            return redirect('edit_profile')
+
+    else:
+        form = UserProfileUpdateForm(instance=user)
+
+    return render(request, 'users/user_acc.html', {'form': form, 'cities': cities})

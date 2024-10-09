@@ -3,111 +3,134 @@
 {% load i18n %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'intl-tel-input/css/intlTelInput.css' %}">
+<script src="{% static 'intl-tel-input/js/intlTelInput.min.js' %}"></script>
+<script src="{% static 'intl-tel-input/js/utils.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <body>
 <div class="cinemas-wrapper">
     <div class="container mt-5">
-        <h1 class="mb-4 text-center">{% trans "Customer Page" %}</h1>
-        <form>
+        <h1 class="mb-4 text-center">{% trans "Edit Profile" %}</h1>
+        <form id="UserProfileUpdateForm" method="post" action="{% url 'edit_profile' %}">
+          {% csrf_token %}
           <div class="row g-3">
+            <!-- Left column -->
             <div class="col-md-6">
-              <div class="mb-3 row align-items-center">
+              <!-- Ім'я користувача -->
+              <div class="mb-3 row">
                 <label for="firstName" class="col-sm-4 col-form-label">{% trans "First Name" %}</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control" id="firstName" aria-label="{% trans 'First Name' %}">
+                  <input type="text" class="form-control" id="firstName" name="name" value="{{ user.name }}" aria-label="{% trans 'First name' %}">
+                  <div class="text-danger" id="nameError"></div>
                 </div>
               </div>
-              <div class="mb-3 row align-items-center">
+
+              <!-- Прізвище користувача -->
+              <div class="mb-3 row">
                 <label for="lastName" class="col-sm-4 col-form-label">{% trans "Last Name" %}</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control" id="lastName" aria-label="{% trans 'Last Name' %}">
+                  <input type="text" class="form-control" id="lastName" name="last_name" value="{{ user.last_name }}" aria-label="{% trans 'Last name' %}">
+                  <div class="text-danger" id="lastNameError"></div>
                 </div>
               </div>
-              <div class="mb-3 row align-items-center">
-                <label for="nickname" class="col-sm-4 col-form-label">{% trans "Nickname" %}</label>
+
+              <!-- Пароль -->
+              <div class="mb-3 row">
+                <label for="password" class="col-sm-4 col-form-label">{% trans "New Password" %}</label>
                 <div class="col-sm-8">
-                  <input type="text" class="form-control" id="nickname" aria-label="{% trans 'Nickname' %}">
+                  <input type="password" class="form-control" id="password" name="password" aria-label="{% trans 'New Password' %}">
+                  <div class="text-danger" id="passwordError"></div>
                 </div>
               </div>
-              <div class="mb-3 row align-items-center">
+
+              <!-- Підтвердження паролю -->
+              <div class="mb-3 row">
+                <label for="confirmPassword" class="col-sm-4 col-form-label">{% trans "Confirm Password" %}</label>
+                <div class="col-sm-8">
+                  <input type="password" class="form-control" id="confirmPassword" name="confirm_password" aria-label="{% trans 'Confirm Password' %}">
+                  <div class="text-danger" id="confirmPasswordError"></div>
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="mb-3 row">
                 <label for="email" class="col-sm-4 col-form-label">{% trans "Email" %}</label>
                 <div class="col-sm-8">
-                  <input type="email" class="form-control" id="email" aria-label="{% trans 'Email' %}">
-                </div>
-              </div>
-              <div class="mb-3 row align-items-center">
-                <label for="address" class="col-sm-4 col-form-label">{% trans "Address" %}</label>
-                <div class="col-sm-8">
-                  <input type="text" class="form-control" id="address" aria-label="{% trans 'Address' %}">
-                </div>
-              </div>
-              <div class="mb-3 row align-items-center">
-                <label for="password" class="col-sm-4 col-form-label">{% trans "Password" %}</label>
-                <div class="col-sm-8">
-                  <input type="password" class="form-control" id="password" aria-label="{% trans 'Password' %}">
-                </div>
-              </div>
-              <div class="mb-3 row align-items-center">
-                <label for="rePassword" class="col-sm-4 col-form-label">{% trans "Repeat Password" %}</label>
-                <div class="col-sm-8">
-                  <input type="password" class="form-control" id="rePassword" aria-label="{% trans 'Repeat Password' %}">
+                  <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" aria-label="{% trans 'Email' %}">
+                  <div class="text-danger" id="emailError"></div>
                 </div>
               </div>
             </div>
+
+            <!-- Right column -->
             <div class="col-md-6">
-              <div class="mb-3 row align-items-center">
+              <!-- Місто -->
+              <div class="mb-3 row">
+                <label for="city" class="col-sm-4 col-form-label">{% trans "City" %}</label>
+                <div class="col-sm-8">
+                  <select class="form-select" id="city" name="city" aria-label="{% trans 'City' %}">
+                    <option>{% trans "Select a city" %}</option>
+                    {% for city in cities %}
+                    <option value="{{ city }}" {% if user.city == city %}selected{% endif %}>{{ city }}</option>
+                    {% endfor %}
+                  </select>
+                  <div class="text-danger" id="cityError"></div>
+                </div>
+              </div>
+
+              <!-- Номер картки -->
+              <div class="mb-3 row">
+                <label for="cardNumber" class="col-sm-4 col-form-label">{% trans "Card Number" %}</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="cardNumber" name="num_card" value="{{ user.num_card }}" aria-label="{% trans 'Card Number' %}">
+                  <div class="text-danger" id="cardNumberError"></div>
+                </div>
+              </div>
+
+              <!-- Телефон -->
+              <div class="mb-3 row">
+                <label for="phoneNumber" class="col-sm-4 col-form-label">{% trans "Phone" %}</label>
+                <div class="col-sm-8">
+                  <input type="tel" class="form-control" id="phoneNumber" name="phone" value="{{ user.phone }}" aria-label="{% trans 'Phone number' %}">
+                  <div class="text-danger" id="phoneError"></div>
+                </div>
+              </div>
+
+              <!-- Мова -->
+              <div class="mb-3 row">
                 <label class="col-sm-4 col-form-label">{% trans "Language" %}</label>
-                <div class="col-sm-8 d-flex align-items-center">
-                  <div class="form-check me-3">
-                    <input class="form-check-input" type="radio" name="languageOptions" id="languageUkr" value="ukr">
+                <div class="col-sm-8">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="language" id="languageUkr" value="ua" {% if user.language == "ua" %}checked{% endif %}>
                     <label class="form-check-label" for="languageUkr">{% trans "UKR" %}</label>
                   </div>
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="languageOptions" id="languageRus" value="rus">
-                    <label class="form-check-label" for="languageRus">{% trans "RU" %}</label>
+                    <input class="form-check-input" type="radio" name="language" id="languageEng" value="en" {% if user.language == "en" %}checked{% endif %}>
+                    <label class="form-check-label" for="languageEng">{% trans "ENG" %}</label>
                   </div>
+                  <div class="text-danger" id="languageError"></div>
                 </div>
               </div>
-              <div class="mb-3 row align-items-center">
+
+              <!-- Стать -->
+              <div class="mb-3 row">
                 <label class="col-sm-4 col-form-label">{% trans "Gender" %}</label>
-                <div class="col-sm-8 d-flex align-items-center">
-                  <div class="form-check me-3">
-                    <input class="form-check-input" type="radio" name="genderOptions" id="genderMale" value="male">
+                <div class="col-sm-8">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gender" id="genderMale" value="M" {% if user.gender == "M" %}checked{% endif %}>
                     <label class="form-check-label" for="genderMale">{% trans "M" %}</label>
                   </div>
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="genderOptions" id="genderFemale" value="female">
+                    <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="F" {% if user.gender == "F" %}checked{% endif %}>
                     <label class="form-check-label" for="genderFemale">{% trans "F" %}</label>
                   </div>
-                </div>
-              </div>
-              <div class="mb-3 row align-items-center">
-                <label for="dob" class="col-sm-4 col-form-label">{% trans "Date of Birth" %}</label>
-                <div class="col-sm-8">
-                  <input type="date" class="form-control" id="dob" name="dob">
-                </div>
-              </div>
-              <div class="mb-3 row align-items-center">
-                <label for="city" class="col-sm-4 col-form-label">{% trans "City" %}</label>
-                <div class="col-sm-8">
-                  <select class="form-select" id="city" aria-label="{% trans 'City' %}">
-                    <option selected>{% trans "Choose a city" %}</option>
-                  </select>
-                </div>
-              </div>
-              <div class="mb-3 row align-items-center">
-                <label for="cardNumber" class="col-sm-4 col-form-label">{% trans "Card Number" %}</label>
-                <div class="col-sm-8">
-                  <input type="text" class="form-control" id="cardNumber" aria-label="{% trans 'Card Number' %}">
-                </div>
-              </div>
-              <div class="mb-3 row align-items-center">
-                <label for="phoneNumber" class="col-sm-4 col-form-label">{% trans "Phone Number" %}</label>
-                <div class="col-sm-8">
-                  <input type="tel" class="form-control" id="phoneNumber" aria-label="{% trans 'Phone Number' %}">
+                  <div class="text-danger" id="genderError"></div>
                 </div>
               </div>
             </div>
           </div>
+
           <div class="text-center mb-2">
             <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
           </div>
@@ -115,5 +138,12 @@
     </div>
 </div>
 
+<script>
+  const input = document.querySelector("#phoneNumber");
+  window.intlTelInput(input, {
+    initialCountry: "ua",
+    utilsScript: "{% static 'intl-tel-input/js/utils.js' %}"
+  });
+</script>
 </body>
 {% endblock %}

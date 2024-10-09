@@ -12,14 +12,14 @@
         </div>
 
         <div class="mb-3 row align-items-center">
-            <label for="movie_name" class="col-sm-4 col-form-label">Rotation speed</label>
-            <div class="col-sm-8">
-                {{ form.rotation_speed }}
-                {% if form.rotation_speed.errors %}
-                    <div class="alert alert-danger">{{ form.rotation_speed.errors }}</div>
-                {% endif %}
-            </div>
-        </div>
+    <label for="rotationSpeed" class="col-sm-4 col-form-label">Rotation speed (seconds)</label>
+    <div class="col-sm-8">
+        <input type="number" class="form-control" id="rotationSpeed" name="rotation_speed" value="{{ form.instance.rotation_speed_in_seconds }}">
+        {% if form.rotation_speed.errors %}
+            <div class="alert alert-danger">{{ form.rotation_speed.errors }}</div>
+        {% endif %}
+    </div>
+</div>
 
         {{ formset.management_form }}
 

@@ -11,6 +11,11 @@ class MainPageBanners(models.Model):
         self.rotation_speed = self.rotation_speed * 1000
         super().save(*args, **kwargs)
 
+    @property
+    def rotation_speed_in_seconds(self):
+        # Повертає значення в секундах для відображення
+        return self.rotation_speed / 1000
+
 
 class MainPageNewsBanners(models.Model):
     rotation_speed = models.IntegerField()
@@ -20,6 +25,11 @@ class MainPageNewsBanners(models.Model):
         # Перетворення секунд в мілісекунди перед збереженням
         self.rotation_speed = self.rotation_speed * 1000
         super().save(*args, **kwargs)
+
+    @property
+    def rotation_speed_in_seconds(self):
+        # Повертає значення в секундах для відображення
+        return self.rotation_speed / 1000
 
 
 class BannerImage(models.Model):

@@ -104,6 +104,7 @@ def page_success(request):
     return render(request, 'admin/pages/page_success.html')
 
 
+
 # view for getting list of all pages
 @login_required
 def get_page_list(request):

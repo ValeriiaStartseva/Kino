@@ -113,6 +113,7 @@ urlpatterns += i18n_patterns(
     path('register/', users_views.register, name='register'),
     path('login/', users_views.login, name='login'),
     path('logout', users_views.logout, name='logout'),
+    path('my-account/', users_views.edit_profile, name='edit_profile'),
 
 
 
